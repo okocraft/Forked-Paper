@@ -4,6 +4,18 @@ Date: Sat, 3 Sep 2022 00:58:38 +0900
 Subject: [PATCH] pufferfish optimize random calls in chunk ticking
 
 
+diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
+index efcb80efc69a1e5ffc81b579bf535fd94e8144d7..f9f6f28299a4cb6055b925dea92771deb03b0771 100644
+--- a/src/main/java/net/minecraft/server/level/ServerChunkCache.java
++++ b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
+@@ -785,6 +785,7 @@ public class ServerChunkCache extends ChunkSource {
+             ProfilerFiller gameprofilerfiller = this.level.getProfiler();
+ 
+             gameprofilerfiller.push("pollingChunks");
++            this.level.resetIceAndSnowTick(); // Pufferfish - reset ice & snow tick random // okocraft Optimize-random-calls-in-chunk-ticking.patch
+             int k = this.level.getGameRules().getInt(GameRules.RULE_RANDOMTICKING);
+             boolean flag1 = level.ticksPerSpawnCategory.getLong(org.bukkit.entity.SpawnCategory.ANIMAL) != 0L && worlddata.getGameTime() % level.ticksPerSpawnCategory.getLong(org.bukkit.entity.SpawnCategory.ANIMAL) == 0L; // CraftBukkit
+ 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
 index 2d92f303e2d3009c527cb6c358dcbdae009b3ff6..2b57b6a78bdcad38da6c937448f2384a732773d6 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
