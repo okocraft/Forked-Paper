@@ -1,0 +1,18 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Sat, 3 Sep 2022 00:52:51 +0900
+Subject: [PATCH] create getter for ThreadUnsafeRandom in ServerLevel
+
+
+diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
+index 96bb0e56f12437037b598cd7baabf369e5994517..10f82d274e3b792f1059bbaae1917f66bdd5741b 100644
+--- a/src/main/java/net/minecraft/server/level/ServerLevel.java
++++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
+@@ -763,6 +763,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+     // Paper start - optimise random block ticking
+     private final BlockPos.MutableBlockPos chunkTickMutablePosition = new BlockPos.MutableBlockPos();
+     private final io.papermc.paper.util.math.ThreadUnsafeRandom randomTickRandom = new io.papermc.paper.util.math.ThreadUnsafeRandom(this.random.nextLong());
++    public io.papermc.paper.util.math.ThreadUnsafeRandom getThreadUnsafeRandom() { return randomTickRandom; } // okocraft - getter
+     // Paper end
+ 
+     public void tickChunk(LevelChunk chunk, int randomTickSpeed) {

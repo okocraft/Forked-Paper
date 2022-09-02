@@ -1,0 +1,37 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Sat, 3 Sep 2022 00:13:43 +0900
+Subject: [PATCH] pufferfish optimize suffocation
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+index cff7993bdafd2f69e46c9985c7601a69ae47f452..93d0932680073134daf427c21ee53ed423f7015b 100644
+--- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
++++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+@@ -399,7 +399,7 @@ public abstract class LivingEntity extends Entity {
+         if (this.isAlive()) {
+             boolean flag = this instanceof net.minecraft.world.entity.player.Player;
+ 
+-            if (this.isInWall()) {
++            if ((tickCount % 10 == 0 && couldPossiblyBeHurt(1.0F)) && this.isInWall()) { // Pufferfish - optimize suffocation // okocraft Pufferfish Optimize-suffocation.patch
+                 this.hurt(DamageSource.IN_WALL, 1.0F);
+             } else if (flag && !this.level.getWorldBorder().isWithinBounds(this.getBoundingBox())) {
+                 double d0 = this.level.getWorldBorder().getDistanceToBorder(this) + this.level.getWorldBorder().getDamageSafeZone();
+@@ -1313,6 +1313,17 @@ public abstract class LivingEntity extends Entity {
+         return this.getHealth() <= 0.0F;
+     }
+ 
++    // okocraft start - Pufferfish Optimize-suffocation.patch
++    // Pufferfish start - optimize suffocation
++    public boolean couldPossiblyBeHurt(float amount) {
++        if ((float) this.invulnerableTime > (float) this.invulnerableDuration / 2.0F && amount <= this.lastHurt) {
++            return false;
++        }
++        return true;
++    }
++    // Pufferfish end
++    // okocraft end
++
+     @Override
+     public boolean hurt(DamageSource source, float amount) {
+         if (this.isInvulnerableTo(source)) {
