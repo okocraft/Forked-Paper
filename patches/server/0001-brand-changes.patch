@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Fri, 2 Sep 2022 23:23:25 +0900
+Subject: [PATCH] brand changes
+
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index 2374cc9bab5039d0a0dc11d4b2ec573ab75778a7..3bebd27c2c25a88391c08ccf41f07c76dea20500 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -9,8 +9,12 @@ plugins {
+ }
+ 
+ dependencies {
+-    implementation(project(":paper-api"))
+-    implementation(project(":paper-mojangapi"))
++    // okocraft start
++    implementation(project(":okocraft-api"))
++    implementation("io.papermc.paper:paper-mojangapi:1.19.2-R0.1-SNAPSHOT") {
++        exclude("io.papermc.paper", "paper-api")
++    }
++    // okocraft end
+     // Paper start
+     implementation("org.jline:jline-terminal-jansi:3.21.0")
+     implementation("net.minecrell:terminalconsoleappender:1.3.0")
