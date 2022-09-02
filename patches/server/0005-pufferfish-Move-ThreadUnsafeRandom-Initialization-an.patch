@@ -19,7 +19,7 @@ index 96bb0e56f12437037b598cd7baabf369e5994517..2d92f303e2d3009c527cb6c358dcbdae
  
      public void tickChunk(LevelChunk chunk, int randomTickSpeed) {
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 5a2a1d394852d39ea576624586f7fa736dec807c..d7310e8a5fb20c56a6a9dc710c89d0399dc9540f 100644
+index 5a2a1d394852d39ea576624586f7fa736dec807c..3a76aa10be1117fc8c904643ab13af482904f6ff 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -271,6 +271,9 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -27,7 +27,7 @@ index 5a2a1d394852d39ea576624586f7fa736dec807c..d7310e8a5fb20c56a6a9dc710c89d039
      public abstract ResourceKey<LevelStem> getTypeKey();
  
 +    protected final io.papermc.paper.util.math.ThreadUnsafeRandom randomTickRandom = new io.papermc.paper.util.math.ThreadUnsafeRandom(java.util.concurrent.ThreadLocalRandom.current().nextLong()); // Pufferfish - move thread unsafe random initialization  // okocraft - Pufferfish Move-ThreadUnsafeRandom-Initialization.patch
-+    protected io.papermc.paper.util.math.ThreadUnsafeRandom getThreadUnsafeRandom() { return randomTickRandom; } // okocraft - getter
++    public io.papermc.paper.util.math.ThreadUnsafeRandom getThreadUnsafeRandom() { return randomTickRandom; } // okocraft - getter
 +
      protected Level(WritableLevelData worlddatamutable, ResourceKey<Level> resourcekey, Holder<DimensionType> holder, Supplier<ProfilerFiller> supplier, boolean flag, boolean flag1, long i, int j, org.bukkit.generator.ChunkGenerator gen, org.bukkit.generator.BiomeProvider biomeProvider, org.bukkit.World.Environment env, java.util.function.Function<org.spigotmc.SpigotWorldConfig, io.papermc.paper.configuration.WorldConfiguration> paperWorldConfigCreator, java.util.concurrent.Executor executor) { // Paper - Async-Anti-Xray - Pass executor
          this.spigotConfig = new org.spigotmc.SpigotWorldConfig(((net.minecraft.world.level.storage.PrimaryLevelData) worlddatamutable).getLevelName()); // Spigot
