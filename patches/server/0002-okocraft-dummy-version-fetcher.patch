@@ -6,7 +6,7 @@ Subject: [PATCH] okocraft dummy version fetcher
 
 diff --git a/src/main/java/net/okocraft/forkedpaper/version/DummyVersionFetcher.java b/src/main/java/net/okocraft/forkedpaper/version/DummyVersionFetcher.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..fd3239e8b96ef5ff61e9573cb0e797091eb71626
+index 0000000000000000000000000000000000000000..18916a46eab94d49a5a785f1d6b0d9fd6a06a0ef
 --- /dev/null
 +++ b/src/main/java/net/okocraft/forkedpaper/version/DummyVersionFetcher.java
 @@ -0,0 +1,18 @@
@@ -25,7 +25,7 @@ index 0000000000000000000000000000000000000000..fd3239e8b96ef5ff61e9573cb0e79709
 +
 +    @Override
 +    public @NotNull Component getVersionMessage(@NotNull String serverVersion) {
-+        return Component.text("Okocraft Forked Paper (https://github.com/okocraft/Forked-Paper)" + CraftServer.class.getPackage().getImplementationVersion());
++        return Component.text("Okocraft Forked Paper (https://github.com/okocraft/Forked-Paper) - " + CraftServer.class.getPackage().getImplementationVersion());
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
