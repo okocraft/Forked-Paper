@@ -1,0 +1,28 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Sat, 3 Sep 2022 08:58:56 +0900
+Subject: [PATCH] pufferfish Patch Paper to use fast item merge raytracing
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/item/ItemEntity.java b/src/main/java/net/minecraft/world/entity/item/ItemEntity.java
+index fcc5444a1268931a0fd2df1e6bbbc17cfd5a61e0..6214d30b6b7cecc8f73e0c5ea5b680e4b1f4bbe2 100644
+--- a/src/main/java/net/minecraft/world/entity/item/ItemEntity.java
++++ b/src/main/java/net/minecraft/world/entity/item/ItemEntity.java
+@@ -252,10 +252,17 @@ public class ItemEntity extends Entity {
+                 if (entityitem.isMergable()) {
+                     // Paper Start - Fix items merging through walls
+                         if (this.level.paperConfig().fixes.fixItemsMergingThroughWalls) {
++                            // okocraft start - Pufferfish Patch-Paper-to-use-fast-item-merge-raytracing.patch
++                            // Pufferfish start - skip the allocations
++                            /*
+                             net.minecraft.world.level.ClipContext rayTrace = new net.minecraft.world.level.ClipContext(this.position(), entityitem.position(),
+                                 net.minecraft.world.level.ClipContext.Block.COLLIDER, net.minecraft.world.level.ClipContext.Fluid.NONE, this);
+                             net.minecraft.world.phys.BlockHitResult rayTraceResult = level.clip(rayTrace);
+                             if (rayTraceResult.getType() == net.minecraft.world.phys.HitResult.Type.BLOCK) continue;
++                             */
++                            if (net.okocraft.forkedpaper.pufferfish.RayTraceUtils.rayTraceDirect(level, this.position(), entityitem.position(), net.minecraft.world.phys.shapes.CollisionContext.of(this)) == net.minecraft.world.phys.HitResult.Type.BLOCK) continue; // okocraft - use RayTraceUtils
++                            // Pufferfish end
++                            // okocraft end
+                         }
+                     // Paper End
+                     this.tryToMerge(entityitem);

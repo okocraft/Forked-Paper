@@ -1,0 +1,78 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Sat, 3 Sep 2022 09:19:32 +0900
+Subject: [PATCH] pufferfish Remove streams from getting nearby players
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index f925a8d550ecbf2044a37bfe58b30d6578c5f6af..f2c540b480ee81c9f607c144150e9827e93e47e9 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -430,6 +430,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+ 
+     // Paper start - optimise entity tracking
+     final org.spigotmc.TrackingRange.TrackingRangeType trackingRangeType = org.spigotmc.TrackingRange.getTrackingRangeType(this);
++    public org.spigotmc.TrackingRange.TrackingRangeType getTrackingRangeType() { return trackingRangeType; } // okocraft - getter
+ 
+     public boolean isLegacyTrackingEntity = false;
+ 
+@@ -443,11 +444,14 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+             return ((ServerLevel)this.level).getChunkSource().chunkMap.playerEntityTrackerTrackMaps[this.trackingRangeType.ordinal()]
+                 .getObjectsInRange(MCUtil.getCoordinateKey(this));
+         }
+-        Iterable<Entity> passengers = this.getIndirectPassengers();
++        //Iterable<Entity> passengers = this.getIndirectPassengers(); // Pufferfish // okocraft - Pufferfish Remove-streams-from-getting-nearby-players.patch
+         net.minecraft.server.level.ChunkMap chunkMap = ((ServerLevel)this.level).getChunkSource().chunkMap;
+         org.spigotmc.TrackingRange.TrackingRangeType type = this.trackingRangeType;
+         int range = chunkMap.getEntityTrackerRange(type.ordinal());
+ 
++        // okocraft start - Pufferfish Remove-streams-from-getting-nearby-players.patch
++        // Pufferfish start - use getFurthestEntity to skip getIndirectPassengers
++        /*
+         for (Entity passenger : passengers) {
+             org.spigotmc.TrackingRange.TrackingRangeType passengerType = passenger.trackingRangeType;
+             int passengerRange = chunkMap.getEntityTrackerRange(passengerType.ordinal());
+@@ -456,6 +460,10 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+                 range = passengerRange;
+             }
+         }
++        */
++        type = net.okocraft.forkedpaper.pufferfish.EntityMethods.getFurthestEntity(this, chunkMap, type, range);
++        // Pufferfish end
++        // okocraft end
+ 
+         return chunkMap.playerEntityTrackerTrackMaps[type.ordinal()].getObjectsInRange(MCUtil.getCoordinateKey(this));
+     }
+diff --git a/src/main/java/net/okocraft/forkedpaper/pufferfish/EntityMethods.java b/src/main/java/net/okocraft/forkedpaper/pufferfish/EntityMethods.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..42ec1711e10ba611a39de6d6607cff84ac6914c6
+--- /dev/null
++++ b/src/main/java/net/okocraft/forkedpaper/pufferfish/EntityMethods.java
+@@ -0,0 +1,27 @@
++package net.okocraft.forkedpaper.pufferfish;
++
++import net.minecraft.world.entity.Entity;
++import org.spigotmc.TrackingRange;
++
++import java.util.List;
++
++public class EntityMethods {
++
++    // source: Pufferfish Entity#getFurthestEntity
++    public static TrackingRange.TrackingRangeType getFurthestEntity(Entity entity, net.minecraft.server.level.ChunkMap chunkMap, TrackingRange.TrackingRangeType type, int range) {
++        List<Entity> passengers = entity.getPassengers();
++        for (int i = 0, size = passengers.size(); i < size; i++) {
++            Entity passenger = passengers.get(i);
++            TrackingRange.TrackingRangeType passengerType = passenger.getTrackingRangeType(); // okocraft - use getter
++            int passengerRange = chunkMap.getEntityTrackerRange(passengerType.ordinal());
++            if (passengerRange > range) {
++                type = passengerType;
++                range = passengerRange;
++            }
++
++            type = getFurthestEntity(passenger, chunkMap, type, range);
++        }
++
++        return type;
++    }
++}
