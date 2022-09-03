@@ -1,0 +1,43 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Sat, 3 Sep 2022 17:43:43 +0900
+Subject: [PATCH] okocraft dummy version fetcher
+
+
+diff --git a/src/main/java/net/okocraft/forkedpaper/version/DummyVersionFetcher.java b/src/main/java/net/okocraft/forkedpaper/version/DummyVersionFetcher.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..fd3239e8b96ef5ff61e9573cb0e797091eb71626
+--- /dev/null
++++ b/src/main/java/net/okocraft/forkedpaper/version/DummyVersionFetcher.java
+@@ -0,0 +1,18 @@
++package net.okocraft.forkedpaper.version;
++
++import com.destroystokyo.paper.util.VersionFetcher;
++import net.kyori.adventure.text.Component;
++import org.bukkit.craftbukkit.CraftServer;
++import org.jetbrains.annotations.NotNull;
++
++public class DummyVersionFetcher implements VersionFetcher {
++    @Override
++    public long getCacheTime() {
++        return Long.MAX_VALUE;
++    }
++
++    @Override
++    public @NotNull Component getVersionMessage(@NotNull String serverVersion) {
++        return Component.text("Okocraft Forked Paper (https://github.com/okocraft/Forked-Paper)" + CraftServer.class.getPackage().getImplementationVersion());
++    }
++}
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
+index 1628913b1e9b91e68dcd942a38da4aed95b12d4a..5502287e9b5f3d4b88e5f19c405b342739d833eb 100644
+--- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
++++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
+@@ -430,7 +430,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+ 
+     @Override
+     public com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {
+-        return new com.destroystokyo.paper.PaperVersionFetcher();
++        return new net.okocraft.forkedpaper.version.DummyVersionFetcher();
+     }
+ 
+     @Override

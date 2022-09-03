@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Siroshun09 <siro.shun8@gmail.com>
 Date: Fri, 2 Sep 2022 23:23:25 +0900
-Subject: [PATCH] brand changes
+Subject: [PATCH] okocraft brand changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
