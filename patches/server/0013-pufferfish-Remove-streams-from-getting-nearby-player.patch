@@ -45,12 +45,13 @@ index f925a8d550ecbf2044a37bfe58b30d6578c5f6af..f2c540b480ee81c9f607c144150e9827
      }
 diff --git a/src/main/java/net/okocraft/forkedpaper/pufferfish/EntityMethods.java b/src/main/java/net/okocraft/forkedpaper/pufferfish/EntityMethods.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..42ec1711e10ba611a39de6d6607cff84ac6914c6
+index 0000000000000000000000000000000000000000..a189292cbb6e1cec23df380d47f8055ea81a1c9d
 --- /dev/null
 +++ b/src/main/java/net/okocraft/forkedpaper/pufferfish/EntityMethods.java
-@@ -0,0 +1,27 @@
+@@ -0,0 +1,28 @@
 +package net.okocraft.forkedpaper.pufferfish;
 +
++import net.minecraft.server.level.ChunkMap;
 +import net.minecraft.world.entity.Entity;
 +import org.spigotmc.TrackingRange;
 +
@@ -59,7 +60,7 @@ index 0000000000000000000000000000000000000000..42ec1711e10ba611a39de6d6607cff84
 +public class EntityMethods {
 +
 +    // source: Pufferfish Entity#getFurthestEntity
-+    public static TrackingRange.TrackingRangeType getFurthestEntity(Entity entity, net.minecraft.server.level.ChunkMap chunkMap, TrackingRange.TrackingRangeType type, int range) {
++    public static TrackingRange.TrackingRangeType getFurthestEntity(Entity entity, ChunkMap chunkMap, TrackingRange.TrackingRangeType type, int range) {
 +        List<Entity> passengers = entity.getPassengers();
 +        for (int i = 0, size = passengers.size(); i < size; i++) {
 +            Entity passenger = passengers.get(i);
