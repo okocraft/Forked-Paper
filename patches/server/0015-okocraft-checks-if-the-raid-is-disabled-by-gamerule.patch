@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Sat, 3 Sep 2022 11:06:16 +0900
+Subject: [PATCH] okocraft checks if the raid is disabled by gamerule
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/npc/Villager.java b/src/main/java/net/minecraft/world/entity/npc/Villager.java
+index 10b45ec24a5a0867106d1694312385ad1e267f43..b64876e1fd3b420fca159cd1557e5c1e438fb012 100644
+--- a/src/main/java/net/minecraft/world/entity/npc/Villager.java
++++ b/src/main/java/net/minecraft/world/entity/npc/Villager.java
+@@ -271,7 +271,7 @@ public class Villager extends AbstractVillager implements ReputationEventHandler
+             this.lastTradedPlayer = null;
+         }
+ 
+-        if (!inactive && !this.isNoAi() && this.random.nextInt(100) == 0) { // Paper
++        if (!inactive && !this.level.getGameRules().getBoolean(net.minecraft.world.level.GameRules.RULE_DISABLE_RAIDS) && !this.isNoAi() && this.random.nextInt(100) == 0) { // Paper // okocraft - checks if the raid is not disabled by gamerule
+             Raid raid = ((ServerLevel) this.level).getRaidAt(this.blockPosition());
+ 
+             if (raid != null && raid.isActive() && !raid.isOver()) {
