@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Sat, 3 Sep 2022 10:55:14 +0900
+Subject: [PATCH] disable natural spawning of bat
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/ambient/Bat.java b/src/main/java/net/minecraft/world/entity/ambient/Bat.java
+index 50d4595b81f24949011c7565c5e3fc8c26c86019..06e0bca8c5cc6622af11ed521ac5bdd60ec2ef81 100644
+--- a/src/main/java/net/minecraft/world/entity/ambient/Bat.java
++++ b/src/main/java/net/minecraft/world/entity/ambient/Bat.java
+@@ -237,7 +237,7 @@ public class Bat extends AmbientCreature {
+     }
+ 
+     public static boolean checkBatSpawnRules(EntityType<Bat> type, LevelAccessor world, MobSpawnType spawnReason, BlockPos pos, RandomSource random) {
+-        if (pos.getY() >= world.getSeaLevel()) {
++        if (true || pos.getY() >= world.getSeaLevel()) { // okocraft - disable natural spawning of bat
+             return false;
+         } else {
+             int i = world.getMaxLocalRawBrightness(pos);
