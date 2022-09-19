@@ -1,0 +1,120 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Tue, 20 Sep 2022 00:07:32 +0900
+Subject: [PATCH] okocraft add more timings
+
+
+diff --git a/src/main/java/co/aikar/timings/WorldTimingsHandler.java b/src/main/java/co/aikar/timings/WorldTimingsHandler.java
+index fe79c0add4f7cb18d487c5bb9415c40c5b551ea2..68f06c3d5eb343b73219518c150275233e8fc6d8 100644
+--- a/src/main/java/co/aikar/timings/WorldTimingsHandler.java
++++ b/src/main/java/co/aikar/timings/WorldTimingsHandler.java
+@@ -67,6 +67,14 @@ public class WorldTimingsHandler {
+     public final Timing chunkUnloadPrepareSave;
+     public final Timing chunkUnloadPOISerialization;
+     public final Timing chunkUnloadDataSave;
++    // okocraft start - add more timings
++    public final Timing entityBaseTick;
++    public final Timing entityPostTick;
++    public final Timing entityUpdateVariousThings;
++    public final Timing entityCheckWallAndWater;
++    public final Timing entityTickEffects;
++    public final Timing entityAiStep;
++    // okocraft end
+ 
+     public WorldTimingsHandler(Level server) {
+         String name = ((PrimaryLevelData) server.getLevelData()).getLevelName() + " - ";
+@@ -131,6 +139,15 @@ public class WorldTimingsHandler {
+         chunkUnloadPrepareSave = Timings.ofSafe(name + "Chunk unload - Async Save Prepare");
+         chunkUnloadPOISerialization = Timings.ofSafe(name + "Chunk unload - POI Data Serialization");
+         chunkUnloadDataSave = Timings.ofSafe(name + "Chunk unload - Data Serialization");
++
++        // okocraft start - add more timings
++        entityBaseTick = Timings.ofSafe(name + "Entity Base Tick");
++        entityPostTick = Timings.ofSafe(name + "Entity Post Tick");
++        entityUpdateVariousThings = Timings.ofSafe(name + "Entity Update Various Things");
++        entityCheckWallAndWater = Timings.ofSafe(name + "Entity Check Wall And Water");
++        entityTickEffects = Timings.ofSafe(name + "Entity Tick Effects");
++        entityAiStep = Timings.ofSafe(name + "Entity AI Step");
++        // okocraft end
+     }
+ 
+     public static Timing getTickList(ServerLevel worldserver, String timingsType) {
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 77923149df9d1789eb2bc01a6ac5b23880fdb112..d299f179ac96845c2d9937ff5e2cdd6ae8a1fddb 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -782,15 +782,19 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+     }
+ 
+     public void tick() {
++        level.timings.entityBaseTick.startTiming(); // okocraft - add more timings
+         this.baseTick();
++        level.timings.entityBaseTick.stopTiming(); // okocraft - add more timings
+     }
+ 
+     // CraftBukkit start
+     public void postTick() {
++        level.timings.entityPostTick.startTiming(); // okocraft - add more timings
+         // No clean way to break out of ticking once the entity has been copied to a new world, so instead we move the portalling later in the tick cycle
+         if (!(this instanceof ServerPlayer) && this.isAlive()) { // Paper - don't attempt to teleport dead entities
+             this.handleNetherPortal();
+         }
++        level.timings.entityPostTick.stopTiming(); // okocraft - add more timings
+     }
+     // CraftBukkit end
+ 
+@@ -816,9 +820,11 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+ 
+         this.wasInPowderSnow = this.isInPowderSnow;
+         this.isInPowderSnow = false;
++        level.timings.entityUpdateVariousThings.startTiming(); // okocraft - add more timings
+         this.updateInWaterStateAndDoFluidPushing();
+         this.updateFluidOnEyes();
+         this.updateSwimming();
++        level.timings.entityUpdateVariousThings.stopTiming(); // okocraft - add more timings
+         if (this.level.isClientSide) {
+             this.clearFire();
+         } else if (this.remainingFireTicks > 0) {
+diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+index 7c7a61240b9f80a6643cbee17ed9ab8c2e8b9d8a..7fb20f97b4afa2c704b9a6adebe0658ce70ffa79 100644
+--- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
++++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+@@ -397,6 +397,7 @@ public abstract class LivingEntity extends Entity {
+         }
+ 
+         if (this.isAlive()) {
++            this.level.timings.entityCheckWallAndWater.startTiming(); // okocraft - add more timing
+             boolean flag = this instanceof net.minecraft.world.entity.player.Player;
+ 
+             if ((tickCount % 10 == 0 && couldPossiblyBeHurt(1.0F)) && this.isInWall()) { // Pufferfish - optimize suffocation // okocraft Pufferfish Optimize-suffocation.patch
+@@ -449,6 +450,8 @@ public abstract class LivingEntity extends Entity {
+                     this.onChangedBlock(blockposition);
+                 }
+             }
++
++            this.level.timings.entityCheckWallAndWater.stopTiming(); // okocraft - add more timing
+         }
+ 
+         if (this.isAlive() && (this.isInWaterRainOrBubble() || this.isInPowderSnow)) {
+@@ -489,7 +492,9 @@ public abstract class LivingEntity extends Entity {
+             }
+         }
+ 
++        level.timings.entityTickEffects.startTiming(); // okocraft - add more timings
+         this.tickEffects();
++        level.timings.entityTickEffects.stopTiming(); // okocraft - add more timings
+         this.animStepO = this.animStep;
+         this.yBodyRotO = this.yBodyRot;
+         this.yHeadRotO = this.yHeadRot;
+@@ -2994,9 +2999,11 @@ public abstract class LivingEntity extends Entity {
+             }
+         }
+ 
++        this.level.timings.entityAiStep.startTiming(); // okocraft - add more timing
+         if (!this.isRemoved()) {
+             this.aiStep();
+         }
++        this.level.timings.entityAiStep.stopTiming(); // okocraft - add more timing
+ 
+         double d0 = this.getX() - this.xo;
+         double d1 = this.getZ() - this.zo;
