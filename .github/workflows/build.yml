@@ -31,4 +31,4 @@ jobs:
         continue-on-error: true
         with:
           name: Forked-Paper-Build-${{ github.run_number }}
-          path: ./build/libs
+          path: ./build/libs/forkedpaper-paperclip-1.19.2-R0.1-SNAPSHOT-reobf.jar
