@@ -1,135 +1,68 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Siroshun09 <siro.shun8@gmail.com>
-Date: Tue, 20 Sep 2022 00:52:30 +0900
+Date: Tue, 20 Sep 2022 14:16:03 +0900
 Subject: [PATCH] okocraft add more timings
 
 
 diff --git a/src/main/java/co/aikar/timings/WorldTimingsHandler.java b/src/main/java/co/aikar/timings/WorldTimingsHandler.java
-index fe79c0add4f7cb18d487c5bb9415c40c5b551ea2..1d133923d3fdb04f325084c66d936b3804a6f943 100644
+index fe79c0add4f7cb18d487c5bb9415c40c5b551ea2..af286212e2e6be23ba8eb40aef83dcc7643b1873 100644
 --- a/src/main/java/co/aikar/timings/WorldTimingsHandler.java
 +++ b/src/main/java/co/aikar/timings/WorldTimingsHandler.java
-@@ -67,6 +67,21 @@ public class WorldTimingsHandler {
+@@ -67,6 +67,15 @@ public class WorldTimingsHandler {
      public final Timing chunkUnloadPrepareSave;
      public final Timing chunkUnloadPOISerialization;
      public final Timing chunkUnloadDataSave;
 +    // okocraft start - add more timings
-+    public final Timing entityBaseTick;
-+    public final Timing entityPostTick;
 +    public final Timing entityUpdateVariousThings;
-+    public final Timing entityCheckWallAndWater;
-+    public final Timing entityTickEffects;
 +    public final Timing entityAiStep;
-+    public final Timing livingEntityAiStepLerp;
 +    public final Timing livingEntityAiStepAi;
-+    public final Timing livingEntityAiStepCheckingFluids;
 +    public final Timing livingEntityAiStepTravel;
-+    public final Timing livingEntityAiStepFreezing;
 +    public final Timing livingEntityAiStepPush;
-+    public final Timing livingEntityAiStepMoveEvent;
++
++    public final Timing behaviorAcquirePoiPoiAccess;
 +    // okocraft end
  
      public WorldTimingsHandler(Level server) {
          String name = ((PrimaryLevelData) server.getLevelData()).getLevelName() + " - ";
-@@ -131,6 +146,23 @@ public class WorldTimingsHandler {
+@@ -131,6 +140,17 @@ public class WorldTimingsHandler {
          chunkUnloadPrepareSave = Timings.ofSafe(name + "Chunk unload - Async Save Prepare");
          chunkUnloadPOISerialization = Timings.ofSafe(name + "Chunk unload - POI Data Serialization");
          chunkUnloadDataSave = Timings.ofSafe(name + "Chunk unload - Data Serialization");
 +
 +        // okocraft start - add more timings
-+        entityBaseTick = Timings.ofSafe(name + "Entity Base Tick");
-+        entityPostTick = Timings.ofSafe(name + "Entity Post Tick");
 +        entityUpdateVariousThings = Timings.ofSafe(name + "Entity Update Various Things");
-+        entityCheckWallAndWater = Timings.ofSafe(name + "Entity Check Wall And Water");
-+        entityTickEffects = Timings.ofSafe(name + "Entity Tick Effects");
 +        entityAiStep = Timings.ofSafe(name + "Entity AI Step");
 +
-+        livingEntityAiStepLerp = Timings.ofSafe(name + "LivingEntity AI Step - Lerp");
 +        livingEntityAiStepAi = Timings.ofSafe(name + "LivingEntity AI Step - Ai");
-+        livingEntityAiStepCheckingFluids = Timings.ofSafe(name + "LivingEntity AI Step - Checking Fluids");
 +        livingEntityAiStepTravel = Timings.ofSafe(name + "LivingEntity AI Step - Travel");
-+        livingEntityAiStepFreezing = Timings.ofSafe(name + "LivingEntity AI Step - Freezing");
 +        livingEntityAiStepPush = Timings.ofSafe(name + "LivingEntity AI Step - Push");
-+        livingEntityAiStepMoveEvent = Timings.ofSafe(name + "LivingEntity AI Step - Move Event");
++
++        behaviorAcquirePoiPoiAccess = Timings.ofSafe(name + "Behavior AcquirePoi Poi Access");
 +        // okocraft end
      }
  
      public static Timing getTickList(ServerLevel worldserver, String timingsType) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 77923149df9d1789eb2bc01a6ac5b23880fdb112..d299f179ac96845c2d9937ff5e2cdd6ae8a1fddb 100644
+index 0a11da6f6242dd016e6016d9f760d01bd43b4bcf..63b220fd73982ac8de1d4e48ee5f5c3deb579c0d 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -782,15 +782,19 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
-     }
- 
-     public void tick() {
-+        level.timings.entityBaseTick.startTiming(); // okocraft - add more timings
-         this.baseTick();
-+        level.timings.entityBaseTick.stopTiming(); // okocraft - add more timings
-     }
- 
-     // CraftBukkit start
-     public void postTick() {
-+        level.timings.entityPostTick.startTiming(); // okocraft - add more timings
-         // No clean way to break out of ticking once the entity has been copied to a new world, so instead we move the portalling later in the tick cycle
-         if (!(this instanceof ServerPlayer) && this.isAlive()) { // Paper - don't attempt to teleport dead entities
-             this.handleNetherPortal();
-         }
-+        level.timings.entityPostTick.stopTiming(); // okocraft - add more timings
-     }
-     // CraftBukkit end
- 
-@@ -816,9 +820,11 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -816,9 +816,11 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
  
          this.wasInPowderSnow = this.isInPowderSnow;
          this.isInPowderSnow = false;
-+        level.timings.entityUpdateVariousThings.startTiming(); // okocraft - add more timings
++        this.level.timings.entityUpdateVariousThings.startTiming(); // okocraft - add more timings
          this.updateInWaterStateAndDoFluidPushing();
          this.updateFluidOnEyes();
          this.updateSwimming();
-+        level.timings.entityUpdateVariousThings.stopTiming(); // okocraft - add more timings
++        this.level.timings.entityUpdateVariousThings.stopTiming(); // okocraft - add more timings
          if (this.level.isClientSide) {
              this.clearFire();
          } else if (this.remainingFireTicks > 0) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 7c7a61240b9f80a6643cbee17ed9ab8c2e8b9d8a..cc5ee94a7fae0211e5a1af51c6964327f144cd85 100644
+index 7c7a61240b9f80a6643cbee17ed9ab8c2e8b9d8a..c6ad62e3e99fedecf611b82ff3b60c162d2ed5cc 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -142,7 +142,6 @@ import org.bukkit.event.entity.EntityTeleportEvent;
- import org.bukkit.event.player.PlayerItemConsumeEvent;
- // CraftBukkit end
- 
--import co.aikar.timings.MinecraftTimings; // Paper
- 
- public abstract class LivingEntity extends Entity {
- 
-@@ -397,6 +396,7 @@ public abstract class LivingEntity extends Entity {
-         }
- 
-         if (this.isAlive()) {
-+            this.level.timings.entityCheckWallAndWater.startTiming(); // okocraft - add more timing
-             boolean flag = this instanceof net.minecraft.world.entity.player.Player;
- 
-             if ((tickCount % 10 == 0 && couldPossiblyBeHurt(1.0F)) && this.isInWall()) { // Pufferfish - optimize suffocation // okocraft Pufferfish Optimize-suffocation.patch
-@@ -449,6 +449,8 @@ public abstract class LivingEntity extends Entity {
-                     this.onChangedBlock(blockposition);
-                 }
-             }
-+
-+            this.level.timings.entityCheckWallAndWater.stopTiming(); // okocraft - add more timing
-         }
- 
-         if (this.isAlive() && (this.isInWaterRainOrBubble() || this.isInPowderSnow)) {
-@@ -489,7 +491,9 @@ public abstract class LivingEntity extends Entity {
-             }
-         }
- 
-+        level.timings.entityTickEffects.startTiming(); // okocraft - add more timings
-         this.tickEffects();
-+        level.timings.entityTickEffects.stopTiming(); // okocraft - add more timings
-         this.animStepO = this.animStep;
-         this.yBodyRotO = this.yBodyRot;
-         this.yHeadRotO = this.yHeadRot;
-@@ -2994,9 +2998,11 @@ public abstract class LivingEntity extends Entity {
+@@ -2994,9 +2994,11 @@ public abstract class LivingEntity extends Entity {
              }
          }
  
@@ -141,24 +74,7 @@ index 7c7a61240b9f80a6643cbee17ed9ab8c2e8b9d8a..cc5ee94a7fae0211e5a1af51c6964327
  
          double d0 = this.getX() - this.xo;
          double d1 = this.getZ() - this.zo;
-@@ -3288,6 +3294,7 @@ public abstract class LivingEntity extends Entity {
-             this.syncPacketPositionCodec(this.getX(), this.getY(), this.getZ());
-         }
- 
-+        this.level.timings.livingEntityAiStepLerp.startTiming(); // okocraft - add more timings
-         if (this.lerpSteps > 0) {
-             double d0 = this.getX() + (this.lerpX - this.getX()) / (double) this.lerpSteps;
-             double d1 = this.getY() + (this.lerpY - this.getY()) / (double) this.lerpSteps;
-@@ -3307,7 +3314,7 @@ public abstract class LivingEntity extends Entity {
-             this.yHeadRot += (float) Mth.wrapDegrees(this.lyHeadRot - (double) this.yHeadRot) / (float) this.lerpHeadSteps;
-             --this.lerpHeadSteps;
-         }
--
-+        this.level.timings.livingEntityAiStepLerp.stopTiming(); // okocraft - add more timings
-         Vec3 vec3d = this.getDeltaMovement();
-         double d4 = vec3d.x;
-         double d5 = vec3d.y;
-@@ -3326,6 +3333,7 @@ public abstract class LivingEntity extends Entity {
+@@ -3326,6 +3328,7 @@ public abstract class LivingEntity extends Entity {
          }
  
          this.setDeltaMovement(d4, d5, d6);
@@ -166,7 +82,7 @@ index 7c7a61240b9f80a6643cbee17ed9ab8c2e8b9d8a..cc5ee94a7fae0211e5a1af51c6964327
          this.level.getProfiler().push("ai");
          if (this.isImmobile()) {
              this.jumping = false;
-@@ -3336,9 +3344,11 @@ public abstract class LivingEntity extends Entity {
+@@ -3336,6 +3339,7 @@ public abstract class LivingEntity extends Entity {
              this.serverAiStep();
              this.level.getProfiler().pop();
          }
@@ -174,52 +90,53 @@ index 7c7a61240b9f80a6643cbee17ed9ab8c2e8b9d8a..cc5ee94a7fae0211e5a1af51c6964327
  
          this.level.getProfiler().pop();
          this.level.getProfiler().push("jump");
-+        this.level.timings.livingEntityAiStepCheckingFluids.startTiming(); // okocraft - add more timings
-         if (this.jumping && this.isAffectedByFluids()) {
-             double d7;
- 
-@@ -3364,7 +3374,9 @@ public abstract class LivingEntity extends Entity {
-         } else {
+@@ -3365,6 +3369,7 @@ public abstract class LivingEntity extends Entity {
              this.noJumpDelay = 0;
          }
-+        this.level.timings.livingEntityAiStepCheckingFluids.stopTiming(); // okocraft - add more timings
  
 +        this.level.timings.livingEntityAiStepTravel.startTiming(); // okocraft - add more timings
          this.level.getProfiler().pop();
          this.level.getProfiler().push("travel");
          this.xxa *= 0.98F;
-@@ -3376,6 +3388,8 @@ public abstract class LivingEntity extends Entity {
+@@ -3376,6 +3381,7 @@ public abstract class LivingEntity extends Entity {
          this.travel(new Vec3((double) this.xxa, (double) this.yya, (double) this.zza));
          // SpigotTimings.timerEntityAIMove.stopTiming(); // Spigot // Paper
          this.level.getProfiler().pop();
 +        this.level.timings.livingEntityAiStepTravel.stopTiming(); // okocraft - add more timings
-+        this.level.timings.livingEntityAiStepFreezing.startTiming(); // okocraft - add more timings
          this.level.getProfiler().push("freezing");
          boolean flag1 = this.getType().is(EntityTypeTags.FREEZE_HURTS_EXTRA_TYPES);
          int i;
-@@ -3397,6 +3411,8 @@ public abstract class LivingEntity extends Entity {
+@@ -3397,6 +3403,7 @@ public abstract class LivingEntity extends Entity {
          }
  
          this.level.getProfiler().pop();
-+        this.level.timings.livingEntityAiStepFreezing.stopTiming(); // okocraft - add more timings
 +        this.level.timings.livingEntityAiStepPush.startTiming(); // okocraft - add more timings
          this.level.getProfiler().push("push");
          if (this.autoSpinAttackTicks > 0) {
              --this.autoSpinAttackTicks;
-@@ -3405,6 +3421,8 @@ public abstract class LivingEntity extends Entity {
+@@ -3405,6 +3412,7 @@ public abstract class LivingEntity extends Entity {
  
          this.pushEntities();
          this.level.getProfiler().pop();
 +        this.level.timings.livingEntityAiStepPush.stopTiming(); // okocraft - add more timings
-+        this.level.timings.livingEntityAiStepMoveEvent.startTiming(); // okocraft - add more timings
          // Paper start
          if (((ServerLevel) this.level).hasEntityMoveEvent && !(this instanceof net.minecraft.world.entity.player.Player)) {
              if (this.xo != getX() || this.yo != this.getY() || this.zo != this.getZ() || this.yRotO != this.getYRot() || this.xRotO != this.getXRot()) {
-@@ -3419,6 +3437,7 @@ public abstract class LivingEntity extends Entity {
+diff --git a/src/main/java/net/minecraft/world/entity/ai/behavior/AcquirePoi.java b/src/main/java/net/minecraft/world/entity/ai/behavior/AcquirePoi.java
+index e46a0e5a080344b5433688994e5aa138d57243b6..a2bc6391827a9d2d9957cae4a93e63c8ba290977 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/behavior/AcquirePoi.java
++++ b/src/main/java/net/minecraft/world/entity/ai/behavior/AcquirePoi.java
+@@ -88,11 +88,13 @@ public class AcquirePoi extends Behavior<PathfinderMob> {
+                 return true;
              }
-         }
-         // Paper end
-+        this.level.timings.livingEntityAiStepMoveEvent.stopTiming(); // okocraft - add more timings
-         if (!this.level.isClientSide && this.isSensitiveToWater() && this.isInWaterRainOrBubble()) {
-             this.hurt(DamageSource.DROWN, 1.0F);
-         }
+         };
++        entity.level.timings.behaviorAcquirePoiPoiAccess.startTiming(); // okocraft - add more timings
+         // Paper start - optimise POI access
+         java.util.List<Pair<Holder<PoiType>, BlockPos>> poiposes = new java.util.ArrayList<>();
+         io.papermc.paper.util.PoiAccess.findNearestPoiPositions(poiManager, this.poiType, predicate, entity.blockPosition(), 48, 48*48, PoiManager.Occupancy.HAS_SPACE, false, 5, poiposes);
+         Set<Pair<Holder<PoiType>, BlockPos>> set = new java.util.HashSet<>(poiposes);
+         // Paper end - optimise POI access
++        entity.level.timings.behaviorAcquirePoiPoiAccess.stopTiming(); // okocraft - add more timings
+         Path path = findPathToPois(entity, set);
+         if (path != null && path.canReach()) {
+             BlockPos blockPos = path.getTarget();
