@@ -1,0 +1,96 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Tue, 20 Sep 2022 14:55:18 +0900
+Subject: [PATCH] okocraft Optimize LivingEntity Travel
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+index c6ad62e3e99fedecf611b82ff3b60c162d2ed5cc..497d7c8ac5024abdc8adb1c269ce6ac565e1f88e 100644
+--- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
++++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+@@ -2717,6 +2717,7 @@ public abstract class LivingEntity extends Entity {
+         return false;
+     }
+ 
++    private static final net.okocraft.forkedpaper.util.CacheableFunction<LivingEntity, FluidState> getFluidStateFunction = net.okocraft.forkedpaper.util.CacheableFunction.create(livingEntity -> livingEntity.level.getFluidState(livingEntity.blockPosition())); // okocraft - get FluidState later and cache the returned value
+     public void travel(Vec3 movementInput) {
+         if (this.isEffectiveAi() || this.isControlledByLocalInstance()) {
+             double d0 = 0.08D;
+@@ -2727,11 +2728,11 @@ public abstract class LivingEntity extends Entity {
+                 this.resetFallDistance();
+             }
+ 
+-            FluidState fluid = this.level.getFluidState(this.blockPosition());
++            net.okocraft.forkedpaper.util.CacheableFunction<LivingEntity, FluidState> fluidStateFunction = getFluidStateFunction.copy(); // okocraft - get FluidState later and cache the returned value
+             double d1;
+             float f;
+ 
+-            if (this.isInWater() && this.isAffectedByFluids() && !this.canStandOnFluid(fluid)) {
++            if (this.isInWater() && this.isAffectedByFluids() && !this.canStandOnFluid(fluidStateFunction.applyOrGetCached(this))) { // okocraft - get FluidState later and cache the returned value
+                 d1 = this.getY();
+                 f = this.isSprinting() ? 0.9F : this.getWaterSlowDown();
+                 float f1 = 0.02F;
+@@ -2758,7 +2759,7 @@ public abstract class LivingEntity extends Entity {
+                 this.move(MoverType.SELF, this.getDeltaMovement());
+                 Vec3 vec3d1 = this.getDeltaMovement();
+ 
+-                if (this.horizontalCollision && this.onClimbable()) {
++                if (this.horizontalCollision && this.onClimableCached()) { // okocraft - use #onClimableCached
+                     vec3d1 = new Vec3(vec3d1.x, 0.2D, vec3d1.z);
+                 }
+ 
+@@ -2769,7 +2770,7 @@ public abstract class LivingEntity extends Entity {
+                 if (this.horizontalCollision && this.isFree(vec3d2.x, vec3d2.y + 0.6000000238418579D - this.getY() + d1, vec3d2.z)) {
+                     this.setDeltaMovement(vec3d2.x, 0.30000001192092896D, vec3d2.z);
+                 }
+-            } else if (this.isInLava() && this.isAffectedByFluids() && !this.canStandOnFluid(fluid)) {
++            } else if (this.isInLava() && this.isAffectedByFluids() && !this.canStandOnFluid(fluidStateFunction.applyOrGetCached(this))) { // okocraft - get FluidState later and cache the returned value
+                 d1 = this.getY();
+                 this.moveRelative(0.02F, movementInput);
+                 this.move(MoverType.SELF, this.getDeltaMovement());
+diff --git a/src/main/java/net/okocraft/forkedpaper/util/CacheableFunction.java b/src/main/java/net/okocraft/forkedpaper/util/CacheableFunction.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..ccfef74847c608b3548fc024f18ddde4778c3596
+--- /dev/null
++++ b/src/main/java/net/okocraft/forkedpaper/util/CacheableFunction.java
+@@ -0,0 +1,40 @@
++package net.okocraft.forkedpaper.util;
++
++import org.jetbrains.annotations.Contract;
++import org.jetbrains.annotations.NotNull;
++
++import java.util.function.Function;
++
++public class CacheableFunction<T, R> implements Function<T, R> {
++    
++    @Contract(value = "_ -> new", pure = true)
++    public static <T, R> @NotNull CacheableFunction<T, R> create(@NotNull Function<T, R> function) {
++        return new CacheableFunction<>(function);
++    }
++
++    private final Function<T, R> function;
++    private boolean calculated = false;
++    private R cached;
++
++    private CacheableFunction(Function<T, R> function) {
++        this.function = function;
++    }
++
++    @Override
++    public R apply(T t) {
++        return function.apply(t);
++    }
++
++    public R applyOrGetCached(T t) {
++        if (!calculated) {
++            calculated = true;
++            cached = function.apply(t);
++        }
++
++        return cached;
++    }
++
++    public @NotNull CacheableFunction<T, R> copy() {
++        return new CacheableFunction<>(function);
++    }
++}
