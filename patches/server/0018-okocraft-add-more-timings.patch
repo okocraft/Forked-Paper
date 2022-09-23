@@ -5,10 +5,10 @@ Subject: [PATCH] okocraft add more timings
 
 
 diff --git a/src/main/java/co/aikar/timings/WorldTimingsHandler.java b/src/main/java/co/aikar/timings/WorldTimingsHandler.java
-index fe79c0add4f7cb18d487c5bb9415c40c5b551ea2..af286212e2e6be23ba8eb40aef83dcc7643b1873 100644
+index fe79c0add4f7cb18d487c5bb9415c40c5b551ea2..99ecf02ccc16606fda84a923f83b73e072311043 100644
 --- a/src/main/java/co/aikar/timings/WorldTimingsHandler.java
 +++ b/src/main/java/co/aikar/timings/WorldTimingsHandler.java
-@@ -67,6 +67,15 @@ public class WorldTimingsHandler {
+@@ -67,6 +67,26 @@ public class WorldTimingsHandler {
      public final Timing chunkUnloadPrepareSave;
      public final Timing chunkUnloadPOISerialization;
      public final Timing chunkUnloadDataSave;
@@ -18,13 +18,24 @@ index fe79c0add4f7cb18d487c5bb9415c40c5b551ea2..af286212e2e6be23ba8eb40aef83dcc7
 +    public final Timing livingEntityAiStepAi;
 +    public final Timing livingEntityAiStepTravel;
 +    public final Timing livingEntityAiStepPush;
++    
++    public final Timing serverAiStepSensing;
++    public final Timing serverAiStepTargetSelector;
++    public final Timing serverAiStepGoalSelector;
++    public final Timing serverAiStepNavigation;
++    public final Timing serverAiStepMobTick;
++    public final Timing serverAiStepMove;
++    public final Timing serverAiStepLook;
++    public final Timing serverAiStepJump;
++
++    public final Timing villagerBrainTick;
 +
 +    public final Timing behaviorAcquirePoiPoiAccess;
 +    // okocraft end
  
      public WorldTimingsHandler(Level server) {
          String name = ((PrimaryLevelData) server.getLevelData()).getLevelName() + " - ";
-@@ -131,6 +140,17 @@ public class WorldTimingsHandler {
+@@ -131,6 +151,28 @@ public class WorldTimingsHandler {
          chunkUnloadPrepareSave = Timings.ofSafe(name + "Chunk unload - Async Save Prepare");
          chunkUnloadPOISerialization = Timings.ofSafe(name + "Chunk unload - POI Data Serialization");
          chunkUnloadDataSave = Timings.ofSafe(name + "Chunk unload - Data Serialization");
@@ -36,6 +47,17 @@ index fe79c0add4f7cb18d487c5bb9415c40c5b551ea2..af286212e2e6be23ba8eb40aef83dcc7
 +        livingEntityAiStepAi = Timings.ofSafe(name + "LivingEntity AI Step - Ai");
 +        livingEntityAiStepTravel = Timings.ofSafe(name + "LivingEntity AI Step - Travel");
 +        livingEntityAiStepPush = Timings.ofSafe(name + "LivingEntity AI Step - Push");
++
++        serverAiStepSensing = Timings.ofSafe(name + "Server AI Step - Sensing");
++        serverAiStepTargetSelector = Timings.ofSafe(name + "Server AI Step - Target Selector");
++        serverAiStepGoalSelector = Timings.ofSafe(name + "Server AI Step - Goal Selector");
++        serverAiStepNavigation = Timings.ofSafe(name + "Server AI Step - Navigation");
++        serverAiStepMobTick = Timings.ofSafe(name + "Server AI Step - Mob Tick");
++        serverAiStepMove = Timings.ofSafe(name + "Server AI Step - Move");
++        serverAiStepLook = Timings.ofSafe(name + "Server AI Step - Look");
++        serverAiStepJump = Timings.ofSafe(name + "Server AI Step - Jump");
++
++        villagerBrainTick = Timings.ofSafe(name + "Villager Brain Tick");
 +
 +        behaviorAcquirePoiPoiAccess = Timings.ofSafe(name + "Behavior AcquirePoi Poi Access");
 +        // okocraft end
@@ -125,6 +147,70 @@ index 7c7a61240b9f80a6643cbee17ed9ab8c2e8b9d8a..6ca7cdd1c53900a6515fc6a16199c3e2
          // Paper start
          if (((ServerLevel) this.level).hasEntityMoveEvent && !(this instanceof net.minecraft.world.entity.player.Player)) {
              if (this.xo != getX() || this.yo != this.getY() || this.zo != this.getZ() || this.yRotO != this.getYRot() || this.xRotO != this.getXRot()) {
+diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
+index 557e90e54439ce0430075403392b5052d5181feb..378d230a4bfff4a136b1600dbc004b9c00d4210b 100644
+--- a/src/main/java/net/minecraft/world/entity/Mob.java
++++ b/src/main/java/net/minecraft/world/entity/Mob.java
+@@ -854,39 +854,59 @@ public abstract class Mob extends LivingEntity {
+         }
+         // Paper end
+         this.level.getProfiler().push("sensing");
++        this.level.timings.serverAiStepSensing.startTiming();
+         this.sensing.tick();
++        this.level.timings.serverAiStepSensing.stopTiming();
+         this.level.getProfiler().pop();
+         int i = this.level.getServer().getTickCount() + this.getId();
+ 
+         if (i % 2 != 0 && this.tickCount > 1) {
+             this.level.getProfiler().push("targetSelector");
++            this.level.timings.serverAiStepTargetSelector.startTiming();
+             this.targetSelector.tickRunningGoals(false);
++            this.level.timings.serverAiStepTargetSelector.stopTiming();
+             this.level.getProfiler().pop();
+             this.level.getProfiler().push("goalSelector");
++            this.level.timings.serverAiStepGoalSelector.startTiming();
+             this.goalSelector.tickRunningGoals(false);
++            this.level.timings.serverAiStepGoalSelector.stopTiming();
+             this.level.getProfiler().pop();
+         } else {
+             this.level.getProfiler().push("targetSelector");
++            this.level.timings.serverAiStepTargetSelector.startTiming();
+             this.targetSelector.tick();
++            this.level.timings.serverAiStepTargetSelector.stopTiming();
+             this.level.getProfiler().pop();
+             this.level.getProfiler().push("goalSelector");
++            this.level.timings.serverAiStepGoalSelector.startTiming();
+             this.goalSelector.tick();
++            this.level.timings.serverAiStepGoalSelector.stopTiming();
+             this.level.getProfiler().pop();
+         }
+ 
+         this.level.getProfiler().push("navigation");
++        this.level.timings.serverAiStepNavigation.startTiming();
+         this.navigation.tick();
++        this.level.timings.serverAiStepNavigation.stopTiming();
+         this.level.getProfiler().pop();
+         this.level.getProfiler().push("mob tick");
++        this.level.timings.serverAiStepMobTick.startTiming();
+         this.customServerAiStep();
++        this.level.timings.serverAiStepMobTick.stopTiming();
+         this.level.getProfiler().pop();
+         this.level.getProfiler().push("controls");
+         this.level.getProfiler().push("move");
++        this.level.timings.serverAiStepMove.startTiming();
+         this.moveControl.tick();
++        this.level.timings.serverAiStepMove.stopTiming();
+         this.level.getProfiler().popPush("look");
++        this.level.timings.serverAiStepLook.startTiming();
+         this.lookControl.tick();
++        this.level.timings.serverAiStepLook.stopTiming();
+         this.level.getProfiler().popPush("jump");
++        this.level.timings.serverAiStepJump.startTiming();
+         this.jumpControl.tick();
++        this.level.timings.serverAiStepJump.stopTiming();
+         this.level.getProfiler().pop();
+         this.level.getProfiler().pop();
+         this.sendDebugPackets();
 diff --git a/src/main/java/net/minecraft/world/entity/ai/behavior/AcquirePoi.java b/src/main/java/net/minecraft/world/entity/ai/behavior/AcquirePoi.java
 index e46a0e5a080344b5433688994e5aa138d57243b6..a2bc6391827a9d2d9957cae4a93e63c8ba290977 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/behavior/AcquirePoi.java
@@ -143,3 +229,17 @@ index e46a0e5a080344b5433688994e5aa138d57243b6..a2bc6391827a9d2d9957cae4a93e63c8
          Path path = findPathToPois(entity, set);
          if (path != null && path.canReach()) {
              BlockPos blockPos = path.getTarget();
+diff --git a/src/main/java/net/minecraft/world/entity/npc/Villager.java b/src/main/java/net/minecraft/world/entity/npc/Villager.java
+index b64876e1fd3b420fca159cd1557e5c1e438fb012..78d38aa169c45f0e6854edaa8bb3b4234c6289df 100644
+--- a/src/main/java/net/minecraft/world/entity/npc/Villager.java
++++ b/src/main/java/net/minecraft/world/entity/npc/Villager.java
+@@ -247,7 +247,9 @@ public class Villager extends AbstractVillager implements ReputationEventHandler
+     protected void customServerAiStep() { mobTick(false); }
+     protected void mobTick(boolean inactive) {
+         this.level.getProfiler().push("villagerBrain");
++        this.level.timings.villagerBrainTick.startTiming(); // okocraft - add more timings
+         if (!inactive) this.getBrain().tick((ServerLevel) this.level, this); // Paper
++        this.level.timings.villagerBrainTick.stopTiming(); // okocraft - add more timings
+         this.level.getProfiler().pop();
+         if (this.assignProfessionWhenSpawned) {
+             this.assignProfessionWhenSpawned = false;
