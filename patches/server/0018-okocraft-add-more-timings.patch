@@ -59,18 +59,18 @@ index 0a11da6f6242dd016e6016d9f760d01bd43b4bcf..63b220fd73982ac8de1d4e48ee5f5c3d
              this.clearFire();
          } else if (this.remainingFireTicks > 0) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 7c7a61240b9f80a6643cbee17ed9ab8c2e8b9d8a..c6ad62e3e99fedecf611b82ff3b60c162d2ed5cc 100644
+index 7c7a61240b9f80a6643cbee17ed9ab8c2e8b9d8a..6ca7cdd1c53900a6515fc6a16199c3e2af75badf 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -2994,9 +2994,11 @@ public abstract class LivingEntity extends Entity {
              }
          }
  
-+        this.level.timings.entityAiStep.startTiming(); // okocraft - add more timing
++        try (co.aikar.timings.Timing ignored = this.level.timings.entityAiStep.startTiming()) { // okocraft - add more timing
          if (!this.isRemoved()) {
              this.aiStep();
          }
-+        this.level.timings.entityAiStep.stopTiming(); // okocraft - add more timing
++        } // okocraft - add more timings
  
          double d0 = this.getX() - this.xo;
          double d1 = this.getZ() - this.zo;
@@ -90,23 +90,26 @@ index 7c7a61240b9f80a6643cbee17ed9ab8c2e8b9d8a..c6ad62e3e99fedecf611b82ff3b60c16
  
          this.level.getProfiler().pop();
          this.level.getProfiler().push("jump");
-@@ -3365,6 +3369,7 @@ public abstract class LivingEntity extends Entity {
-             this.noJumpDelay = 0;
-         }
+@@ -3367,14 +3371,17 @@ public abstract class LivingEntity extends Entity {
  
-+        this.level.timings.livingEntityAiStepTravel.startTiming(); // okocraft - add more timings
          this.level.getProfiler().pop();
          this.level.getProfiler().push("travel");
++        AABB axisalignedbb;
++        try (co.aikar.timings.Timing ignored = this.level.timings.livingEntityAiStepTravel.startTiming()) { // okocraft - add more timings
          this.xxa *= 0.98F;
-@@ -3376,6 +3381,7 @@ public abstract class LivingEntity extends Entity {
+         this.zza *= 0.98F;
+         this.updateFallFlying();
+-        AABB axisalignedbb = this.getBoundingBox();
++        axisalignedbb = this.getBoundingBox();
+ 
+         // SpigotTimings.timerEntityAIMove.startTiming(); // Spigot // Paper
          this.travel(new Vec3((double) this.xxa, (double) this.yya, (double) this.zza));
          // SpigotTimings.timerEntityAIMove.stopTiming(); // Spigot // Paper
++        }  // okocraft - add more timings
          this.level.getProfiler().pop();
-+        this.level.timings.livingEntityAiStepTravel.stopTiming(); // okocraft - add more timings
          this.level.getProfiler().push("freezing");
          boolean flag1 = this.getType().is(EntityTypeTags.FREEZE_HURTS_EXTRA_TYPES);
-         int i;
-@@ -3397,6 +3403,7 @@ public abstract class LivingEntity extends Entity {
+@@ -3397,6 +3404,7 @@ public abstract class LivingEntity extends Entity {
          }
  
          this.level.getProfiler().pop();
@@ -114,7 +117,7 @@ index 7c7a61240b9f80a6643cbee17ed9ab8c2e8b9d8a..c6ad62e3e99fedecf611b82ff3b60c16
          this.level.getProfiler().push("push");
          if (this.autoSpinAttackTicks > 0) {
              --this.autoSpinAttackTicks;
-@@ -3405,6 +3412,7 @@ public abstract class LivingEntity extends Entity {
+@@ -3405,6 +3413,7 @@ public abstract class LivingEntity extends Entity {
  
          this.pushEntities();
          this.level.getProfiler().pop();
