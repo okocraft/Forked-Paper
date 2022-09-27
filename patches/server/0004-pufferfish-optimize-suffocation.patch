@@ -3,9 +3,23 @@ From: Siroshun09 <siro.shun8@gmail.com>
 Date: Sat, 3 Sep 2022 00:13:43 +0900
 Subject: [PATCH] pufferfish optimize suffocation
 
+copy from Optimize-suffocation.patch:
+
+The isInWall check to determine suffocation is quite expensive, and
+often is completely unnecessary to check. We do two things here to
+improve this:
+
+1. We only check for suffocation once per 20 ticks. The maximum
+no-damage ticks value means that this change should be extremely
+difficult, if not impossible, for players to notice.
+
+2. We additionally execute a check to see if the player can even take
+damage in the first place. This check doesn't improve performance much
+but is so much cheaper than the suffocation check that it's worth
+keeping it.
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index cff7993bdafd2f69e46c9985c7601a69ae47f452..93d0932680073134daf427c21ee53ed423f7015b 100644
+index 1c8661afcfaaf56953cef3a5c26fbc4fa3ac5b1c..41db1f1456a72122daaf2d04a82968cf37207cf1 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -399,7 +399,7 @@ public abstract class LivingEntity extends Entity {
@@ -17,17 +31,14 @@ index cff7993bdafd2f69e46c9985c7601a69ae47f452..93d0932680073134daf427c21ee53ed4
                  this.hurt(DamageSource.IN_WALL, 1.0F);
              } else if (flag && !this.level.getWorldBorder().isWithinBounds(this.getBoundingBox())) {
                  double d0 = this.level.getWorldBorder().getDistanceToBorder(this) + this.level.getWorldBorder().getDamageSafeZone();
-@@ -1313,6 +1313,17 @@ public abstract class LivingEntity extends Entity {
+@@ -1313,6 +1313,14 @@ public abstract class LivingEntity extends Entity {
          return this.getHealth() <= 0.0F;
      }
  
 +    // okocraft start - Pufferfish Optimize-suffocation.patch
 +    // Pufferfish start - optimize suffocation
 +    public boolean couldPossiblyBeHurt(float amount) {
-+        if ((float) this.invulnerableTime > (float) this.invulnerableDuration / 2.0F && amount <= this.lastHurt) {
-+            return false;
-+        }
-+        return true;
++        return !(amount <= this.lastHurt && (float) this.invulnerableDuration / 2.0F < (float) this.invulnerableTime);
 +    }
 +    // Pufferfish end
 +    // okocraft end

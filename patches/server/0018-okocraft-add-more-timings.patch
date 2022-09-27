@@ -65,7 +65,7 @@ index fe79c0add4f7cb18d487c5bb9415c40c5b551ea2..99ecf02ccc16606fda84a923f83b73e0
  
      public static Timing getTickList(ServerLevel worldserver, String timingsType) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 0a11da6f6242dd016e6016d9f760d01bd43b4bcf..63b220fd73982ac8de1d4e48ee5f5c3deb579c0d 100644
+index add2c45d6182d692a782868b12339f82580c4d2a..5a7e61f08edfccd42eed58a22a29df0b43ef9790 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -816,9 +816,11 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
@@ -81,10 +81,10 @@ index 0a11da6f6242dd016e6016d9f760d01bd43b4bcf..63b220fd73982ac8de1d4e48ee5f5c3d
              this.clearFire();
          } else if (this.remainingFireTicks > 0) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 7c7a61240b9f80a6643cbee17ed9ab8c2e8b9d8a..6ca7cdd1c53900a6515fc6a16199c3e2af75badf 100644
+index 490a896dd367e283a780a189777bcbddbdd557ed..7bb72d02bdb9d9563662041ce7adef5a8bbf198e 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -2994,9 +2994,11 @@ public abstract class LivingEntity extends Entity {
+@@ -2991,9 +2991,11 @@ public abstract class LivingEntity extends Entity {
              }
          }
  
@@ -96,7 +96,7 @@ index 7c7a61240b9f80a6643cbee17ed9ab8c2e8b9d8a..6ca7cdd1c53900a6515fc6a16199c3e2
  
          double d0 = this.getX() - this.xo;
          double d1 = this.getZ() - this.zo;
-@@ -3326,6 +3328,7 @@ public abstract class LivingEntity extends Entity {
+@@ -3323,6 +3325,7 @@ public abstract class LivingEntity extends Entity {
          }
  
          this.setDeltaMovement(d4, d5, d6);
@@ -104,7 +104,7 @@ index 7c7a61240b9f80a6643cbee17ed9ab8c2e8b9d8a..6ca7cdd1c53900a6515fc6a16199c3e2
          this.level.getProfiler().push("ai");
          if (this.isImmobile()) {
              this.jumping = false;
-@@ -3336,6 +3339,7 @@ public abstract class LivingEntity extends Entity {
+@@ -3333,6 +3336,7 @@ public abstract class LivingEntity extends Entity {
              this.serverAiStep();
              this.level.getProfiler().pop();
          }
@@ -112,7 +112,7 @@ index 7c7a61240b9f80a6643cbee17ed9ab8c2e8b9d8a..6ca7cdd1c53900a6515fc6a16199c3e2
  
          this.level.getProfiler().pop();
          this.level.getProfiler().push("jump");
-@@ -3367,14 +3371,17 @@ public abstract class LivingEntity extends Entity {
+@@ -3364,14 +3368,17 @@ public abstract class LivingEntity extends Entity {
  
          this.level.getProfiler().pop();
          this.level.getProfiler().push("travel");
@@ -131,7 +131,7 @@ index 7c7a61240b9f80a6643cbee17ed9ab8c2e8b9d8a..6ca7cdd1c53900a6515fc6a16199c3e2
          this.level.getProfiler().pop();
          this.level.getProfiler().push("freezing");
          boolean flag1 = this.getType().is(EntityTypeTags.FREEZE_HURTS_EXTRA_TYPES);
-@@ -3397,6 +3404,7 @@ public abstract class LivingEntity extends Entity {
+@@ -3394,6 +3401,7 @@ public abstract class LivingEntity extends Entity {
          }
  
          this.level.getProfiler().pop();
@@ -139,7 +139,7 @@ index 7c7a61240b9f80a6643cbee17ed9ab8c2e8b9d8a..6ca7cdd1c53900a6515fc6a16199c3e2
          this.level.getProfiler().push("push");
          if (this.autoSpinAttackTicks > 0) {
              --this.autoSpinAttackTicks;
-@@ -3405,6 +3413,7 @@ public abstract class LivingEntity extends Entity {
+@@ -3402,6 +3410,7 @@ public abstract class LivingEntity extends Entity {
  
          this.pushEntities();
          this.level.getProfiler().pop();

@@ -5,18 +5,19 @@ Subject: [PATCH] pufferfish Remove streams from getting nearby players
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index f925a8d550ecbf2044a37bfe58b30d6578c5f6af..f2c540b480ee81c9f607c144150e9827e93e47e9 100644
+index 008bd65d838819431a0823c6ac5925774bd155a1..add2c45d6182d692a782868b12339f82580c4d2a 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -430,6 +430,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
- 
+@@ -480,7 +480,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+     public boolean updatingSectionStatus = false;
+     // Paper end
      // Paper start - optimise entity tracking
-     final org.spigotmc.TrackingRange.TrackingRangeType trackingRangeType = org.spigotmc.TrackingRange.getTrackingRangeType(this);
-+    public org.spigotmc.TrackingRange.TrackingRangeType getTrackingRangeType() { return trackingRangeType; } // okocraft - getter
+-    final org.spigotmc.TrackingRange.TrackingRangeType trackingRangeType = org.spigotmc.TrackingRange.getTrackingRangeType(this);
++    public final org.spigotmc.TrackingRange.TrackingRangeType trackingRangeType = org.spigotmc.TrackingRange.getTrackingRangeType(this); // okocraft - public
  
      public boolean isLegacyTrackingEntity = false;
  
-@@ -443,11 +444,14 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -494,11 +494,14 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
              return ((ServerLevel)this.level).getChunkSource().chunkMap.playerEntityTrackerTrackMaps[this.trackingRangeType.ordinal()]
                  .getObjectsInRange(MCUtil.getCoordinateKey(this));
          }
@@ -32,7 +33,7 @@ index f925a8d550ecbf2044a37bfe58b30d6578c5f6af..f2c540b480ee81c9f607c144150e9827
          for (Entity passenger : passengers) {
              org.spigotmc.TrackingRange.TrackingRangeType passengerType = passenger.trackingRangeType;
              int passengerRange = chunkMap.getEntityTrackerRange(passengerType.ordinal());
-@@ -456,6 +460,10 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -507,6 +510,10 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
                  range = passengerRange;
              }
          }
@@ -45,7 +46,7 @@ index f925a8d550ecbf2044a37bfe58b30d6578c5f6af..f2c540b480ee81c9f607c144150e9827
      }
 diff --git a/src/main/java/net/okocraft/forkedpaper/pufferfish/EntityMethods.java b/src/main/java/net/okocraft/forkedpaper/pufferfish/EntityMethods.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..a189292cbb6e1cec23df380d47f8055ea81a1c9d
+index 0000000000000000000000000000000000000000..5b419bb724d5f06c3a6396b108a6f1e38c160bd0
 --- /dev/null
 +++ b/src/main/java/net/okocraft/forkedpaper/pufferfish/EntityMethods.java
 @@ -0,0 +1,28 @@
@@ -64,7 +65,7 @@ index 0000000000000000000000000000000000000000..a189292cbb6e1cec23df380d47f8055e
 +        List<Entity> passengers = entity.getPassengers();
 +        for (int i = 0, size = passengers.size(); i < size; i++) {
 +            Entity passenger = passengers.get(i);
-+            TrackingRange.TrackingRangeType passengerType = passenger.getTrackingRangeType(); // okocraft - use getter
++            TrackingRange.TrackingRangeType passengerType = passenger.trackingRangeType; // okocraft - use getter
 +            int passengerRange = chunkMap.getEntityTrackerRange(passengerType.ordinal());
 +            if (passengerRange > range) {
 +                type = passengerType;

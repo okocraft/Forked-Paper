@@ -3,12 +3,21 @@ From: Siroshun09 <siro.shun8@gmail.com>
 Date: Sat, 3 Sep 2022 00:58:38 +0900
 Subject: [PATCH] pufferfish optimize random calls in chunk ticking
 
+copy from Optimize-random-calls-in-chunk-ticking.patch:
+
+Especially at over 30,000 chunks these random calls are fairly heavy. We use a different method here for checking lightning, and for checking ice.
+
+Lightning: Each chunk now keeps an int of how many ticks until the lightning should strike. This int is a random number from 0 to 100000 * 2, the multiplication is required to keep the probability the same.
+
+Ice and snow: We just generate a single random number 0-16 and increment it, while checking if it's 0 for the current chunk.
+
+Depending on configuration for things that tick in a chunk, this is a 5-10% improvement.
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
-index efcb80efc69a1e5ffc81b579bf535fd94e8144d7..f9f6f28299a4cb6055b925dea92771deb03b0771 100644
+index 6d1f929eb717f62f0d7ebb9e9b52c3788061e240..9e3c40a8b8ce1316c939dd4407e5772fe5fb5fad 100644
 --- a/src/main/java/net/minecraft/server/level/ServerChunkCache.java
 +++ b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
-@@ -785,6 +785,7 @@ public class ServerChunkCache extends ChunkSource {
+@@ -702,6 +702,7 @@ public class ServerChunkCache extends ChunkSource {
              ProfilerFiller gameprofilerfiller = this.level.getProfiler();
  
              gameprofilerfiller.push("pollingChunks");
@@ -17,10 +26,10 @@ index efcb80efc69a1e5ffc81b579bf535fd94e8144d7..f9f6f28299a4cb6055b925dea92771de
              boolean flag1 = level.ticksPerSpawnCategory.getLong(org.bukkit.entity.SpawnCategory.ANIMAL) != 0L && worlddata.getGameTime() % level.ticksPerSpawnCategory.getLong(org.bukkit.entity.SpawnCategory.ANIMAL) == 0L; // CraftBukkit
  
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 2d92f303e2d3009c527cb6c358dcbdae009b3ff6..2b57b6a78bdcad38da6c937448f2384a732773d6 100644
+index a5c446a656a7ae22ef74d184f11ae6067d0d09d8..f9adf35ae53eeea7c6da553f44dd9b82dfdf55a2 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -764,6 +764,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -794,6 +794,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
      private final BlockPos.MutableBlockPos chunkTickMutablePosition = new BlockPos.MutableBlockPos();
      // private final io.papermc.paper.util.math.ThreadUnsafeRandom randomTickRandom = new io.papermc.paper.util.math.ThreadUnsafeRandom(this.random.nextLong()); // Pufferfish - move to super // okocraft - Pufferfish Move-ThreadUnsafeRandom-Initialization.patch
      // Paper end
@@ -28,7 +37,7 @@ index 2d92f303e2d3009c527cb6c358dcbdae009b3ff6..2b57b6a78bdcad38da6c937448f2384a
  
      public void tickChunk(LevelChunk chunk, int randomTickSpeed) {
          ChunkPos chunkcoordintpair = chunk.getPos();
-@@ -775,7 +776,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -805,7 +806,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
          gameprofilerfiller.push("thunder");
          final BlockPos.MutableBlockPos blockposition = this.chunkTickMutablePosition; // Paper - use mutable to reduce allocation rate, final to force compile fail on change
  
@@ -37,7 +46,7 @@ index 2d92f303e2d3009c527cb6c358dcbdae009b3ff6..2b57b6a78bdcad38da6c937448f2384a
              blockposition.set(this.findLightningTargetAround(this.getBlockRandomPos(j, 0, k, 15))); // Paper
              if (this.isRainingAt(blockposition)) {
                  DifficultyInstance difficultydamagescaler = this.getCurrentDifficultyAt(blockposition);
-@@ -799,7 +800,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -829,7 +830,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
          }
  
          gameprofilerfiller.popPush("iceandsnow");
@@ -47,13 +56,13 @@ index 2d92f303e2d3009c527cb6c358dcbdae009b3ff6..2b57b6a78bdcad38da6c937448f2384a
              this.getRandomBlockPosition(j, 0, k, 15, blockposition);
              int normalY = chunk.getHeight(Heightmap.Types.MOTION_BLOCKING, blockposition.getX() & 15, blockposition.getZ() & 15) + 1;
 diff --git a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
-index 2292cb0e0c1a3e0ed34b941f028136bfb0bff13e..e894f6b8cf2a0ea3f814e2385b2bf9c017425b80 100644
+index 05499ae9fc331471db6e763a2adb46b5da8522d3..f791e1bc06b99f067567be2ffb8b85ad44bef907 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
-@@ -94,6 +94,20 @@ public class LevelChunk extends ChunkAccess {
-     }
-     // Paper end
- 
+@@ -87,6 +87,19 @@ public class LevelChunk extends ChunkAccess {
+     private final Int2ObjectMap<GameEventDispatcher> gameEventDispatcherSections;
+     private final LevelChunkTicks<Block> blockTicks;
+     private final LevelChunkTicks<Fluid> fluidTicks;
 +    // okocraft start - Pufferfish Optimize-random-calls-in-chunk-ticking.patch
 +    // Pufferfish start - instead of using a random every time the chunk is ticked, define when lightning strikes preemptively
 +    private int lightningTick;
@@ -67,15 +76,14 @@ index 2292cb0e0c1a3e0ed34b941f028136bfb0bff13e..e894f6b8cf2a0ea3f814e2385b2bf9c0
 +    }
 +    // Pufferfish end
 +    // okocraft end
-+
+ 
      public LevelChunk(Level world, ChunkPos pos) {
          this(world, pos, UpgradeData.EMPTY, new LevelChunkTicks<>(), new LevelChunkTicks<>(), 0L, (LevelChunkSection[]) null, (LevelChunk.PostLoadProcessor) null, (BlendingData) null);
-     }
-@@ -124,6 +138,7 @@ public class LevelChunk extends ChunkAccess {
+@@ -116,6 +129,7 @@ public class LevelChunk extends ChunkAccess {
+         this.postLoad = entityLoader;
+         this.blockTicks = blockTickScheduler;
          this.fluidTicks = fluidTickScheduler;
++        this.lightningTick = this.level.getThreadUnsafeRandom().nextInt(100000) << 1; // Pufferfish - initialize lightning tick // okocraft - Pufferfish Optimize-random-calls-in-chunk-ticking.patch
          // CraftBukkit start
          this.bukkitChunk = new org.bukkit.craftbukkit.CraftChunk(this);
-+        this.lightningTick = this.level.getThreadUnsafeRandom().nextInt(100000) << 1; // Pufferfish - initialize lightning tick // okocraft - Pufferfish Optimize-random-calls-in-chunk-ticking.patch
      }
- 
-     public org.bukkit.Chunk bukkitChunk;

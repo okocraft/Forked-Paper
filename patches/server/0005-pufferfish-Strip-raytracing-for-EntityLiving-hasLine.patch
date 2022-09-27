@@ -3,12 +3,20 @@ From: Siroshun09 <siro.shun8@gmail.com>
 Date: Sat, 3 Sep 2022 00:31:00 +0900
 Subject: [PATCH] pufferfish Strip raytracing for EntityLiving hasLineOfSight
 
+copy from Strip-raytracing-for-EntityLiving-hasLineOfSight.patch
+
+The IBlockAccess#rayTrace method is very wasteful in both allocations,
+and in logic. While EntityLiving#hasLineOfSight provides static
+parameters for collisions with blocks and fluids, the method still does
+a lot of dynamic checks for both of these, which result in extra work.
+As well, since the fluid collision option is set to NONE, the entire
+fluid collision system is completely unneeded, yet used anyways.
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 0cccd2a6f4a6459fc148e3101406b4173bd22d83..7ec79ee758167327c0e1b0453ca6c43b75c82206 100644
+index 41db1f1456a72122daaf2d04a82968cf37207cf1..e70bb400bb38d51f32adeac64746a25d6c6b6924 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -3594,7 +3594,12 @@ public abstract class LivingEntity extends Entity {
+@@ -3591,7 +3591,12 @@ public abstract class LivingEntity extends Entity {
              Vec3 vec3d1 = new Vec3(entity.getX(), entity.getEyeY(), entity.getZ());
  
              // Paper - diff on change - used in CraftLivingEntity#hasLineOfSight(Location) and CraftWorld#lineOfSightExists
@@ -24,15 +32,14 @@ index 0cccd2a6f4a6459fc148e3101406b4173bd22d83..7ec79ee758167327c0e1b0453ca6c43b
  
 diff --git a/src/main/java/net/okocraft/forkedpaper/pufferfish/RayTraceUtils.java b/src/main/java/net/okocraft/forkedpaper/pufferfish/RayTraceUtils.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..7fa0a6349905f809dab04d8d8d63fa5855d6e383
+index 0000000000000000000000000000000000000000..95f48098f1e66c1e0e2cbc0fd2c4d5e0c55f6eda
 --- /dev/null
 +++ b/src/main/java/net/okocraft/forkedpaper/pufferfish/RayTraceUtils.java
-@@ -0,0 +1,108 @@
+@@ -0,0 +1,107 @@
 +package net.okocraft.forkedpaper.pufferfish;
 +
 +import net.minecraft.core.BlockPos;
 +import net.minecraft.util.Mth;
-+import net.minecraft.world.level.BlockGetter;
 +import net.minecraft.world.level.ClipContext;
 +import net.minecraft.world.level.Level;
 +import net.minecraft.world.level.block.state.BlockState;
@@ -70,7 +77,7 @@ index 0000000000000000000000000000000000000000..7fa0a6349905f809dab04d8d8d63fa58
 +            return BlockHitResult.Type.MISS;
 +        }
 +
-+        net.minecraft.world.phys.BlockHitResult.Type initialCheck = rayTraceBlockDirect(level, vec3d, vec3d1, currentBlock, chunk.getBlockState(currentBlock), voxelshapecoll); // okocraft - add level argument
++        BlockHitResult.Type initialCheck = rayTraceBlockDirect(level, vec3d, vec3d1, currentBlock, chunk.getBlockState(currentBlock), voxelshapecoll); // okocraft - add level argument
 +
 +        if (initialCheck != null) {
 +            return initialCheck;
@@ -119,7 +126,7 @@ index 0000000000000000000000000000000000000000..7fa0a6349905f809dab04d8d8d63fa58
 +            if (chunk.getPos().x != currentBlock.getX() >> 4 || chunk.getPos().z != currentBlock.getZ() >> 4) {
 +                chunk = level.getChunkIfLoaded(currentBlock);
 +                if (chunk == null) {
-+                    return net.minecraft.world.phys.BlockHitResult.Type.MISS;
++                    return BlockHitResult.Type.MISS;
 +                }
 +            }
 +            result = rayTraceBlockDirect(level, vec3d, vec3d1, currentBlock, chunk.getBlockState(currentBlock), voxelshapecoll);

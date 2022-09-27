@@ -6,10 +6,10 @@ Subject: [PATCH] pufferfish Move ThreadUnsafeRandom Initialization and add
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 96bb0e56f12437037b598cd7baabf369e5994517..2d92f303e2d3009c527cb6c358dcbdae009b3ff6 100644
+index b396e9b35f315db37ba070ad4baeec1f098d0cb8..a5c446a656a7ae22ef74d184f11ae6067d0d09d8 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -762,7 +762,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -792,7 +792,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
      }
      // Paper start - optimise random block ticking
      private final BlockPos.MutableBlockPos chunkTickMutablePosition = new BlockPos.MutableBlockPos();
@@ -19,7 +19,7 @@ index 96bb0e56f12437037b598cd7baabf369e5994517..2d92f303e2d3009c527cb6c358dcbdae
  
      public void tickChunk(LevelChunk chunk, int randomTickSpeed) {
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 5a2a1d394852d39ea576624586f7fa736dec807c..3a76aa10be1117fc8c904643ab13af482904f6ff 100644
+index d89471935b2b5888cb5d1f6829ae479003451fda..f18667ea48c1f8c0ed20a7c7423a04cbf652b71c 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -271,6 +271,9 @@ public abstract class Level implements LevelAccessor, AutoCloseable {

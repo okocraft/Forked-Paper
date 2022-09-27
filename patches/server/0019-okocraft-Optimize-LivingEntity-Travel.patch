@@ -5,10 +5,10 @@ Subject: [PATCH] okocraft Optimize LivingEntity Travel
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index c6ad62e3e99fedecf611b82ff3b60c162d2ed5cc..497d7c8ac5024abdc8adb1c269ce6ac565e1f88e 100644
+index 7bb72d02bdb9d9563662041ce7adef5a8bbf198e..c361522504453767a7539e37a6ab5e461922f2a0 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -2717,6 +2717,7 @@ public abstract class LivingEntity extends Entity {
+@@ -2714,6 +2714,7 @@ public abstract class LivingEntity extends Entity {
          return false;
      }
  
@@ -16,7 +16,7 @@ index c6ad62e3e99fedecf611b82ff3b60c162d2ed5cc..497d7c8ac5024abdc8adb1c269ce6ac5
      public void travel(Vec3 movementInput) {
          if (this.isEffectiveAi() || this.isControlledByLocalInstance()) {
              double d0 = 0.08D;
-@@ -2727,11 +2728,11 @@ public abstract class LivingEntity extends Entity {
+@@ -2724,11 +2725,11 @@ public abstract class LivingEntity extends Entity {
                  this.resetFallDistance();
              }
  
@@ -30,7 +30,7 @@ index c6ad62e3e99fedecf611b82ff3b60c162d2ed5cc..497d7c8ac5024abdc8adb1c269ce6ac5
                  d1 = this.getY();
                  f = this.isSprinting() ? 0.9F : this.getWaterSlowDown();
                  float f1 = 0.02F;
-@@ -2758,7 +2759,7 @@ public abstract class LivingEntity extends Entity {
+@@ -2755,7 +2756,7 @@ public abstract class LivingEntity extends Entity {
                  this.move(MoverType.SELF, this.getDeltaMovement());
                  Vec3 vec3d1 = this.getDeltaMovement();
  
@@ -39,7 +39,7 @@ index c6ad62e3e99fedecf611b82ff3b60c162d2ed5cc..497d7c8ac5024abdc8adb1c269ce6ac5
                      vec3d1 = new Vec3(vec3d1.x, 0.2D, vec3d1.z);
                  }
  
-@@ -2769,7 +2770,7 @@ public abstract class LivingEntity extends Entity {
+@@ -2766,7 +2767,7 @@ public abstract class LivingEntity extends Entity {
                  if (this.horizontalCollision && this.isFree(vec3d2.x, vec3d2.y + 0.6000000238418579D - this.getY() + d1, vec3d2.z)) {
                      this.setDeltaMovement(vec3d2.x, 0.30000001192092896D, vec3d2.z);
                  }

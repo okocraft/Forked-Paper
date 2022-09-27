@@ -1,12 +1,11 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Siroshun09 <siro.shun8@gmail.com>
-Date: Tue, 20 Sep 2022 23:17:51 +0900
+Date: Tue, 27 Sep 2022 16:40:08 +0900
 Subject: [PATCH] okocraft Revert "Detail more information in watchdog dumps"
 
-This reverts commit d05c84d1
 
 diff --git a/src/main/java/net/minecraft/network/Connection.java b/src/main/java/net/minecraft/network/Connection.java
-index 2a26d03fba2f3b37f176be9e47954ef9a6cd7b3e..d7a03bf78cf849cfe27c7fa8f9affd6e60eb1a1b 100644
+index 6967c90c50ea75fb9dd5da808b2c8c8ea046ecec..6540f6f08e3f40dbb9c57cd1f2a1d947b0913634 100644
 --- a/src/main/java/net/minecraft/network/Connection.java
 +++ b/src/main/java/net/minecraft/network/Connection.java
 @@ -571,15 +571,9 @@ public class Connection extends SimpleChannelInboundHandler<Packet<?>> {
@@ -77,10 +76,10 @@ index 8bc0cb9ad5bb4e76d962ff54305e2c08e279a17b..b00357965fd03322facf9723546e27c1
              });
              throw RunningOnDifferentThreadException.RUNNING_ON_DIFFERENT_THREAD;
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 2b57b6a78bdcad38da6c937448f2384a732773d6..2487539e955b847b0aa5d76d2b12aac0790ee3b9 100644
+index f9adf35ae53eeea7c6da553f44dd9b82dfdf55a2..433084ab76ee0ab8ed5f3699a1981b0b56e2bc07 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -1112,27 +1112,10 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1142,26 +1142,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
  
      }
  
@@ -97,9 +96,8 @@ index 2b57b6a78bdcad38da6c937448f2384a732773d6..2487539e955b847b0aa5d76d2b12aac0
 -    // Paper end - log detailed entity tick information
 -
      public void tickNonPassenger(Entity entity) {
-         // Paper start - log detailed entity tick information
-         io.papermc.paper.util.TickThread.ensureTickThread("Cannot tick an entity off-main");
-         if (!entity.isRemoved()) this.entityManager.updateNavigatorsInRegion(entity); // Paper - optimise notify
+-        // Paper start - log detailed entity tick information
+-        io.papermc.paper.util.TickThread.ensureTickThread("Cannot tick an entity off-main");
 -        try {
 -            if (currentlyTickingEntity.get() == null) {
 -                currentlyTickingEntity.lazySet(entity);
@@ -108,7 +106,7 @@ index 2b57b6a78bdcad38da6c937448f2384a732773d6..2487539e955b847b0aa5d76d2b12aac0
          ++TimingHistory.entityTicks; // Paper - timings
          // Spigot start
          co.aikar.timings.Timing timer; // Paper
-@@ -1172,13 +1155,6 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1201,13 +1182,6 @@ public class ServerLevel extends Level implements WorldGenLevel {
              this.tickPassenger(entity, entity1);
          }
          // } finally { timer.stopTiming(); } // Paper - timings - move up
@@ -123,7 +121,7 @@ index 2b57b6a78bdcad38da6c937448f2384a732773d6..2487539e955b847b0aa5d76d2b12aac0
  
      private void tickPassenger(Entity vehicle, Entity passenger) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 63b220fd73982ac8de1d4e48ee5f5c3deb579c0d..e05165a99d872e2f8d4f96c855f1471fa8433920 100644
+index 5a7e61f08edfccd42eed58a22a29df0b43ef9790..d53c3f6eaed8f235799468aaf2f350634fb1dc3c 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -983,42 +983,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
@@ -183,7 +181,7 @@ index 63b220fd73982ac8de1d4e48ee5f5c3deb579c0d..e05165a99d872e2f8d4f96c855f1471f
      }
  
      protected boolean isHorizontalCollisionMinor(Vec3 adjustedMovement) {
-@@ -4153,9 +4111,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -4163,9 +4121,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
      }
  
      public void setDeltaMovement(Vec3 velocity) {
@@ -193,7 +191,7 @@ index 63b220fd73982ac8de1d4e48ee5f5c3deb579c0d..e05165a99d872e2f8d4f96c855f1471f
      }
  
      public void setDeltaMovement(double x, double y, double z) {
-@@ -4253,9 +4209,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -4269,9 +4225,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
          }
          // Paper end - fix MC-4
          if (this.position.x != x || this.position.y != y || this.position.z != z) {
@@ -204,10 +202,10 @@ index 63b220fd73982ac8de1d4e48ee5f5c3deb579c0d..e05165a99d872e2f8d4f96c855f1471f
              int j = Mth.floor(y);
              int k = Mth.floor(z);
 diff --git a/src/main/java/org/spigotmc/WatchdogThread.java b/src/main/java/org/spigotmc/WatchdogThread.java
-index d568fc92d03c313a782796cc720a1ebb1a5ad8be..7823e97add506d42161fd86f830e4d988b2113d8 100644
+index e9fa7faaa4451e36b3908cbcbbe0baf213abde96..e0a71bfc1498a517456b21747ab6ef3f1067a3f3 100644
 --- a/src/main/java/org/spigotmc/WatchdogThread.java
 +++ b/src/main/java/org/spigotmc/WatchdogThread.java
-@@ -22,78 +22,6 @@ public class WatchdogThread extends Thread
+@@ -22,78 +22,6 @@ public final class WatchdogThread extends io.papermc.paper.util.TickThread // Pa
      private volatile long lastTick;
      private volatile boolean stopping;
  
@@ -286,11 +284,11 @@ index d568fc92d03c313a782796cc720a1ebb1a5ad8be..7823e97add506d42161fd86f830e4d98
      private WatchdogThread(long timeoutTime, boolean restart)
      {
          super( "Paper Watchdog Thread" );
-@@ -192,7 +120,6 @@ public class WatchdogThread extends Thread
+@@ -192,7 +120,6 @@ public final class WatchdogThread extends io.papermc.paper.util.TickThread // Pa
                  log.log( Level.SEVERE, "------------------------------" );
                  log.log( Level.SEVERE, "Server thread dump (Look for plugins here before reporting to Paper!):" ); // Paper
-                 com.destroystokyo.paper.io.chunk.ChunkTaskManager.dumpAllChunkLoadInfo(); // Paper
+                 io.papermc.paper.chunk.system.scheduling.ChunkTaskScheduler.dumpAllChunkLoadInfo(isLongTimeout); // Paper // Paper - rewrite chunk system
 -                this.dumpTickingInfo(); // Paper - log detailed tick information
-                 WatchdogThread.dumpThread( ManagementFactory.getThreadMXBean().getThreadInfo( server.serverThread.getId(), Integer.MAX_VALUE ), log );
+                 WatchdogThread.dumpThread( ManagementFactory.getThreadMXBean().getThreadInfo( MinecraftServer.getServer().serverThread.getId(), Integer.MAX_VALUE ), log );
                  log.log( Level.SEVERE, "------------------------------" );
                  //

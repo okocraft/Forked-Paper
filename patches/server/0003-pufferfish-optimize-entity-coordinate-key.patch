@@ -5,10 +5,10 @@ Subject: [PATCH] pufferfish optimize entity coordinate key
 
 
 diff --git a/src/main/java/net/minecraft/server/MCUtil.java b/src/main/java/net/minecraft/server/MCUtil.java
-index 6939ef9b1fe782980e77c351d8a385a573d6a8e6..a93b578fb24a12f029e24b9b1b7905ea2fd52a4c 100644
+index 99f56658c70f99592fb40c9df0ce3e47053d1bd5..bddfea2fb3b4c221f118c27fd9b2c81b8ab68bf4 100644
 --- a/src/main/java/net/minecraft/server/MCUtil.java
 +++ b/src/main/java/net/minecraft/server/MCUtil.java
-@@ -207,7 +207,9 @@ public final class MCUtil {
+@@ -208,7 +208,9 @@ public final class MCUtil {
      }
  
      public static long getCoordinateKey(final Entity entity) {
