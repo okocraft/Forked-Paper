@@ -13,10 +13,10 @@ As well, since the fluid collision option is set to NONE, the entire
 fluid collision system is completely unneeded, yet used anyways.
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 41db1f1456a72122daaf2d04a82968cf37207cf1..e70bb400bb38d51f32adeac64746a25d6c6b6924 100644
+index 7b61d47b498a7e420c7583ccb99cc36fbedf2b23..c061e69c65dc35e18aafb5c1f07f0e8981cc0519 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -3591,7 +3591,12 @@ public abstract class LivingEntity extends Entity {
+@@ -3594,7 +3594,12 @@ public abstract class LivingEntity extends Entity {
              Vec3 vec3d1 = new Vec3(entity.getX(), entity.getEyeY(), entity.getZ());
  
              // Paper - diff on change - used in CraftLivingEntity#hasLineOfSight(Location) and CraftWorld#lineOfSightExists

@@ -5,10 +5,10 @@ Subject: [PATCH] pufferfish Use thread unsafe random for mob spawning
 
 
 diff --git a/src/main/java/net/minecraft/world/level/NaturalSpawner.java b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
-index e31a2eea9a62ab2c0bed1a97dab6bae231b8cd8b..a999ed307074b967867bc1a513343c791b479185 100644
+index df83b6f0e217eec4c9e9707be0030c129fdeb545..2f6f6d51f2a6874b5f6a7a19b2a4040b45a4aecb 100644
 --- a/src/main/java/net/minecraft/world/level/NaturalSpawner.java
 +++ b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
-@@ -416,10 +416,12 @@ public final class NaturalSpawner {
+@@ -417,10 +417,12 @@ public final class NaturalSpawner {
  
      private static BlockPos getRandomPosWithin(Level world, LevelChunk chunk) {
          ChunkPos chunkcoordintpair = chunk.getPos();

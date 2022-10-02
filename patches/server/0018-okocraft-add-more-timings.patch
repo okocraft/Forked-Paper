@@ -81,10 +81,10 @@ index add2c45d6182d692a782868b12339f82580c4d2a..5a7e61f08edfccd42eed58a22a29df0b
              this.clearFire();
          } else if (this.remainingFireTicks > 0) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 490a896dd367e283a780a189777bcbddbdd557ed..7bb72d02bdb9d9563662041ce7adef5a8bbf198e 100644
+index bf10cb44200b9b09f23e7ecec31eb36196401fa7..32be847c5338db81fefd273e4a1b07c531f7ca8f 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -2991,9 +2991,11 @@ public abstract class LivingEntity extends Entity {
+@@ -2994,9 +2994,11 @@ public abstract class LivingEntity extends Entity {
              }
          }
  
@@ -96,7 +96,7 @@ index 490a896dd367e283a780a189777bcbddbdd557ed..7bb72d02bdb9d9563662041ce7adef5a
  
          double d0 = this.getX() - this.xo;
          double d1 = this.getZ() - this.zo;
-@@ -3323,6 +3325,7 @@ public abstract class LivingEntity extends Entity {
+@@ -3326,6 +3328,7 @@ public abstract class LivingEntity extends Entity {
          }
  
          this.setDeltaMovement(d4, d5, d6);
@@ -104,7 +104,7 @@ index 490a896dd367e283a780a189777bcbddbdd557ed..7bb72d02bdb9d9563662041ce7adef5a
          this.level.getProfiler().push("ai");
          if (this.isImmobile()) {
              this.jumping = false;
-@@ -3333,6 +3336,7 @@ public abstract class LivingEntity extends Entity {
+@@ -3336,6 +3339,7 @@ public abstract class LivingEntity extends Entity {
              this.serverAiStep();
              this.level.getProfiler().pop();
          }
@@ -112,7 +112,7 @@ index 490a896dd367e283a780a189777bcbddbdd557ed..7bb72d02bdb9d9563662041ce7adef5a
  
          this.level.getProfiler().pop();
          this.level.getProfiler().push("jump");
-@@ -3364,14 +3368,17 @@ public abstract class LivingEntity extends Entity {
+@@ -3367,14 +3371,17 @@ public abstract class LivingEntity extends Entity {
  
          this.level.getProfiler().pop();
          this.level.getProfiler().push("travel");
@@ -131,7 +131,7 @@ index 490a896dd367e283a780a189777bcbddbdd557ed..7bb72d02bdb9d9563662041ce7adef5a
          this.level.getProfiler().pop();
          this.level.getProfiler().push("freezing");
          boolean flag1 = this.getType().is(EntityTypeTags.FREEZE_HURTS_EXTRA_TYPES);
-@@ -3394,6 +3401,7 @@ public abstract class LivingEntity extends Entity {
+@@ -3397,6 +3404,7 @@ public abstract class LivingEntity extends Entity {
          }
  
          this.level.getProfiler().pop();
@@ -139,7 +139,7 @@ index 490a896dd367e283a780a189777bcbddbdd557ed..7bb72d02bdb9d9563662041ce7adef5a
          this.level.getProfiler().push("push");
          if (this.autoSpinAttackTicks > 0) {
              --this.autoSpinAttackTicks;
-@@ -3402,6 +3410,7 @@ public abstract class LivingEntity extends Entity {
+@@ -3405,6 +3413,7 @@ public abstract class LivingEntity extends Entity {
  
          this.pushEntities();
          this.level.getProfiler().pop();
@@ -148,7 +148,7 @@ index 490a896dd367e283a780a189777bcbddbdd557ed..7bb72d02bdb9d9563662041ce7adef5a
          if (((ServerLevel) this.level).hasEntityMoveEvent && !(this instanceof net.minecraft.world.entity.player.Player)) {
              if (this.xo != getX() || this.yo != this.getY() || this.zo != this.getZ() || this.yRotO != this.getYRot() || this.xRotO != this.getXRot()) {
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index 557e90e54439ce0430075403392b5052d5181feb..378d230a4bfff4a136b1600dbc004b9c00d4210b 100644
+index fffa6ba329b38433a1df51df339df652d3fda828..c09e76270ba576badbfabad863b1f6f835b92e49 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
 @@ -854,39 +854,59 @@ public abstract class Mob extends LivingEntity {
