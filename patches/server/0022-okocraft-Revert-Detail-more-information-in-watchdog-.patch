@@ -121,10 +121,10 @@ index f9adf35ae53eeea7c6da553f44dd9b82dfdf55a2..433084ab76ee0ab8ed5f3699a1981b0b
  
      private void tickPassenger(Entity vehicle, Entity passenger) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 5a7e61f08edfccd42eed58a22a29df0b43ef9790..d53c3f6eaed8f235799468aaf2f350634fb1dc3c 100644
+index f1db9b25c10591014afb4ed44a8c8928a1fce3f2..f7ea90d0fdb06c6395b30ec6b50be3fcba8d24c8 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -983,42 +983,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -987,42 +987,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
          return this.onGround;
      }
  
@@ -167,7 +167,7 @@ index 5a7e61f08edfccd42eed58a22a29df0b43ef9790..d53c3f6eaed8f235799468aaf2f35063
          if (this.noPhysics) {
              this.setPos(this.getX() + movement.x, this.getY() + movement.y, this.getZ() + movement.z);
          } else {
-@@ -1226,13 +1191,6 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -1230,13 +1195,6 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
                  this.level.getProfiler().pop();
              }
          }
@@ -181,7 +181,7 @@ index 5a7e61f08edfccd42eed58a22a29df0b43ef9790..d53c3f6eaed8f235799468aaf2f35063
      }
  
      protected boolean isHorizontalCollisionMinor(Vec3 adjustedMovement) {
-@@ -4163,9 +4121,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -4167,9 +4125,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
      }
  
      public void setDeltaMovement(Vec3 velocity) {
@@ -191,7 +191,7 @@ index 5a7e61f08edfccd42eed58a22a29df0b43ef9790..d53c3f6eaed8f235799468aaf2f35063
      }
  
      public void setDeltaMovement(double x, double y, double z) {
-@@ -4269,9 +4225,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -4273,9 +4229,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
          }
          // Paper end - fix MC-4
          if (this.position.x != x || this.position.y != y || this.position.z != z) {

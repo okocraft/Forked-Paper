@@ -65,10 +65,10 @@ index fe79c0add4f7cb18d487c5bb9415c40c5b551ea2..99ecf02ccc16606fda84a923f83b73e0
  
      public static Timing getTickList(ServerLevel worldserver, String timingsType) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index add2c45d6182d692a782868b12339f82580c4d2a..5a7e61f08edfccd42eed58a22a29df0b43ef9790 100644
+index 96db157e294ef823b25a10fa4db37a2c7cd87bfa..f1db9b25c10591014afb4ed44a8c8928a1fce3f2 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -816,9 +816,11 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -820,9 +820,11 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
  
          this.wasInPowderSnow = this.isInPowderSnow;
          this.isInPowderSnow = false;
@@ -148,10 +148,10 @@ index bf10cb44200b9b09f23e7ecec31eb36196401fa7..32be847c5338db81fefd273e4a1b07c5
          if (((ServerLevel) this.level).hasEntityMoveEvent && !(this instanceof net.minecraft.world.entity.player.Player)) {
              if (this.xo != getX() || this.yo != this.getY() || this.zo != this.getZ() || this.yRotO != this.getYRot() || this.xRotO != this.getXRot()) {
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index fffa6ba329b38433a1df51df339df652d3fda828..c09e76270ba576badbfabad863b1f6f835b92e49 100644
+index c89aa33a5c7daca5cd581c5ba4b3e0ba14a18be8..0064760acaf57a814d6dbd1ae7d6d305c61fddb0 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
-@@ -854,39 +854,59 @@ public abstract class Mob extends LivingEntity {
+@@ -854,43 +854,63 @@ public abstract class Mob extends LivingEntity {
          }
          // Paper end
          this.level.getProfiler().push("sensing");
@@ -164,22 +164,26 @@ index fffa6ba329b38433a1df51df339df652d3fda828..c09e76270ba576badbfabad863b1f6f8
          if (i % 2 != 0 && this.tickCount > 1) {
              this.level.getProfiler().push("targetSelector");
 +            this.level.timings.serverAiStepTargetSelector.startTiming();
+             if (this.targetSelector.inactiveTick(this.activatedPriority)) // Pufferfish - use this to alternate ticking
              this.targetSelector.tickRunningGoals(false);
 +            this.level.timings.serverAiStepTargetSelector.stopTiming();
              this.level.getProfiler().pop();
              this.level.getProfiler().push("goalSelector");
 +            this.level.timings.serverAiStepGoalSelector.startTiming();
+             if (this.goalSelector.inactiveTick(this.activatedPriority)) // Pufferfish - use this to alternate ticking
              this.goalSelector.tickRunningGoals(false);
 +            this.level.timings.serverAiStepGoalSelector.stopTiming();
              this.level.getProfiler().pop();
          } else {
              this.level.getProfiler().push("targetSelector");
 +            this.level.timings.serverAiStepTargetSelector.startTiming();
+             if (this.targetSelector.inactiveTick(this.activatedPriority)) // Pufferfish - use this to alternate ticking
              this.targetSelector.tick();
 +            this.level.timings.serverAiStepTargetSelector.stopTiming();
              this.level.getProfiler().pop();
              this.level.getProfiler().push("goalSelector");
 +            this.level.timings.serverAiStepGoalSelector.startTiming();
+             if (this.goalSelector.inactiveTick(this.activatedPriority)) // Pufferfish - use this to alternate ticking
              this.goalSelector.tick();
 +            this.level.timings.serverAiStepGoalSelector.stopTiming();
              this.level.getProfiler().pop();
@@ -230,15 +234,20 @@ index e46a0e5a080344b5433688994e5aa138d57243b6..a2bc6391827a9d2d9957cae4a93e63c8
          if (path != null && path.canReach()) {
              BlockPos blockPos = path.getTarget();
 diff --git a/src/main/java/net/minecraft/world/entity/npc/Villager.java b/src/main/java/net/minecraft/world/entity/npc/Villager.java
-index b64876e1fd3b420fca159cd1557e5c1e438fb012..78d38aa169c45f0e6854edaa8bb3b4234c6289df 100644
+index e41f5efb250f1b4449bfee34a8d055e4a8445b50..ce93e6170e71830659406d2c7018c40074d3940d 100644
 --- a/src/main/java/net/minecraft/world/entity/npc/Villager.java
 +++ b/src/main/java/net/minecraft/world/entity/npc/Villager.java
-@@ -247,7 +247,9 @@ public class Villager extends AbstractVillager implements ReputationEventHandler
+@@ -248,12 +248,14 @@ public class Villager extends AbstractVillager implements ReputationEventHandler
      protected void customServerAiStep() { mobTick(false); }
      protected void mobTick(boolean inactive) {
          this.level.getProfiler().push("villagerBrain");
 +        this.level.timings.villagerBrainTick.startTiming(); // okocraft - add more timings
-         if (!inactive) this.getBrain().tick((ServerLevel) this.level, this); // Paper
+         // Pufferfish start
+         if (!inactive) {
+             if (this.behaviorTick++ % this.activatedPriority == 0) // Pufferfish
+             this.getBrain().tick((ServerLevel) this.level, this); // Paper
+          }
+         // Pufferfish end
 +        this.level.timings.villagerBrainTick.stopTiming(); // okocraft - add more timings
          this.level.getProfiler().pop();
          if (this.assignProfessionWhenSpawned) {

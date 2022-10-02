@@ -5,10 +5,10 @@ Subject: [PATCH] okocraft checks if the raid is disabled by gamerule
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/npc/Villager.java b/src/main/java/net/minecraft/world/entity/npc/Villager.java
-index 10b45ec24a5a0867106d1694312385ad1e267f43..b64876e1fd3b420fca159cd1557e5c1e438fb012 100644
+index 59ebee245669b682a8081da44734f43ba7b70b5c..e41f5efb250f1b4449bfee34a8d055e4a8445b50 100644
 --- a/src/main/java/net/minecraft/world/entity/npc/Villager.java
 +++ b/src/main/java/net/minecraft/world/entity/npc/Villager.java
-@@ -271,7 +271,7 @@ public class Villager extends AbstractVillager implements ReputationEventHandler
+@@ -277,7 +277,7 @@ public class Villager extends AbstractVillager implements ReputationEventHandler
              this.lastTradedPlayer = null;
          }
  

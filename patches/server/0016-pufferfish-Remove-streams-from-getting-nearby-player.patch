@@ -5,10 +5,10 @@ Subject: [PATCH] pufferfish Remove streams from getting nearby players
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 008bd65d838819431a0823c6ac5925774bd155a1..add2c45d6182d692a782868b12339f82580c4d2a 100644
+index 60822a463fc82e0f4fd946c1e93f13c8acc6c722..96db157e294ef823b25a10fa4db37a2c7cd87bfa 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -480,7 +480,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -484,7 +484,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
      public boolean updatingSectionStatus = false;
      // Paper end
      // Paper start - optimise entity tracking
@@ -17,7 +17,7 @@ index 008bd65d838819431a0823c6ac5925774bd155a1..add2c45d6182d692a782868b12339f82
  
      public boolean isLegacyTrackingEntity = false;
  
-@@ -494,11 +494,14 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -498,11 +498,14 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
              return ((ServerLevel)this.level).getChunkSource().chunkMap.playerEntityTrackerTrackMaps[this.trackingRangeType.ordinal()]
                  .getObjectsInRange(MCUtil.getCoordinateKey(this));
          }
@@ -33,7 +33,7 @@ index 008bd65d838819431a0823c6ac5925774bd155a1..add2c45d6182d692a782868b12339f82
          for (Entity passenger : passengers) {
              org.spigotmc.TrackingRange.TrackingRangeType passengerType = passenger.trackingRangeType;
              int passengerRange = chunkMap.getEntityTrackerRange(passengerType.ordinal());
-@@ -507,6 +510,10 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -511,6 +514,10 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
                  range = passengerRange;
              }
          }
