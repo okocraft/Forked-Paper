@@ -1,0 +1,28 @@
+name: Create Update Upstream Issue
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 0 * * *
+
+jobs:
+  create_issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Git Repository
+        uses: actions/checkout@v2
+      - name: Run check-upstream.sh
+        uses: actions/github-script@v6
+        id: check-result
+        with:
+          result-encoding: string
+          script: |
+            const result = await exec.getExecOutput('bash ./scripts/check-upstream.sh');
+            return result.stdout;
+      - name: Create Issue
+        if: ${{ startsWith(steps.check-result.outputs.result, 'Paper Changes:') }}
+        uses: imjohnbo/issue-bot@v3
+        with:
+          title: Updated Upstream (Paper)
+          body: ${{ steps.check-result.outputs.result }}
+          labels: upstream
+          close-previous: true
