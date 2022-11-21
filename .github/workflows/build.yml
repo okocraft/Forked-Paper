@@ -21,12 +21,10 @@ jobs:
       - name: Apply Patches
         uses: gradle/gradle-build-action@v2.3.3
         with:
-          cache-read-only: ${{ github.ref != 'refs/heads/pufferfish' }}
           arguments: applyPatches --stacktrace
       - name: Build
         uses: gradle/gradle-build-action@v2.3.3
         with:
-          cache-read-only: ${{ github.ref != 'refs/heads/pufferfish' }}
           arguments: createReobfPaperclipJar --stacktrace
       - name: Upload
         uses: actions/upload-artifact@v3.1.1
