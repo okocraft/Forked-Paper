@@ -15,6 +15,7 @@ COMMITS=`git log --reverse --pretty=format:"%h %s" $CURRENT_HASH..$LATEST_COMMIT
 echo "Paper Changes:"
 echo "$COMMITS"
 echo ""
+echo "Latest commit hash: $LATEST_COMMIT_HASH"
 echo "See full diff at https://github.com/PaperMC/Paper/compare/$CURRENT_HASH...$LATEST_COMMIT_HASH"
 
 cd ../
