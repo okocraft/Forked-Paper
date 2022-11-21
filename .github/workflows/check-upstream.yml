@@ -9,9 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Git Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.5.0
       - name: Run check-upstream.sh
-        uses: actions/github-script@v6
+        uses: actions/github-script@v6.3.3
         id: check-result
         with:
           result-encoding: string
@@ -20,7 +20,7 @@ jobs:
             return result.stdout;
       - name: Create Issue
         if: ${{ startsWith(steps.check-result.outputs.result, 'Paper Changes:') }}
-        uses: imjohnbo/issue-bot@v3
+        uses: imjohnbo/issue-bot@v3.4.1
         with:
           title: Updated Upstream (Paper)
           body: ${{ steps.check-result.outputs.result }}
