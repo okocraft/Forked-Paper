@@ -20,7 +20,7 @@ jobs:
             return result.stdout;
       - name: Create Issue
         if: ${{ startsWith(steps.check-result.outputs.result, 'Paper Changes:') }}
-        uses: imjohnbo/issue-bot@v3.4.1
+        uses: imjohnbo/issue-bot@v3.4.2
         with:
           title: Updated Upstream (Paper)
           body: ${{ steps.check-result.outputs.result }}
