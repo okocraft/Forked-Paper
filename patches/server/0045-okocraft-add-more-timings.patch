@@ -65,10 +65,10 @@ index fe79c0add4f7cb18d487c5bb9415c40c5b551ea2..bc3121996f3917dd267b6a8a091bb69e
  
      public static Timing getTickList(ServerLevel worldserver, String timingsType) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 84caca55518464ac4fdf7dfe766bcaf00a9da227..08cc23c33427973e8cc0ca90539e8069de7d8a3e 100644
+index 77a96dd66e2c39495f23b4219dfdbb0820233434..b082d6360eedd9a4cbe37441661585c33e9fc2ba 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -3347,6 +3347,7 @@ public abstract class LivingEntity extends Entity {
+@@ -3362,6 +3362,7 @@ public abstract class LivingEntity extends Entity {
              this.serverAiStep();
              this.level.getProfiler().pop();
          }
@@ -91,7 +91,7 @@ index 26fabc96d3c3ac4ea35d094c686975b19c428d7f..e5547428c319339ea27569021590a1eb
          int i = this.level.getServer().getTickCount() + this.getId();
  
 diff --git a/src/main/java/net/minecraft/world/entity/npc/Villager.java b/src/main/java/net/minecraft/world/entity/npc/Villager.java
-index 93077e8c6b5a35adc6febb749d1d08be172402f1..16004f81acce83ee4924fd054916e7a01a5b6c85 100644
+index fa7cede4a0b59efde4949dba4a010aed5cd0a960..d643c27e87a28ac064667d0fbf773ee885ff7bde 100644
 --- a/src/main/java/net/minecraft/world/entity/npc/Villager.java
 +++ b/src/main/java/net/minecraft/world/entity/npc/Villager.java
 @@ -250,12 +250,14 @@ public class Villager extends AbstractVillager implements ReputationEventHandler
