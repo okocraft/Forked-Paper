@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Git Repository
-        uses: actions/checkout@v3.1.0
+        uses: actions/checkout@v3.2.0
       - name: Set up JDK
         uses: actions/setup-java@v3.6.0
         with:
