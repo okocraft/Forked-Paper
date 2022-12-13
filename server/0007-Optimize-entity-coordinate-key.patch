@@ -1,0 +1,38 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Kevin Raneri <kevin.raneri@gmail.com>
+Date: Tue, 9 Nov 2021 14:33:16 -0500
+Subject: [PATCH] Optimize entity coordinate key
+
+When executing getCoordinateKey for entities (a hotpath), the JVM is
+required to repeatedly cast doubles to longs. The performance impact of
+this depends on the CPU architecture, but generally switching between
+FPU and ALU incurs a significant performance hit. The casted/rounded
+data is already available in the blockPosition struct, so we use that
+instead of re-doing the casting.
+
+diff --git a/src/main/java/io/papermc/paper/util/MCUtil.java b/src/main/java/io/papermc/paper/util/MCUtil.java
+index e63dc33250831428c2cef34e02238600231fb815..c8f7aa9e0794713724e1053581c220aa95f1bc90 100644
+--- a/src/main/java/io/papermc/paper/util/MCUtil.java
++++ b/src/main/java/io/papermc/paper/util/MCUtil.java
+@@ -209,7 +209,7 @@ public final class MCUtil {
+     }
+ 
+     public static long getCoordinateKey(final Entity entity) {
+-        return ((long)(MCUtil.fastFloor(entity.getZ()) >> 4) << 32) | ((MCUtil.fastFloor(entity.getX()) >> 4) & 0xFFFFFFFFL);
++        return ((long)(entity.blockPosition.getZ() >> 4) << 32) | ((entity.blockPosition.getX() >> 4) & 0xFFFFFFFFL); // Pufferfish - eliminate double->long cast in hotpath
+     }
+ 
+     public static long getCoordinateKey(final ChunkPos pair) {
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index f2908cf61ff28bef44fcf46b15cf585e942fd7ce..f2514efbce51218160fb631fdd30bfbe9c216cd5 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -291,7 +291,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+     public double yo;
+     public double zo;
+     private Vec3 position;
+-    private BlockPos blockPosition;
++    public BlockPos blockPosition; // Pufferfish - private->public
+     private ChunkPos chunkPosition;
+     private Vec3 deltaMovement;
+     private float yRot;
