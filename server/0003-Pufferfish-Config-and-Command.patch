@@ -5,16 +5,16 @@ Subject: [PATCH] Pufferfish Config and Command
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 5344140dd36ee7b2ca82461b082c8e3223f8b836..408430ebbba5a2cec5269817e66bce9c49c39948 100644
+index 207b3f1272ebd56196406629a10693d92eb5c0d9..6ab5f295fdc189b3585da2c6bef626fa7d32a151 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -46,6 +46,13 @@ dependencies {
+@@ -45,6 +45,13 @@ dependencies {
      runtimeOnly("org.apache.maven.resolver:maven-resolver-connector-basic:1.7.3")
      runtimeOnly("org.apache.maven.resolver:maven-resolver-transport-http:1.7.3")
  
 +    // Pufferfish start
-+    implementation("org.yaml:snakeyaml:1.32")
-+    implementation ("me.carleslc.Simple-YAML:Simple-Yaml:1.8.2") {
++    implementation("org.yaml:snakeyaml:1.33")
++    implementation ("me.carleslc.Simple-YAML:Simple-Yaml:1.8.3") {
 +        exclude(group="org.yaml", module="snakeyaml")
 +    }
 +    // Pufferfish end
@@ -112,19 +112,19 @@ index 0000000000000000000000000000000000000000..020368da69b9a492155f6de6297f7473
 +}
 diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..deb52c185705c4b4186c7bae02f2a827620c20ca
+index 0000000000000000000000000000000000000000..f118544878d10e102f072a22db10c4c91d4a5b0e
 --- /dev/null
 +++ b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-@@ -0,0 +1,135 @@
+@@ -0,0 +1,134 @@
 +package gg.pufferfish.pufferfish;
 +
 +import java.io.File;
 +import java.io.IOException;
++
++import net.minecraft.server.MinecraftServer;
 +import java.lang.reflect.Method;
 +import java.lang.reflect.Modifier;
 +import java.util.List;
-+import net.minecraft.server.MinecraftServer;
-+import org.apache.logging.log4j.Level;
 +import org.bukkit.configuration.ConfigurationSection;
 +import org.bukkit.configuration.MemoryConfiguration;
 +import org.jetbrains.annotations.Nullable;
@@ -249,13 +249,12 @@ index 0000000000000000000000000000000000000000..deb52c185705c4b4186c7bae02f2a827
 +		ensureDefault(key, defaultValue, comment);
 +		return config.getStringList(key);
 +	}
-+	
 +}
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index ff3eced0e20c39b825586897ee2fed01dd471d88..99bbb5b2e5462114cd0802961461abd961301958 100644
+index 51b3db0b6c2cede95b584268e035c0fb36d38094..60120cd101ed2ee1d04161bf5de9d997261beac0 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-@@ -226,6 +226,8 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+@@ -221,6 +221,8 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
          com.destroystokyo.paper.VersionHistoryManager.INSTANCE.getClass(); // load version history now
          io.papermc.paper.brigadier.PaperBrigadierProviderImpl.INSTANCE.getClass(); // init PaperBrigadierProvider
          // Paper end

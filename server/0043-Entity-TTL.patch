@@ -5,25 +5,23 @@ Subject: [PATCH] Entity TTL
 
 
 diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-index 56a5a31b41d00ba73259a7eda5c57d08570d3e6e..a125abc75ed2bbd905c8fdec442416a45264f531 100644
+index d1bc5d223cfe59498c3f53cf2b7c73c170062a74..e3b5f466f214508865d3eeb08998dca01b4dbbf6 100644
 --- a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 +++ b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-@@ -4,7 +4,10 @@ import gg.pufferfish.pufferfish.simd.SIMDDetection;
+@@ -3,6 +3,8 @@ package gg.pufferfish.pufferfish;
  import java.io.File;
  import java.io.IOException;
  import java.util.Collections;
 +import java.util.Locale;
 +import java.util.Map;
- import net.minecraft.server.MinecraftServer;
-+import net.minecraft.tags.TagKey;
- import org.apache.logging.log4j.Level;
- import org.bukkit.configuration.ConfigurationSection;
- import net.minecraft.core.Registry;
-@@ -251,6 +254,23 @@ public class PufferfishConfig {
  
-         setComment("dab", "Optimizes entity brains when", "they're far away from the player");
-     }
-+	
+ import net.minecraft.core.registries.BuiltInRegistries;
+ import net.minecraft.server.MinecraftServer;
+@@ -205,4 +207,21 @@ public class PufferfishConfig {
+ 				"Throttles the AI goal selector in entity inactive ticks.",
+ 				"This can improve performance by a few percent, but has minor gameplay implications.");
+ 	}
++
 +	public static Map<String, Integer> projectileTimeouts;
 +	private static void projectileTimeouts() {
 +		// Set some defaults
@@ -34,17 +32,15 @@ index 56a5a31b41d00ba73259a7eda5c57d08570d3e6e..a125abc75ed2bbd905c8fdec442416a4
 +				"entity is in this list and it has survived for longer than",
 +				"that number of ticks, then it will be removed. Setting a value to",
 +				"-1 disables this feature.");
-+		
-+		for (EntityType<?> entityType : Registry.ENTITY_TYPE) {
++
++		for (EntityType<?> entityType : BuiltInRegistries.ENTITY_TYPE) {
 +			String type = EntityType.getKey(entityType).getPath().toUpperCase(Locale.ROOT);
 +			entityType.ttl = config.getInt("entity_timeouts." + type, -1);
 +		}
 +	}
-     
-     public static boolean throttleInactiveGoalSelectorTick;
- 	private static void inactiveGoalSelectorThrottle() {
+ }
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index b5679e41efc401c2e785cc21f2e423ed792c8e00..249305f0fc4f525fe2d109ecc96900ce3680b1b1 100644
+index 78240b67508b73da01944e2c6147b73c07c7bfad..75bce2aa67aae03c56d3284b543079b6ce997301 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -815,6 +815,12 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
@@ -61,14 +57,14 @@ index b5679e41efc401c2e785cc21f2e423ed792c8e00..249305f0fc4f525fe2d109ecc96900ce
          if (firstTick && this instanceof net.minecraft.world.entity.NeutralMob neutralMob) neutralMob.tickInitialPersistentAnger(level); // Paper - Update last hurt when ticking
          this.feetBlockState = null;
 diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
-index 885b0aaf149638da917b0fcc25d6262aed1e00be..b44322c337bcded94c60e1761a3891013ae1dd1a 100644
+index ec857130e32cc5cd8e85e6537e1010a0d3daa845..ea81b7d7fb0ec86f6c06d45a4f5dbaa7fde37422 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityType.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityType.java
-@@ -306,6 +306,7 @@ public class EntityType<T extends Entity> implements EntityTypeTest<Entity, T> {
-     }
- 
+@@ -302,6 +302,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+     private final EntityDimensions dimensions;
+     private final FeatureFlagSet requiredFeatures;
      public boolean dabEnabled = false; // Pufferfish
 +    public int ttl = -1; // Pufferfish
-     // Paper start - add id
-     public final String id;
  
+     private static <T extends Entity> EntityType<T> register(String id, EntityType.Builder type) { // CraftBukkit - decompile error
+         return (EntityType) Registry.register(BuiltInRegistries.ENTITY_TYPE, id, (EntityType<T>) type.build(id)); // CraftBukkit - decompile error

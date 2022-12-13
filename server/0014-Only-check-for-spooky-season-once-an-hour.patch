@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Paul Sauve <paul@technove.co>
 Date: Sun, 13 Dec 2020 17:53:08 -0600
-Subject: [PATCH] Only check for spooky season once an hour
+Subject: [PATCH] Only check for spooky season once a day
 
 Airplane
 Copyright (C) 2020 Technove LLC
@@ -20,27 +20,36 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 diff --git a/src/main/java/net/minecraft/world/entity/ambient/Bat.java b/src/main/java/net/minecraft/world/entity/ambient/Bat.java
-index ed617223942b410fb6f799be7db2001909db67ed..f11eb6df9f095109378caaf0fd16575bfb2e4976 100644
+index 320c558bbe80d4bbc641e895ec43cfa2b45e8d70..7d8d307a9b68d7c76899bd9152929bf70fe78e80 100644
 --- a/src/main/java/net/minecraft/world/entity/ambient/Bat.java
 +++ b/src/main/java/net/minecraft/world/entity/ambient/Bat.java
-@@ -253,13 +253,22 @@ public class Bat extends AmbientCreature {
+@@ -256,13 +256,30 @@ public class Bat extends AmbientCreature {
          }
      }
  
-+    // Pufferfish start - only check for spooky season once an hour
++    // Pufferfish start - only check for spooky season once a day
 +    private static boolean isSpookySeason = false;
-+    private static final int ONE_HOUR = 20 * 60 * 60;
-+    private static int lastSpookyCheck = -ONE_HOUR;
++    private static long nextSpookyCheck;
      private static boolean isHalloween() {
-+        if (net.minecraft.server.MinecraftServer.currentTick - lastSpookyCheck > ONE_HOUR) {
-         LocalDate localdate = LocalDate.now();
+-        LocalDate localdate = LocalDate.now();
++        if (System.currentTimeMillis() < nextSpookyCheck) {
++            return isSpookySeason;
++        }
++
++        java.time.LocalDateTime localdate = java.time.LocalDateTime.now();
          int i = localdate.get(ChronoField.DAY_OF_MONTH);
          int j = localdate.get(ChronoField.MONTH_OF_YEAR);
  
 -        return j == 10 && i >= 20 || j == 11 && i <= 3;
 +        isSpookySeason = j == 10 && i >= 20 || j == 11 && i <= 3;
-+        lastSpookyCheck = net.minecraft.server.MinecraftServer.currentTick;
-+        }
++
++        nextSpookyCheck =
++                localdate.truncatedTo(java.time.temporal.ChronoUnit.DAYS)
++                .plusDays(1)
++                .atZone(java.time.ZoneId.systemDefault())
++                .toInstant()
++                .toEpochMilli();
++
 +        return isSpookySeason;
      }
 +    // Pufferfish end
