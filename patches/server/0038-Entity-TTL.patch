@@ -40,10 +40,10 @@ index d1bc5d223cfe59498c3f53cf2b7c73c170062a74..e3b5f466f214508865d3eeb08998dca0
 +	}
  }
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 78240b67508b73da01944e2c6147b73c07c7bfad..75bce2aa67aae03c56d3284b543079b6ce997301 100644
+index fee138fb6dca8234ca98101697e899bef96c1e7f..063872a87d2b1ef775ba95f4a007b3511ccece60 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -815,6 +815,12 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -814,6 +814,12 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
      // CraftBukkit end
  
      public void baseTick() {
