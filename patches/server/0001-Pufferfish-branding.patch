@@ -3,10 +3,9 @@ From: Kevin Raneri <kevin.raneri@gmail.com>
 Date: Wed, 3 Feb 2021 23:02:38 -0600
 Subject: [PATCH] Pufferfish branding
 
-Update branding
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index b0e4f11e8af4b909a56bb5576d05ef0537fb25f7..5344140dd36ee7b2ca82461b082c8e3223f8b836 100644
+index d5d49bb2b47c889e12d17dc87b8c439a60b3fe67..207b3f1272ebd56196406629a10693d92eb5c0d9 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -7,8 +7,12 @@ plugins {
@@ -17,14 +16,14 @@ index b0e4f11e8af4b909a56bb5576d05ef0537fb25f7..5344140dd36ee7b2ca82461b082c8e32
 -    implementation(project(":paper-mojangapi"))
 +    implementation(project(":pufferfish-api")) // Pufferfish // Paper
 +    // Pufferfish start
-+    implementation("io.papermc.paper:paper-mojangapi:1.19.2-R0.1-SNAPSHOT") {
++    implementation("io.papermc.paper:paper-mojangapi:1.19.3-R0.1-SNAPSHOT") {
 +        exclude("io.papermc.paper", "paper-api")
 +    }
 +    // Pufferfish end
      // Paper start
      implementation("org.jline:jline-terminal-jansi:3.21.0")
      implementation("net.minecrell:terminalconsoleappender:1.3.0")
-@@ -62,7 +66,7 @@ tasks.jar {
+@@ -61,7 +65,7 @@ tasks.jar {
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",
              "Implementation-Title" to "CraftBukkit",
@@ -57,7 +56,7 @@ index 7b1843e16745ca8db2244e17490d291401f22679..061716934ba0a1f01e4d85d664034f72
                      Map<String, Map<String, Integer>> map = new HashMap<>();
 diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishVersionFetcher.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishVersionFetcher.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..e877921370f6009a4bd204d9b17d2d58834b8822
+index 0000000000000000000000000000000000000000..1adc3de7cdb5b5f309df45f463e4697d6ec2c245
 --- /dev/null
 +++ b/src/main/java/gg/pufferfish/pufferfish/PufferfishVersionFetcher.java
 @@ -0,0 +1,136 @@
@@ -89,46 +88,46 @@ index 0000000000000000000000000000000000000000..e877921370f6009a4bd204d9b17d2d58
 +import org.jetbrains.annotations.Nullable;
 +
 +public class PufferfishVersionFetcher implements VersionFetcher {
-+	
++
 +	private static final Logger LOGGER = Logger.getLogger("PufferfishVersionFetcher");
 +	private static final HttpClient client = HttpClient.newHttpClient();
-+	
++
 +	private static final URI JENKINS_URI = URI.create("https://ci.pufferfish.host/job/Pufferfish-1.19/lastSuccessfulBuild/buildNumber");
 +	private static final String GITHUB_FORMAT = "https://api.github.com/repos/pufferfish-gg/Pufferfish/compare/ver/1.19...%s";
-+	
++
 +	private static final HttpResponse.BodyHandler<JsonObject> JSON_OBJECT_BODY_HANDLER = responseInfo -> HttpResponse.BodySubscribers
 +			.mapping(
 +					HttpResponse.BodySubscribers.ofString(StandardCharsets.UTF_8),
 +					string -> new Gson().fromJson(string, JsonObject.class)
 +			);
-+	
++
 +	@Override
 +	public long getCacheTime() {
 +		return TimeUnit.MINUTES.toMillis(30);
 +	}
-+	
++
 +	@Override
 +	public @NotNull Component getVersionMessage(final @NotNull String serverVersion) {
 +		final String[] parts = CraftServer.class.getPackage().getImplementationVersion().split("-");
 +		@NotNull Component component;
-+		
++
 +		if (parts.length != 3) {
 +			component = text("Unknown server version.", RED);
 +		} else {
 +			final String versionString = parts[2];
-+			
++
 +			try {
 +				component = this.fetchJenkinsVersion(Integer.parseInt(versionString));
 +			} catch (NumberFormatException e) {
 +				component = this.fetchGithubVersion(versionString.substring(1, versionString.length() - 1));
 +			}
 +		}
-+		
++
 +		final @Nullable Component history = this.getHistory();
 +		return history != null ? Component
 +				.join(JoinConfiguration.noSeparators(), component, Component.newline(), this.getHistory()) : component;
 +	}
-+	
++
 +	private @NotNull Component fetchJenkinsVersion(final int versionNumber) {
 +		final HttpRequest request = HttpRequest.newBuilder(JENKINS_URI).build();
 +		try {
@@ -136,7 +135,7 @@ index 0000000000000000000000000000000000000000..e877921370f6009a4bd204d9b17d2d58
 +			if (response.statusCode() != 200) {
 +				return text("Received invalid status code (" + response.statusCode() + ") from server.", RED);
 +			}
-+			
++
 +			int latestVersionNumber;
 +			try {
 +				latestVersionNumber = Integer.parseInt(response.body());
@@ -144,7 +143,7 @@ index 0000000000000000000000000000000000000000..e877921370f6009a4bd204d9b17d2d58
 +				LOGGER.log(Level.WARNING, "Received invalid response from Jenkins \"" + response.body() + "\".");
 +				return text("Received invalid response from server.", RED);
 +			}
-+			
++
 +			final int versionDiff = latestVersionNumber - versionNumber;
 +			return this.getResponseMessage(versionDiff);
 +		} catch (IOException | InterruptedException e) {
@@ -152,7 +151,7 @@ index 0000000000000000000000000000000000000000..e877921370f6009a4bd204d9b17d2d58
 +			return text("Failed to retrieve version from server.", RED);
 +		}
 +	}
-+	
++
 +	// Based off code contributed by Techcable <Techcable@outlook.com> in Paper/GH-65
 +	private @NotNull Component fetchGithubVersion(final @NotNull String hash) {
 +		final URI uri = URI.create(String.format(GITHUB_FORMAT, hash));
@@ -162,17 +161,17 @@ index 0000000000000000000000000000000000000000..e877921370f6009a4bd204d9b17d2d58
 +			if (response.statusCode() != 200) {
 +				return text("Received invalid status code (" + response.statusCode() + ") from server.", RED);
 +			}
-+			
++
 +			final JsonObject obj = response.body();
 +			final int versionDiff = obj.get("behind_by").getAsInt();
-+			
++
 +			return this.getResponseMessage(versionDiff);
 +		} catch (IOException | InterruptedException e) {
 +			LOGGER.log(Level.WARNING, "Failed to look up version from GitHub", e);
 +			return text("Failed to retrieve version from server.", RED);
 +		}
 +	}
-+	
++
 +	private @NotNull Component getResponseMessage(final int versionDiff) {
 +		return switch (Math.max(-1, Math.min(1, versionDiff))) {
 +			case -1 -> text("You are running an unsupported version of Pufferfish.", RED);
@@ -182,24 +181,24 @@ index 0000000000000000000000000000000000000000..e877921370f6009a4bd204d9b17d2d58
 +					RED);
 +		};
 +	}
-+	
++
 +	private @Nullable Component getHistory() {
 +		final VersionHistoryManager.VersionData data = VersionHistoryManager.INSTANCE.getVersionData();
 +		if (data == null) {
 +			return null;
 +		}
-+		
++
 +		final String oldVersion = data.getOldVersion();
 +		if (oldVersion == null) {
 +			return null;
 +		}
-+		
++
 +		return Component.text("Previous version: " + oldVersion, NamedTextColor.GRAY, TextDecoration.ITALIC);
 +	}
 +}
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 6dc6c3bccb4ba34268a87b0754c87eb1e0df4135..6ba71433f50e7fdfed5e9da273d7163f992b69cf 100644
+index 710ca7d3a5659953f64bc6dccdd93b43300961cc..5dcc3b80b4a13944b39458802362a6bb1a5fbe41 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1654,7 +1654,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -212,10 +211,10 @@ index 6dc6c3bccb4ba34268a87b0754c87eb1e0df4135..6ba71433f50e7fdfed5e9da273d7163f
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 07eac5439164a7345476c55277538a152359630a..cf6c59ad8f4f8b18f9856e83a4dd3acf2111b555 100644
+index 47df6f4268a63118da8187f4102c876bd37d1680..9a02280d3d72c8b292cc88adb7965928485fbdd7 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -248,7 +248,7 @@ import javax.annotation.Nullable; // Paper
+@@ -261,7 +261,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {
@@ -225,10 +224,10 @@ index 07eac5439164a7345476c55277538a152359630a..cf6c59ad8f4f8b18f9856e83a4dd3acf
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 103ab25119bfcdd21eac7e1deeac025108e3c138..47ff8c22bd9c7220df98268f6db224d1cd66a0ab 100644
+index 17336102d37a5ab05c3b3c93fcf46961d0ffa7e2..a3c6b3dd87022e2def1f12da7c44c8d529191d1e 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-@@ -435,7 +435,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+@@ -433,7 +433,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
  
      @Override
      public com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {
