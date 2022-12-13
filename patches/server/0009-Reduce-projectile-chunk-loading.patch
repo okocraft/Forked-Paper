@@ -20,30 +20,28 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-index 94743568aff18e58cca69c8256950fe77d1d109c..8e4c8227c4a3fde3b29daa6420a67374786ea2e4 100644
+index d06d151fbf4e413b7a81371758b7ba84794dd242..6781bf0200949842ef05fa9ba68f365ebc7c97b3 100644
 --- a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 +++ b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-@@ -196,4 +196,15 @@ public class PufferfishConfig {
+@@ -148,4 +148,13 @@ public class PufferfishConfig {
+ 			enableAsyncMobSpawning = temp;
  		}
  	}
- 	
-+    public static int maxProjectileLoadsPerTick;
-+    public static int maxProjectileLoadsPerProjectile;
-+    private static void projectileLoading() {
-+        maxProjectileLoadsPerTick = getInt("projectile.max-loads-per-tick", 10, "Controls how many chunks are allowed", "to be sync loaded by projectiles in a tick.");
-+        maxProjectileLoadsPerProjectile = getInt("projectile.max-loads-per-projectile", 10, "Controls how many chunks a projectile", "can load in its lifetime before it gets", "automatically removed.");
 +
-+        setComment("projectile", "Optimizes projectile settings");
-+    }
++	public static int maxProjectileLoadsPerTick;
++	public static int maxProjectileLoadsPerProjectile;
++	private static void projectileLoading() {
++		maxProjectileLoadsPerTick = getInt("projectile.max-loads-per-tick", 10, "Controls how many chunks are allowed", "to be sync loaded by projectiles in a tick.");
++		maxProjectileLoadsPerProjectile = getInt("projectile.max-loads-per-projectile", 10, "Controls how many chunks a projectile", "can load in its lifetime before it gets", "automatically removed.");
 +
-+
++		setComment("projectile", "Optimizes projectile settings");
++	}
  }
-+
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/Projectile.java b/src/main/java/net/minecraft/world/entity/projectile/Projectile.java
-index ccaa97956e40c6a79371d813719f65687991ec5b..0c7d31c7ffd603e54fb19010331ad220c7b15627 100644
+index 66476b33cede1e44db5ec166a0cea81f82ffe47a..fca0c424f47b21ca7b57a892e4619ddf479eaa70 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/Projectile.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/Projectile.java
-@@ -42,6 +42,36 @@ public abstract class Projectile extends Entity {
+@@ -43,6 +43,36 @@ public abstract class Projectile extends Entity {
          super(type, world);
      }
  
@@ -75,7 +73,7 @@ index ccaa97956e40c6a79371d813719f65687991ec5b..0c7d31c7ffd603e54fb19010331ad220
 +        }
 +        super.setPos(x, y, z);
 +    }
-+    // Pufferfish start
++    // Pufferfish end
 +
      public void setOwner(@Nullable Entity entity) {
          if (entity != null) {

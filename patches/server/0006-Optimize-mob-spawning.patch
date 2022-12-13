@@ -17,13 +17,15 @@ and, in my opinion, worth the low risk of minor mob-spawning-related
 inconsistencies.
 
 diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-index 62d231ca05039c99c17252847cb850983864e09a..fca3cc322ab396d0865e8082bc673836d5fbb3c5 100644
+index deb52c185705c4b4186c7bae02f2a827620c20ca..d06d151fbf4e413b7a81371758b7ba84794dd242 100644
 --- a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 +++ b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-@@ -179,4 +179,21 @@ public class PufferfishConfig {
- 				"configuration option if the vanilla deviation is undesirable.");
+@@ -131,5 +131,21 @@ public class PufferfishConfig {
+ 		ensureDefault(key, defaultValue, comment);
+ 		return config.getStringList(key);
  	}
- 	
+-	
++
 +	public static boolean enableAsyncMobSpawning;
 +	public static boolean asyncMobSpawningInitialized;
 +	private static void asyncMobSpawning() {
@@ -33,33 +35,32 @@ index 62d231ca05039c99c17252847cb850983864e09a..fca3cc322ab396d0865e8082bc673836
 +				"paper's per-player-mob-spawns setting set to true for this to work.",
 +				"One quick note - this does not actually spawn mobs async (that would be very unsafe).",
 +				"This just offloads some expensive calculations that are required for mob spawning.");
-+		
++
 +		// This prevents us from changing the value during a reload.
 +		if (!asyncMobSpawningInitialized) {
 +			asyncMobSpawningInitialized = true;
 +			enableAsyncMobSpawning = temp;
 +		}
 +	}
-+	
  }
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 6ba71433f50e7fdfed5e9da273d7163f992b69cf..70cf57e532be110cc5801ec72031d6e5ced53574 100644
+index 5dcc3b80b4a13944b39458802362a6bb1a5fbe41..b4390b204f72acd5d6f5426350b8e9014913691a 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -298,6 +298,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
-     public volatile Thread shutdownThread; // Paper
+@@ -310,6 +310,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
      public volatile boolean abnormalExit = false; // Paper
      public boolean isIteratingOverLevels = false; // Paper
-+    
-+    public gg.pufferfish.pufferfish.util.AsyncExecutor mobSpawnExecutor = new gg.pufferfish.pufferfish.util.AsyncExecutor("MobSpawning"); // Pufferfish - optimize mob spawning
  
++    public gg.pufferfish.pufferfish.util.AsyncExecutor mobSpawnExecutor = new gg.pufferfish.pufferfish.util.AsyncExecutor("MobSpawning"); // Pufferfish - optimize mob spawning
++
      public static <S extends MinecraftServer> S spin(Function<Thread, S> serverFactory) {
          AtomicReference<S> atomicreference = new AtomicReference();
+         Thread thread = new io.papermc.paper.util.TickThread(() -> { // Paper - rewrite chunk system
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index 99bbb5b2e5462114cd0802961461abd961301958..5c54a5da7fb50cd97799c5fa280a24d5c6117244 100644
+index 60120cd101ed2ee1d04161bf5de9d997261beac0..673fb3955291407be37dc78be4eec9bf2018128b 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-@@ -340,6 +340,7 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+@@ -334,6 +334,7 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
                  DedicatedServer.LOGGER.info("JMX monitoring enabled");
              }
  
@@ -68,10 +69,10 @@ index 99bbb5b2e5462114cd0802961461abd961301958..5c54a5da7fb50cd97799c5fa280a24d5
          }
      }
 diff --git a/src/main/java/net/minecraft/server/level/ChunkMap.java b/src/main/java/net/minecraft/server/level/ChunkMap.java
-index d1edafb3e44a4d17586e0e9c4fca30389b529074..63a34b36227d1dc37b924105ff7191797fddf14b 100644
+index 2212f9f48636357265d8e44aba415ea4f09f1fe7..7aa247fd9dabe79d7b7f0b18a6f82ac926440c70 100644
 --- a/src/main/java/net/minecraft/server/level/ChunkMap.java
 +++ b/src/main/java/net/minecraft/server/level/ChunkMap.java
-@@ -334,7 +334,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+@@ -342,7 +342,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
          this.dataRegionManager = new io.papermc.paper.chunk.SingleThreadChunkRegionManager(this.level, 2, (1.0 / 3.0), 1, 6, "Data", DataRegionData::new, DataRegionSectionData::new);
          this.regionManagers.add(this.dataRegionManager);
          // Paper end
@@ -81,20 +82,20 @@ index d1edafb3e44a4d17586e0e9c4fca30389b529074..63a34b36227d1dc37b924105ff719179
          this.playerEntityTrackerTrackMaps = new com.destroystokyo.paper.util.misc.PlayerAreaMap[TRACKING_RANGE_TYPES.length];
          this.entityTrackerTrackRanges = new int[TRACKING_RANGE_TYPES.length];
 diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
-index be97d38f45046a7f6d2337d879651f04cf9ff825..c2e63457fd85f78e3656d0e88b45c04cee1f610f 100644
+index ca84eddbdb1e198b899750e5f6b3eafd25ce970f..2d27ab2a61b70cd86543282f2cad2690ca0f5142 100644
 --- a/src/main/java/net/minecraft/server/level/ServerChunkCache.java
 +++ b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
-@@ -75,6 +75,9 @@ public class ServerChunkCache extends ChunkSource {
-     final it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap<LevelChunk> loadedChunkMap = new it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap<>(8192, 0.5f);
+@@ -77,6 +77,9 @@ public class ServerChunkCache extends ChunkSource {
  
      private final LevelChunk[] lastLoadedChunks = new LevelChunk[4 * 4];
-+    
+ 
 +    public boolean firstRunSpawnCounts = true; // Pufferfish
 +    public final java.util.concurrent.atomic.AtomicBoolean _pufferfish_spawnCountsReady = new java.util.concurrent.atomic.AtomicBoolean(false); // Pufferfish - optimize countmobs
- 
++
      private static int getChunkCacheKey(int x, int z) {
          return x & 3 | ((z & 3) << 2);
-@@ -711,18 +714,25 @@ public class ServerChunkCache extends ChunkSource {
+     }
+@@ -712,18 +715,25 @@ public class ServerChunkCache extends ChunkSource {
              // Paper start - per player mob spawning
              NaturalSpawner.SpawnState spawnercreature_d; // moved down
              if ((this.spawnFriendlies || this.spawnEnemies) && this.chunkMap.playerMobDistanceMap != null) { // don't count mobs when animals and monsters are disabled
@@ -126,7 +127,7 @@ index be97d38f45046a7f6d2337d879651f04cf9ff825..c2e63457fd85f78e3656d0e88b45c04c
              gameprofilerfiller.popPush("filteringLoadedChunks");
              // Paper - moved down
              this.level.timings.chunkTicks.startTiming(); // Paper
-@@ -760,8 +770,8 @@ public class ServerChunkCache extends ChunkSource {
+@@ -761,8 +771,8 @@ public class ServerChunkCache extends ChunkSource {
  
                  if ((true || this.level.isNaturalSpawningAllowed(chunkcoordintpair)) && this.chunkMap.anyPlayerCloseEnoughForSpawning(holder, chunkcoordintpair, false)) { // Paper - optimise anyPlayerCloseEnoughForSpawning // Paper - the chunk is known ticking
                      chunk1.incrementInhabitedTime(j);
@@ -137,11 +138,11 @@ index be97d38f45046a7f6d2337d879651f04cf9ff825..c2e63457fd85f78e3656d0e88b45c04c
                      }
  
                      if (true || this.level.shouldTickBlocksAt(chunkcoordintpair.toLong())) { // Paper - the chunk is known ticking
-@@ -823,6 +833,30 @@ public class ServerChunkCache extends ChunkSource {
+@@ -824,6 +834,30 @@ public class ServerChunkCache extends ChunkSource {
              }
              // Paper end - controlled flush for entity tracker packets
          }
-+    
++
 +        // Pufferfish start - optimize mob spawning
 +        if (gg.pufferfish.pufferfish.PufferfishConfig.enableAsyncMobSpawning) {
 +            for (ServerPlayer player : this.level.players) {
