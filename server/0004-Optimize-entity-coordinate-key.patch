@@ -16,10 +16,10 @@ index dacb00c7cb2702ae8e9c6be61ca08e41bd6009e4..a3726237a24dacc8246cc790973c1b36
 +++ b/src/main/java/io/papermc/paper/util/MCUtil.java
 @@ -209,7 +209,7 @@ public final class MCUtil {
      }
-
+ 
      public static long getCoordinateKey(final Entity entity) {
 -        return ((long)(MCUtil.fastFloor(entity.getZ()) >> 4) << 32) | ((MCUtil.fastFloor(entity.getX()) >> 4) & 0xFFFFFFFFL);
 +        return ((long)(entity.getBlockZ() >> 4) << 32) | ((entity.getBlockX() >> 4) & 0xFFFFFFFFL); // Pufferfish - eliminate double->long cast in hotpath
      }
-
+ 
      public static long getCoordinateKey(final ChunkPos pair) {
