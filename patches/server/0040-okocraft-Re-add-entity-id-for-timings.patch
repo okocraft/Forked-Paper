@@ -5,10 +5,10 @@ Subject: [PATCH] okocraft Re-add entity id for timings
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
-index ea81b7d7fb0ec86f6c06d45a4f5dbaa7fde37422..7c1131d3574914e31ba026c9a52413ac0af4d13c 100644
+index c3953a2740168cb3443e90cfeb3a19fdf5d218c0..2ffb5a2f4673807f2129d5efb78e8a88c7e2e5d5 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityType.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityType.java
-@@ -782,7 +782,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+@@ -789,7 +789,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
                  Util.fetchChoiceType(References.ENTITY_TREE, id);
              }
  
