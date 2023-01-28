@@ -10,6 +10,8 @@ if [ $CURRENT_HASH = $LATEST_COMMIT_HASH ]; then
   exit 0
 fi
 
+echo -n "$LATEST_COMMIT_HASH" > ../paper-ref
+
 COMMITS=`git log --reverse --pretty=format:"%h %s" $CURRENT_HASH..$LATEST_COMMIT_HASH | sed -e 's/\(#[0-9]*\)/Paper\1/g' | sed -e 's/\[ci skip\] //'`
 
 echo "Paper Changes:"
