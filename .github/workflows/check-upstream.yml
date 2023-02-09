@@ -8,7 +8,8 @@ jobs:
   check_upstream:
     runs-on: ubuntu-latest
     outputs:
-      pr_description: ${{ steps.check_result.outputs.result }}
+      pr_description: ${{ steps.check_result.outputs.pr_description }}
+      commit_message: ${{ steps.check_result.outputs.commit_message }}
       latest_commit_hash: ${{ steps.latest_commit_hash.outputs.hash }}
     steps:
       - name: Checkout Git Repository
@@ -20,7 +21,9 @@ jobs:
           result-encoding: string
           script: |
             const result = await exec.getExecOutput('bash ./scripts/check-upstream.sh');
-            return result.stdout;
+            const output = result.stdout;
+            core.setOutput('pr_description', output);
+            core.setOutput('commit_message', 'Updated Upstream (Paper)\n` + output);
       - name: Store latest commit hash to output
         id: latest_commit_hash
         run: echo "hash=$(<paper-ref)" >> $GITHUB_OUTPUT
@@ -55,15 +58,6 @@ jobs:
         continue-on-error: true
         with:
           arguments: rebuildPatches --stacktrace
-      - name: Create Commit Message
-        uses: actions/github-script@v6.4.0
-        id: commit_message
-        if: always()
-        with:
-          result-encoding: string
-          script: |
-            return `Updated Upstream (Paper)
-            ${{ needs.check_upstream.outputs.pr_description }}`;
       - name: Specify Labels
         id: labels
         if: always()
@@ -79,7 +73,7 @@ jobs:
         with:
           title: Updated Upstream (Paper)
           body: ${{ needs.check_upstream.outputs.pr_description }}
-          commit-message: ${{ steps.commit_message.outputs.result }}
+          commit-message: ${{ needs.check_upstream.outputs.commit_message }}
           branch: upstream
           labels: ${{ steps.labels.outputs.result }}
           draft: ${{ steps.apply_patches.outcome != 'success' }}
