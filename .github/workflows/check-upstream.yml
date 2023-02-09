@@ -23,7 +23,7 @@ jobs:
             const result = await exec.getExecOutput('bash ./scripts/check-upstream.sh');
             const output = result.stdout;
             core.setOutput('pr_description', output);
-            core.setOutput('commit_message', 'Updated Upstream (Paper)\n` + output);
+            core.setOutput('commit_message', 'Updated Upstream (Paper)\n' + output);
       - name: Store latest commit hash to output
         id: latest_commit_hash
         run: echo "hash=$(<paper-ref)" >> $GITHUB_OUTPUT
