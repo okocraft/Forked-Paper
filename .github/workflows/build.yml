@@ -31,4 +31,4 @@ jobs:
         continue-on-error: true
         with:
           name: Okocraft-Pufferfish-Build-${{ github.run_number }}
-          path: ./build/libs/pufferfish-paperclip-1.19.3-R0.1-SNAPSHOT-reobf.jar
+          path: ./build/libs/pufferfish-paperclip-*.jar
