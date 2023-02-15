@@ -22,12 +22,10 @@ jobs:
         uses: gradle/gradle-build-action@v2.3.3
         with:
           arguments: applyPatches --stacktrace
-          cache-read-only: true
       - name: Build
         uses: gradle/gradle-build-action@v2.3.3
         with:
           arguments: createReobfPaperclipJar --stacktrace
-          cache-read-only: true
       - name: Upload
         uses: actions/upload-artifact@v3.1.2
         continue-on-error: true
