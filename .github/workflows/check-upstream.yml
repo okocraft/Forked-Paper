@@ -52,14 +52,14 @@ jobs:
         continue-on-error: true
         with:
           arguments: applyPatches --stacktrace
-          cache-read-only: true
+          cache-read-only: false
       - name: Rebuild Patches
         uses: gradle/gradle-build-action@v2.3.3
         if: steps.apply_patches.outcome == 'success'
         continue-on-error: true
         with:
           arguments: rebuildPatches --stacktrace
-          cache-read-only: true
+          cache-read-only: false
       - name: Specify Labels
         id: labels
         if: always()
