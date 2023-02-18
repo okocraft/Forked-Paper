@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Sun, 19 Feb 2023 07:55:31 +0900
+Subject: [PATCH] okocraft Catch and ignore CME that occurred when reloading a
+ plugin using ServerUtils
+
+
+diff --git a/src/main/java/net/minecraft/commands/Commands.java b/src/main/java/net/minecraft/commands/Commands.java
+index e92864ecf32dd984f6f87f7b05341e43af3a2977..d0ada2b7af0d6c3ce9c13a344238280d769e11d6 100644
+--- a/src/main/java/net/minecraft/commands/Commands.java
++++ b/src/main/java/net/minecraft/commands/Commands.java
+@@ -12,6 +12,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
+ import com.mojang.brigadier.tree.CommandNode;
+ import com.mojang.brigadier.tree.RootCommandNode;
+ import com.mojang.logging.LogUtils;
++
++import java.util.ConcurrentModificationException;
+ import java.util.Iterator;
+ import java.util.Map;
+ import java.util.Optional;
+@@ -405,7 +407,12 @@ public class Commands {
+         // Register Vanilla commands into builtRoot as before
+         // Paper start - Async command map building
+         COMMAND_SENDING_POOL.execute(() -> {
++            // okocraft start - Catch and ignore CME that occurred when reloading a plugin using ServerUtils
++            try {
+                 this.sendAsync(player);
++            } catch (ConcurrentModificationException ignored) {
++            }
++            // okocraft end
+         });
+     }
+ 
