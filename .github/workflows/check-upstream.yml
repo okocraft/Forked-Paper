@@ -42,7 +42,7 @@ jobs:
       - name: Configure Git User Details
         run: git config --global user.email "actions@github.com" && git config --global user.name "Github Actions"
       - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v1.0.5
+        uses: gradle/wrapper-validation-action@v1.0.6
       - run: chmod +x ./gradlew
       - name: Update paper-ref
         run: echo -n ${{ needs.check_upstream.outputs.latest_commit_hash }} > paper-ref
