@@ -6,10 +6,10 @@ Subject: [PATCH] okocraft Skip dependency checking to allow bad reloads using
 
 
 diff --git a/src/main/java/io/papermc/paper/plugin/entrypoint/strategy/ModernPluginLoadingStrategy.java b/src/main/java/io/papermc/paper/plugin/entrypoint/strategy/ModernPluginLoadingStrategy.java
-index a0363af157131a2b42c00028a260e9c3d3c543de..d45074a6e51bdb6a2252e6f35e2d5b226c981478 100644
+index f2ef0ac8b498013d232ee56fdafba331c7dcbe27..2f68d4406ed558ce9acb138fe31feea563fcbde7 100644
 --- a/src/main/java/io/papermc/paper/plugin/entrypoint/strategy/ModernPluginLoadingStrategy.java
 +++ b/src/main/java/io/papermc/paper/plugin/entrypoint/strategy/ModernPluginLoadingStrategy.java
-@@ -18,6 +18,7 @@ import java.util.Map;
+@@ -20,6 +20,7 @@ import java.util.Map;
  
  @SuppressWarnings("UnstableApiUsage")
  public class ModernPluginLoadingStrategy<T> implements ProviderLoadingStrategy<T> {
@@ -17,7 +17,7 @@ index a0363af157131a2b42c00028a260e9c3d3c543de..d45074a6e51bdb6a2252e6f35e2d5b22
  
      private static final Logger LOGGER = LogUtils.getLogger();
      private final ProviderConfiguration<T> configuration;
-@@ -63,6 +64,12 @@ public class ModernPluginLoadingStrategy<T> implements ProviderLoadingStrategy<T
+@@ -65,6 +66,12 @@ public class ModernPluginLoadingStrategy<T> implements ProviderLoadingStrategy<T
  
          // Validate providers, ensuring all of them have valid dependencies. Removing those who are invalid
          for (PluginProvider<T> provider : pluginProviders) {
