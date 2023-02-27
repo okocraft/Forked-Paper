@@ -6,10 +6,10 @@ Subject: [PATCH] okocraft Check for registered plugins in the server to allow
 
 
 diff --git a/src/main/java/io/papermc/paper/plugin/entrypoint/strategy/ModernPluginLoadingStrategy.java b/src/main/java/io/papermc/paper/plugin/entrypoint/strategy/ModernPluginLoadingStrategy.java
-index fa7bbfeff53d5cab3d96a5f1181b610f4ce22518..c268c1891476a25920573d55bdf521382850f6f6 100644
+index 671e9ebb8246a4cc9e212f5b11ea476560f2f7d5..13e2d99d95853dccaf275c2824a33361fbd8ef11 100644
 --- a/src/main/java/io/papermc/paper/plugin/entrypoint/strategy/ModernPluginLoadingStrategy.java
 +++ b/src/main/java/io/papermc/paper/plugin/entrypoint/strategy/ModernPluginLoadingStrategy.java
-@@ -20,6 +20,7 @@ import java.util.Map;
+@@ -24,6 +24,7 @@ import java.util.Map;
  
  @SuppressWarnings("UnstableApiUsage")
  public class ModernPluginLoadingStrategy<T> implements ProviderLoadingStrategy<T> {
@@ -17,7 +17,7 @@ index fa7bbfeff53d5cab3d96a5f1181b610f4ce22518..c268c1891476a25920573d55bdf52138
  
      private static final Logger LOGGER = LogUtils.getClassLogger();
      private final ProviderConfiguration<T> configuration;
-@@ -69,6 +70,13 @@ public class ModernPluginLoadingStrategy<T> implements ProviderLoadingStrategy<T
+@@ -73,6 +74,13 @@ public class ModernPluginLoadingStrategy<T> implements ProviderLoadingStrategy<T
  
              // Populate missing dependencies to capture if there are multiple missing ones.
              List<String> missingDependencies = provider.validateDependencies(providerMapMirror);
