@@ -5,7 +5,7 @@ Subject: [PATCH] Pufferfish branding
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 4cc7d15f43b2547a723ea231bcf98bc13bdb85bf..b7d8d1134f20bd0dad5f9a564061df2f9222d909 100644
+index 4cc7d15f43b2547a723ea231bcf98bc13bdb85bf..d00dd3af0da0971c16d4fc6988fa12f2da839d00 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -7,8 +7,12 @@ plugins {
@@ -32,19 +32,6 @@ index 4cc7d15f43b2547a723ea231bcf98bc13bdb85bf..b7d8d1134f20bd0dad5f9a564061df2f
              "Implementation-Vendor" to date, // Paper
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
-@@ -170,6 +174,7 @@ val runtimeClasspathWithoutVanillaServer = configurations.runtimeClasspath.flatM
-         runtime.filterNot { it.asFile.absolutePath == vanilla }
-     }
- 
-+/* okocraft - remove these tasks to avoid errors when importing to IntelliJ.
- tasks.registerRunTask("runShadow") {
-     description = "Spin up a test server from the shadowJar archiveFile"
-     classpath(tasks.shadowJar.flatMap { it.archiveFile })
-@@ -186,3 +191,4 @@ tasks.registerRunTask("runDev") {
-     description = "Spin up a non-relocated Mojang-mapped test server"
-     classpath(sourceSets.main.map { it.runtimeClasspath })
- }
-+*/ // okocraft end
 diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
 index 4b002e8b75d117b726b0de274a76d3596fce015b..0c8bf4eb1a15466ad298c51e6e0262440286f359 100644
 --- a/src/main/java/com/destroystokyo/paper/Metrics.java
