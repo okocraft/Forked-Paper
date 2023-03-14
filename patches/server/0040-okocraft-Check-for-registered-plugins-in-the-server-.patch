@@ -1,0 +1,52 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Fri, 24 Feb 2023 05:36:07 +0900
+Subject: [PATCH] okocraft Check for registered plugins in the server to allow
+ bad reloads using PluginManager#loadPlugin
+
+
+diff --git a/src/main/java/io/papermc/paper/plugin/entrypoint/strategy/ModernPluginLoadingStrategy.java b/src/main/java/io/papermc/paper/plugin/entrypoint/strategy/ModernPluginLoadingStrategy.java
+index 1d58f3a438d5be423c84b2f61e496d938fdc2995..f6c078eb69964f473b2a57b6b9a1b890405d710a 100644
+--- a/src/main/java/io/papermc/paper/plugin/entrypoint/strategy/ModernPluginLoadingStrategy.java
++++ b/src/main/java/io/papermc/paper/plugin/entrypoint/strategy/ModernPluginLoadingStrategy.java
+@@ -24,6 +24,7 @@ import java.util.Map;
+ 
+ @SuppressWarnings("UnstableApiUsage")
+ public class ModernPluginLoadingStrategy<T> implements ProviderLoadingStrategy<T> {
++    public static boolean checkRegisteredPlugins = false; // okocraft - Check for registered plugins in the server to allow bad reloads using PluginManager#loadPlugin
+ 
+     private static final Logger LOGGER = LogUtils.getClassLogger();
+     private final ProviderConfiguration<T> configuration;
+@@ -73,6 +74,13 @@ public class ModernPluginLoadingStrategy<T> implements ProviderLoadingStrategy<T
+ 
+             // Populate missing dependencies to capture if there are multiple missing ones.
+             List<String> missingDependencies = provider.validateDependencies(providerMapMirror);
++            // okocraft start - Check for registered plugins in the server to allow bad reloads using PluginManager#loadPlugin
++            if (checkRegisteredPlugins && !missingDependencies.isEmpty()) {
++                Map<String, PluginProvider<?>> registeredProviderMap = new HashMap<>();
++                io.papermc.paper.plugin.entrypoint.LaunchEntryPointHandler.INSTANCE.get(io.papermc.paper.plugin.entrypoint.Entrypoint.PLUGIN).getRegisteredProviders().forEach(registered -> registeredProviderMap.put(registered.getMeta().getName(), registered));
++                missingDependencies.retainAll(provider.validateDependencies(registeredProviderMap));
++            }
++            // okocraft end
+ 
+             if (missingDependencies.isEmpty()) {
+                 validatedProviders.add(provider);
+diff --git a/src/main/java/io/papermc/paper/plugin/manager/PaperPluginInstanceManager.java b/src/main/java/io/papermc/paper/plugin/manager/PaperPluginInstanceManager.java
+index c0e896343c22badd97c774c4ed1daa4e274f5d44..ee7ce7b48a02ed8adee0511d53e362048819bc20 100644
+--- a/src/main/java/io/papermc/paper/plugin/manager/PaperPluginInstanceManager.java
++++ b/src/main/java/io/papermc/paper/plugin/manager/PaperPluginInstanceManager.java
+@@ -118,9 +118,14 @@ class PaperPluginInstanceManager {
+         }
+ 
+         try {
++            io.papermc.paper.plugin.entrypoint.strategy.ModernPluginLoadingStrategy.checkRegisteredPlugins = true; // okocraft - Check for registered plugins in the server to allow bad reloads using PluginManager#loadPlugin
+             runtimePluginEntrypointHandler.enter(Entrypoint.PLUGIN);
+         } catch (Throwable e) {
+             throw new InvalidPluginException(e);
++        // okocraft start - Check for registered plugins in the server to allow bad reloads using PluginManager#loadPlugin
++        } finally {
++            io.papermc.paper.plugin.entrypoint.strategy.ModernPluginLoadingStrategy.checkRegisteredPlugins = false;
++        // okocraft end
+         }
+ 
+         return runtimePluginEntrypointHandler.getPluginProviderStorage().getSingleLoaded()

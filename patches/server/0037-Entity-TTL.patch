@@ -1,0 +1,70 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Kevin Raneri <kevin.raneri@gmail.com>
+Date: Thu, 2 Jun 2022 19:54:09 -0500
+Subject: [PATCH] Entity TTL
+
+
+diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
+index d1bc5d223cfe59498c3f53cf2b7c73c170062a74..e3b5f466f214508865d3eeb08998dca01b4dbbf6 100644
+--- a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
++++ b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
+@@ -3,6 +3,8 @@ package gg.pufferfish.pufferfish;
+ import java.io.File;
+ import java.io.IOException;
+ import java.util.Collections;
++import java.util.Locale;
++import java.util.Map;
+ 
+ import net.minecraft.core.registries.BuiltInRegistries;
+ import net.minecraft.server.MinecraftServer;
+@@ -205,4 +207,21 @@ public class PufferfishConfig {
+ 				"Throttles the AI goal selector in entity inactive ticks.",
+ 				"This can improve performance by a few percent, but has minor gameplay implications.");
+ 	}
++
++	public static Map<String, Integer> projectileTimeouts;
++	private static void projectileTimeouts() {
++		// Set some defaults
++		getInt("entity_timeouts.SNOWBALL", -1);
++		getInt("entity_timeouts.LLAMA_SPIT", -1);
++		setComment("entity_timeouts",
++				"These values define a entity's maximum lifespan. If an",
++				"entity is in this list and it has survived for longer than",
++				"that number of ticks, then it will be removed. Setting a value to",
++				"-1 disables this feature.");
++
++		for (EntityType<?> entityType : BuiltInRegistries.ENTITY_TYPE) {
++			String type = EntityType.getKey(entityType).getPath().toUpperCase(Locale.ROOT);
++			entityType.ttl = config.getInt("entity_timeouts." + type, -1);
++		}
++	}
+ }
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 292491dc8c159018ffb6d732dc50bc505845d58c..bfc0ce4c7fd70c43474334dae44aff3a0989f01d 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -816,6 +816,12 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+     // CraftBukkit end
+ 
+     public void baseTick() {
++        // Pufferfish start - entity TTL
++        if (type != EntityType.PLAYER && type.ttl >= 0 && this.tickCount >= type.ttl) {
++            remove(RemovalReason.DISCARDED);
++            return;
++        }
++        // Pufferfish end - entity TTL
+         this.level.getProfiler().push("entityBaseTick");
+         if (firstTick && this instanceof net.minecraft.world.entity.NeutralMob neutralMob) neutralMob.tickInitialPersistentAnger(level); // Paper - Update last hurt when ticking
+         this.feetBlockState = null;
+diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
+index 6ed367ba2d81e3c47181c7c8d93c09fc1c6737a2..c8e43a46ef5eb958c2e0a8b49cbb6dafef7cb52f 100644
+--- a/src/main/java/net/minecraft/world/entity/EntityType.java
++++ b/src/main/java/net/minecraft/world/entity/EntityType.java
+@@ -309,6 +309,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+     private final EntityDimensions dimensions;
+     private final FeatureFlagSet requiredFeatures;
+     public boolean dabEnabled = false; // Pufferfish
++    public int ttl = -1; // Pufferfish
+ 
+     private static <T extends Entity> EntityType<T> register(String id, EntityType.Builder type) { // CraftBukkit - decompile error
+         return (EntityType) Registry.register(BuiltInRegistries.ENTITY_TYPE, id, (EntityType<T>) type.build(id)); // CraftBukkit - decompile error

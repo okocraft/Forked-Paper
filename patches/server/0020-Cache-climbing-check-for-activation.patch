@@ -1,0 +1,43 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Paul Sauve <paul@technove.co>
+Date: Mon, 26 Apr 2021 10:52:56 -0500
+Subject: [PATCH] Cache climbing check for activation
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+index bd92e5367259a1cf2c6736bd8c73c16ae0e9818d..ef57f15763357ff771cad661a56c2ef433193cb5 100644
+--- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
++++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+@@ -1938,6 +1938,19 @@ public abstract class LivingEntity extends Entity implements Attackable {
+         return this.lastClimbablePos;
+     }
+ 
++    // Pufferfish start
++    private boolean cachedOnClimable = false;
++    private BlockPos lastClimbingPosition = null;
++
++    public boolean onClimableCached() {
++        if (!this.blockPosition().equals(this.lastClimbingPosition)) {
++            this.cachedOnClimable = this.onClimbable();
++            this.lastClimbingPosition = this.blockPosition();
++        }
++        return this.cachedOnClimable;
++    }
++    // Pufferfish end
++
+     public boolean onClimbable() {
+         if (this.isSpectator()) {
+             return false;
+diff --git a/src/main/java/org/spigotmc/ActivationRange.java b/src/main/java/org/spigotmc/ActivationRange.java
+index 9dc1e8ef24d68a0652bcfe3a9e8ae0f0ea4c04af..b7df37a28ecd8ef4f8598e4849d8a30248a10838 100644
+--- a/src/main/java/org/spigotmc/ActivationRange.java
++++ b/src/main/java/org/spigotmc/ActivationRange.java
+@@ -308,7 +308,7 @@ public class ActivationRange
+         if ( entity instanceof LivingEntity )
+         {
+             LivingEntity living = (LivingEntity) entity;
+-            if ( living.onClimbable() || living.jumping || living.hurtTime > 0 || living.activeEffects.size() > 0 ) // Paper
++            if ( living.onClimableCached() || living.jumping || living.hurtTime > 0 || living.activeEffects.size() > 0 ) // Paper // Pufferfish - use cached
+             {
+                 return 1; // Paper
+             }
