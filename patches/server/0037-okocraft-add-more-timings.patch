@@ -65,7 +65,7 @@ index fe79c0add4f7cb18d487c5bb9415c40c5b551ea2..bc3121996f3917dd267b6a8a091bb69e
  
      public static Timing getTickList(ServerLevel worldserver, String timingsType) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index ef57f15763357ff771cad661a56c2ef433193cb5..bed382fbd8238c75025bbd91bfb2ce569587dbe6 100644
+index 5f818308fdad80ba5f7690eb1c21dbf5fde93c7b..87c39245e95880e7662311cf552100c78ee84f80 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -3342,6 +3342,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
