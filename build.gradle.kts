@@ -60,3 +60,10 @@ paperweight {
         }
     }
 }
+
+tasks {
+    // Add an alias for "createReobfPaperclipJar" task
+    create("clip") {
+        dependsOn(createReobfPaperclipJar)
+    }
+}
