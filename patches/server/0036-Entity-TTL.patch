@@ -40,10 +40,10 @@ index d1bc5d223cfe59498c3f53cf2b7c73c170062a74..e3b5f466f214508865d3eeb08998dca0
 +	}
  }
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 11e80f1c55b97e209d28074e29dbdbf3b4353778..deff8375546b70d519c35a71b99e61dc496a3bfd 100644
+index 292491dc8c159018ffb6d732dc50bc505845d58c..bfc0ce4c7fd70c43474334dae44aff3a0989f01d 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -815,6 +815,12 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -816,6 +816,12 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
      // CraftBukkit end
  
      public void baseTick() {
@@ -57,10 +57,10 @@ index 11e80f1c55b97e209d28074e29dbdbf3b4353778..deff8375546b70d519c35a71b99e61dc
          if (firstTick && this instanceof net.minecraft.world.entity.NeutralMob neutralMob) neutralMob.tickInitialPersistentAnger(level); // Paper - Update last hurt when ticking
          this.feetBlockState = null;
 diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
-index ec857130e32cc5cd8e85e6537e1010a0d3daa845..ea81b7d7fb0ec86f6c06d45a4f5dbaa7fde37422 100644
+index 6ed367ba2d81e3c47181c7c8d93c09fc1c6737a2..c8e43a46ef5eb958c2e0a8b49cbb6dafef7cb52f 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityType.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityType.java
-@@ -302,6 +302,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+@@ -309,6 +309,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
      private final EntityDimensions dimensions;
      private final FeatureFlagSet requiredFeatures;
      public boolean dabEnabled = false; // Pufferfish

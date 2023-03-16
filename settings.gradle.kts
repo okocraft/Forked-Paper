@@ -9,5 +9,5 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.4.0"
 }
 
-rootProject.name = "pufferfish"
-include("pufferfish-api", "pufferfish-server")
+rootProject.name = "okocraft"
+include("okocraft-api", "okocraft-server")

@@ -1,0 +1,112 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Wed, 15 Mar 2023 07:49:23 +0900
+Subject: [PATCH] okocraft customize server
+
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index 9cf389defdaeb887e9cad4f0fed3f3b95667b238..d63de82916fbc08e97a5b86ea8cf4f523d4c9880 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -7,8 +7,12 @@ plugins {
+ }
+ 
+ dependencies {
+-    implementation(project(":paper-api"))
+-    implementation(project(":paper-mojangapi"))
++    // okocraft start
++    implementation(project(":okocraft-api"))
++    implementation("io.papermc.paper:paper-mojangapi:1.19.3-R0.1-SNAPSHOT") { // todo: Update to 1.19.4
++        exclude("io.papermc.paper", "paper-api")
++    }
++    // okocraft end
+     // Paper start
+     implementation("org.jline:jline-terminal-jansi:3.21.0")
+     implementation("net.minecrell:terminalconsoleappender:1.3.0")
+diff --git a/src/main/java/net/okocraft/paper/OkocraftVersionFetcher.java b/src/main/java/net/okocraft/paper/OkocraftVersionFetcher.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..05d4f1a98480719283d43e535e603bf9f9d74502
+--- /dev/null
++++ b/src/main/java/net/okocraft/paper/OkocraftVersionFetcher.java
+@@ -0,0 +1,55 @@
++package net.okocraft.paper;
++
++import com.destroystokyo.paper.VersionHistoryManager;
++import com.destroystokyo.paper.util.VersionFetcher;
++import net.kyori.adventure.text.Component;
++import net.kyori.adventure.text.TextComponent;
++import net.kyori.adventure.text.event.ClickEvent;
++import net.kyori.adventure.text.format.NamedTextColor;
++import net.kyori.adventure.text.format.TextDecoration;
++import org.jetbrains.annotations.NotNull;
++import org.jetbrains.annotations.Nullable;
++
++import static net.kyori.adventure.text.Component.newline;
++import static net.kyori.adventure.text.Component.text;
++
++public class OkocraftVersionFetcher implements VersionFetcher {
++
++    private static final String OKOCRAFT_PAPER_REPO = "https://github.com/okocraft/Forked-Paper";
++
++    @Override
++    public long getCacheTime() {
++        return Long.MAX_VALUE; // prevent re-fetching
++    }
++
++    @Override
++    public @NotNull Component getVersionMessage(final @NotNull String serverVersion) {
++        TextComponent.Builder builder =
++                text().append(text("This server software is maintained by OKOCRAFT."))
++                        .append(newline())
++                        .append(text("Repository: "))
++                        .append(text(OKOCRAFT_PAPER_REPO)
++                                .hoverEvent(Component.text("Click to open", NamedTextColor.WHITE))
++                                .clickEvent(ClickEvent.openUrl(OKOCRAFT_PAPER_REPO))
++                        );
++
++
++        final @Nullable Component history = this.getHistory();
++
++        return history != null ? builder.append(newline()).append(history).build() : builder.build();
++    }
++
++    private @Nullable Component getHistory() {
++        final VersionHistoryManager.VersionData data = VersionHistoryManager.INSTANCE.getVersionData();
++        if (data == null) {
++            return null;
++        }
++
++        final String oldVersion = data.getOldVersion();
++        if (oldVersion == null) {
++            return null;
++        }
++
++        return Component.text("Previous version: " + oldVersion, NamedTextColor.GRAY, TextDecoration.ITALIC);
++    }
++}
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
+index 64c50c52c11214740de7903e5592b8b6b2c170b3..d72f6d34858c32cbafcbaadda44a5659bc2ae4db 100644
+--- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
++++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
+@@ -464,7 +464,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+ 
+     @Override
+     public com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {
+-        return new com.destroystokyo.paper.PaperVersionFetcher();
++        return new net.okocraft.paper.OkocraftVersionFetcher(); // okocraft
+     }
+ 
+     @Override
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
+index 774556a62eb240da42e84db4502e2ed43495be17..b2822fee256233d555e6588ba75aa9ac94688a13 100644
+--- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
++++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
+@@ -11,7 +11,7 @@ public final class Versioning {
+     public static String getBukkitVersion() {
+         String result = "Unknown-Version";
+ 
+-        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/io.papermc.paper/paper-api/pom.properties");
++        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/net.okocraft.paper/okocraft-api/pom.properties"); // okocraft
+         Properties properties = new Properties();
+ 
+         if (stream != null) {

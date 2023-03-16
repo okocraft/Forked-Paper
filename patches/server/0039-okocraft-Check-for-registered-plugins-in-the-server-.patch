@@ -6,7 +6,7 @@ Subject: [PATCH] okocraft Check for registered plugins in the server to allow
 
 
 diff --git a/src/main/java/io/papermc/paper/plugin/entrypoint/strategy/ModernPluginLoadingStrategy.java b/src/main/java/io/papermc/paper/plugin/entrypoint/strategy/ModernPluginLoadingStrategy.java
-index 671e9ebb8246a4cc9e212f5b11ea476560f2f7d5..13e2d99d95853dccaf275c2824a33361fbd8ef11 100644
+index 1d58f3a438d5be423c84b2f61e496d938fdc2995..f6c078eb69964f473b2a57b6b9a1b890405d710a 100644
 --- a/src/main/java/io/papermc/paper/plugin/entrypoint/strategy/ModernPluginLoadingStrategy.java
 +++ b/src/main/java/io/papermc/paper/plugin/entrypoint/strategy/ModernPluginLoadingStrategy.java
 @@ -24,6 +24,7 @@ import java.util.Map;

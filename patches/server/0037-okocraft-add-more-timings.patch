@@ -65,10 +65,10 @@ index fe79c0add4f7cb18d487c5bb9415c40c5b551ea2..bc3121996f3917dd267b6a8a091bb69e
  
      public static Timing getTickList(ServerLevel worldserver, String timingsType) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 04896125b861508e2c966010607514a41e04dd72..b8a825a7ee342d71e2950f05c86f3fdf18fe4457 100644
+index 5f818308fdad80ba5f7690eb1c21dbf5fde93c7b..87c39245e95880e7662311cf552100c78ee84f80 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -3384,6 +3384,7 @@ public abstract class LivingEntity extends Entity {
+@@ -3342,6 +3342,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
              this.serverAiStep();
              this.level.getProfiler().pop();
          }
@@ -77,10 +77,10 @@ index 04896125b861508e2c966010607514a41e04dd72..b8a825a7ee342d71e2950f05c86f3fdf
          this.level.getProfiler().pop();
          this.level.getProfiler().push("jump");
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index 94b45579dc371ee980565aed2f5dee78ebd44427..d58e8c4649214b53131737dea53740360ee4eddb 100644
+index 636e601b004a412d02e5be86e97d489b52c28e1b..7efb0638f3424de76fb0467b6e61563527a9ca04 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
-@@ -874,7 +874,9 @@ public abstract class Mob extends LivingEntity {
+@@ -903,7 +903,9 @@ public abstract class Mob extends LivingEntity implements Targeting {
          }
          // Paper end
          this.level.getProfiler().push("sensing");
@@ -91,7 +91,7 @@ index 94b45579dc371ee980565aed2f5dee78ebd44427..d58e8c4649214b53131737dea5374036
          int i = this.level.getServer().getTickCount() + this.getId();
  
 diff --git a/src/main/java/net/minecraft/world/entity/npc/Villager.java b/src/main/java/net/minecraft/world/entity/npc/Villager.java
-index 76a9da8209d557b913c49ccd281bf147b9ac4fa4..cae9ba615b7a5c7f9b4959e446d83a83c84d9fd4 100644
+index 5402a084ef5fe0b3cfea897a90cffade1eff5b66..c72e8ee9943ab692f40966185effc36616247fba 100644
 --- a/src/main/java/net/minecraft/world/entity/npc/Villager.java
 +++ b/src/main/java/net/minecraft/world/entity/npc/Villager.java
 @@ -250,12 +250,14 @@ public class Villager extends AbstractVillager implements ReputationEventHandler

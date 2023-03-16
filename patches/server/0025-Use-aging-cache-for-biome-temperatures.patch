@@ -130,7 +130,7 @@ index 0000000000000000000000000000000000000000..a7f297ebb569f7c1f205e967ca485be7
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/world/level/biome/Biome.java b/src/main/java/net/minecraft/world/level/biome/Biome.java
-index c4f1173aab1e53412a65793e06238e637910475a..a4c484cacbf6cec7b9225f3f66a05827bf8ef7a3 100644
+index 65012a12e1430956ef55ced56773e6354ac26444..ed439b7e94646141c93a7dd3704d1cdeb5c27e16 100644
 --- a/src/main/java/net/minecraft/world/level/biome/Biome.java
 +++ b/src/main/java/net/minecraft/world/level/biome/Biome.java
 @@ -66,14 +66,20 @@ public final class Biome {
@@ -155,7 +155,7 @@ index c4f1173aab1e53412a65793e06238e637910475a..a4c484cacbf6cec7b9225f3f66a05827
          });
      });
  
-@@ -114,17 +120,15 @@ public final class Biome {
+@@ -118,17 +124,15 @@ public final class Biome {
      @Deprecated
      public float getTemperature(BlockPos blockPos) {
          long l = blockPos.asLong();
