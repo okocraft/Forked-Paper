@@ -13,7 +13,7 @@ jobs:
       latest_commit_hash: ${{ steps.latest_commit_hash.outputs.hash }}
     steps:
       - name: Checkout Git Repository
-        uses: actions/checkout@v3.3.0
+        uses: actions/checkout@v3.4.0
       - name: Run check-upstream.sh
         uses: actions/github-script@v6.4.0
         id: check_result
@@ -33,7 +33,7 @@ jobs:
     if: ${{ startsWith(needs.check_upstream.outputs.pr_description, 'Paper Changes:') }}
     steps:
       - name: Checkout Git Repository
-        uses: actions/checkout@v3.3.0
+        uses: actions/checkout@v3.4.0
       - name: Set up JDK
         uses: actions/setup-java@v3.10.0
         with:
