@@ -5,7 +5,7 @@ Subject: [PATCH] okocraft customize server
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 9cf389defdaeb887e9cad4f0fed3f3b95667b238..d63de82916fbc08e97a5b86ea8cf4f523d4c9880 100644
+index 9cf389defdaeb887e9cad4f0fed3f3b95667b238..4beaf2d09e76f7af213d5769ebf72b2a46e1bc79 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -7,8 +7,12 @@ plugins {
@@ -16,7 +16,7 @@ index 9cf389defdaeb887e9cad4f0fed3f3b95667b238..d63de82916fbc08e97a5b86ea8cf4f52
 -    implementation(project(":paper-mojangapi"))
 +    // okocraft start
 +    implementation(project(":okocraft-api"))
-+    implementation("io.papermc.paper:paper-mojangapi:1.19.3-R0.1-SNAPSHOT") { // todo: Update to 1.19.4
++    implementation("io.papermc.paper:paper-mojangapi:1.19.4-R0.1-SNAPSHOT") {
 +        exclude("io.papermc.paper", "paper-api")
 +    }
 +    // okocraft end
