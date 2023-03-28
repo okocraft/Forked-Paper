@@ -5,10 +5,10 @@ Subject: [PATCH] okocraft add more timings
 
 
 diff --git a/src/main/java/co/aikar/timings/WorldTimingsHandler.java b/src/main/java/co/aikar/timings/WorldTimingsHandler.java
-index fe79c0add4f7cb18d487c5bb9415c40c5b551ea2..bc3121996f3917dd267b6a8a091bb69e44e6d7d5 100644
+index 22687667ec69a954261e55e59261286ac1b8b8cd..c847d7eb9c238ae038e85e07ef91a557081a60c3 100644
 --- a/src/main/java/co/aikar/timings/WorldTimingsHandler.java
 +++ b/src/main/java/co/aikar/timings/WorldTimingsHandler.java
-@@ -67,6 +67,26 @@ public class WorldTimingsHandler {
+@@ -68,6 +68,26 @@ public class WorldTimingsHandler {
      public final Timing chunkUnloadPrepareSave;
      public final Timing chunkUnloadPOISerialization;
      public final Timing chunkUnloadDataSave;
@@ -35,7 +35,7 @@ index fe79c0add4f7cb18d487c5bb9415c40c5b551ea2..bc3121996f3917dd267b6a8a091bb69e
  
      public WorldTimingsHandler(Level server) {
          String name = ((PrimaryLevelData) server.getLevelData()).getLevelName() + " - ";
-@@ -131,6 +151,28 @@ public class WorldTimingsHandler {
+@@ -132,6 +152,28 @@ public class WorldTimingsHandler {
          chunkUnloadPrepareSave = Timings.ofSafe(name + "Chunk unload - Async Save Prepare");
          chunkUnloadPOISerialization = Timings.ofSafe(name + "Chunk unload - POI Data Serialization");
          chunkUnloadDataSave = Timings.ofSafe(name + "Chunk unload - Data Serialization");
@@ -65,7 +65,7 @@ index fe79c0add4f7cb18d487c5bb9415c40c5b551ea2..bc3121996f3917dd267b6a8a091bb69e
  
      public static Timing getTickList(ServerLevel worldserver, String timingsType) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 5f818308fdad80ba5f7690eb1c21dbf5fde93c7b..87c39245e95880e7662311cf552100c78ee84f80 100644
+index bef17fe121555450f5f46fb795f30e566561be9c..b894a70cb81a58ebb355064721a18b9fa1683698 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -3342,6 +3342,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
