@@ -4,24 +4,8 @@ Date: Sat, 11 Dec 2021 22:20:45 -0500
 Subject: [PATCH] Throttle goal selector during inactive ticking
 
 
-diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-index 45675121b207a42ef40658ef87844c1ebeca48a2..d1bc5d223cfe59498c3f53cf2b7c73c170062a74 100644
---- a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-+++ b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-@@ -198,4 +198,11 @@ public class PufferfishConfig {
- 		disableMethodProfiler = getBoolean("misc.disable-method-profiler", true);
- 		setComment("misc", "Settings for things that don't belong elsewhere");
- 	}
-+
-+	public static boolean throttleInactiveGoalSelectorTick;
-+	private static void inactiveGoalSelectorThrottle() {
-+		getBoolean("inactive-goal-selector-throttle", "inactive-goal-selector-disable", true,
-+				"Throttles the AI goal selector in entity inactive ticks.",
-+				"This can improve performance by a few percent, but has minor gameplay implications.");
-+	}
- }
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index 28268bcfdd4dc21f12d1493c288e2960d483058a..636e601b004a412d02e5be86e97d489b52c28e1b 100644
+index 28268bcfdd4dc21f12d1493c288e2960d483058a..ee40b2763062bcc1649acec55552f87474ca3a2e 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
 @@ -215,11 +215,13 @@ public abstract class Mob extends LivingEntity implements Targeting {
@@ -34,7 +18,7 @@ index 28268bcfdd4dc21f12d1493c288e2960d483058a..636e601b004a412d02e5be86e97d489b
      public void inactiveTick() {
          super.inactiveTick();
 -        if (this.goalSelector.inactiveTick(this.activatedPriority, true)) { // Pufferfish - pass activated priroity
-+        boolean isThrottled = gg.pufferfish.pufferfish.PufferfishConfig.throttleInactiveGoalSelectorTick && _pufferfish_inactiveTickDisableCounter++ % 20 != 0; // Pufferfish - throttle inactive goal selector ticking
++        boolean isThrottled = _pufferfish_inactiveTickDisableCounter++ % 20 != 0; // Pufferfish - throttle inactive goal selector ticking
 +        if (this.goalSelector.inactiveTick(this.activatedPriority, true) && !isThrottled) { // Pufferfish - pass activated priroity // Pufferfish - throttle inactive goal selector ticking
              this.goalSelector.tick();
          }

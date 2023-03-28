@@ -20,10 +20,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-index 4682c01c3c58b5e7f0bc88e5828b45aa266cc85f..ec72d8b2d789df5ef042f97932aed9c775cc2020 100644
+index 0169a8965e57ae0a4b128270f9fdc08306702a5a..dfd0f6a5357ddf8d5f6fa94a4d6b063bbe293271 100644
 --- a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 +++ b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-@@ -148,4 +148,13 @@ public class PufferfishConfig {
+@@ -84,4 +84,13 @@ public class PufferfishConfig {
  			enableAsyncMobSpawning = temp;
  		}
  	}

@@ -4,38 +4,6 @@ Date: Tue, 9 Nov 2021 13:53:53 -0500
 Subject: [PATCH] Pufferfish Config and Command
 
 
-diff --git a/build.gradle.kts b/build.gradle.kts
-index 4beaf2d09e76f7af213d5769ebf72b2a46e1bc79..192d20452d9cc40b6f53026e69b763fcbf6a6e41 100644
---- a/build.gradle.kts
-+++ b/build.gradle.kts
-@@ -46,6 +46,13 @@ dependencies {
-     runtimeOnly("org.apache.maven.resolver:maven-resolver-connector-basic:1.7.3")
-     runtimeOnly("org.apache.maven.resolver:maven-resolver-transport-http:1.7.3")
- 
-+    // Pufferfish start
-+    implementation("org.yaml:snakeyaml:1.33")
-+    implementation ("me.carleslc.Simple-YAML:Simple-Yaml:1.8.3") {
-+        exclude(group="org.yaml", module="snakeyaml")
-+    }
-+    // Pufferfish end
-+
-     testImplementation("io.github.classgraph:classgraph:4.8.47") // Paper - mob goal test
-     testImplementation("junit:junit:4.13.2")
-     testImplementation("org.hamcrest:hamcrest-library:1.3")
-diff --git a/src/main/java/co/aikar/timings/TimingsExport.java b/src/main/java/co/aikar/timings/TimingsExport.java
-index c07eb451a576811a39021f6f97103c77488fd001..5af15c85fab72034b97ac210ff775e0a8fa0be78 100644
---- a/src/main/java/co/aikar/timings/TimingsExport.java
-+++ b/src/main/java/co/aikar/timings/TimingsExport.java
-@@ -242,7 +242,8 @@ public class TimingsExport extends Thread {
-         parent.put("config", createObject(
-             pair("spigot", mapAsJSON(Bukkit.spigot().getSpigotConfig(), null)),
-             pair("bukkit", mapAsJSON(Bukkit.spigot().getBukkitConfig(), null)),
--            pair("paper", mapAsJSON(Bukkit.spigot().getPaperConfig(), null))
-+            pair("paper", mapAsJSON(Bukkit.spigot().getPaperConfig(), null)), // Pufferfish
-+            pair("pufferfish", mapAsJSON(gg.pufferfish.pufferfish.PufferfishConfig.getConfigCopy(), null)) // Pufferfish
-         ));
- 
-         new TimingsExport(listeners, parent, history).start();
 diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishCommand.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishCommand.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..020368da69b9a492155f6de6297f74732f4ab6ea
@@ -112,69 +80,37 @@ index 0000000000000000000000000000000000000000..020368da69b9a492155f6de6297f7473
 +}
 diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..f118544878d10e102f072a22db10c4c91d4a5b0e
+index 0000000000000000000000000000000000000000..77a0a75b7d71ab6b373581eb75483f5c1439b698
 --- /dev/null
 +++ b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-@@ -0,0 +1,134 @@
+@@ -0,0 +1,70 @@
 +package gg.pufferfish.pufferfish;
 +
 +import java.io.File;
 +import java.io.IOException;
-+
-+import net.minecraft.server.MinecraftServer;
 +import java.lang.reflect.Method;
 +import java.lang.reflect.Modifier;
++import java.util.Arrays;
 +import java.util.List;
-+import org.bukkit.configuration.ConfigurationSection;
-+import org.bukkit.configuration.MemoryConfiguration;
-+import org.jetbrains.annotations.Nullable;
-+import org.simpleyaml.configuration.comments.CommentType;
-+import org.simpleyaml.configuration.file.YamlFile;
-+import org.simpleyaml.exceptions.InvalidConfigurationException;
++import net.minecraft.server.MinecraftServer;
++import org.bukkit.configuration.InvalidConfigurationException;
++import org.bukkit.configuration.file.YamlConfiguration;
 +
 +public class PufferfishConfig {
-+	
-+	private static final YamlFile config = new YamlFile();
-+	private static int updates = 0;
-+	
-+	private static ConfigurationSection convertToBukkit(org.simpleyaml.configuration.ConfigurationSection section) {
-+		ConfigurationSection newSection = new MemoryConfiguration();
-+		for (String key : section.getKeys(false)) {
-+			if (section.isConfigurationSection(key)) {
-+				newSection.set(key, convertToBukkit(section.getConfigurationSection(key)));
-+			} else {
-+				newSection.set(key, section.get(key));
-+			}
-+		}
-+		return newSection;
-+	}
-+	
-+	public static ConfigurationSection getConfigCopy() {
-+		return convertToBukkit(config);
-+	}
-+	
-+	public static int getUpdates() {
-+		return updates;
-+	}
-+	
++
++	private static final YamlConfiguration yaml = new YamlConfiguration();
++
 +	public static void load() throws IOException {
 +		File configFile = new File("pufferfish.yml");
-+		
++
 +		if (configFile.exists()) {
 +			try {
-+				config.load(configFile);
++				yaml.load(configFile);
 +			} catch (InvalidConfigurationException e) {
 +				throw new IOException(e);
 +			}
 +		}
-+		
-+		getString("info.version", "1.0");
-+		setComment("info",
-+				"Pufferfish Configuration",
-+				"Check out Pufferfish Host for maximum performance server hosting: https://pufferfish.host",
-+				"Join our Discord for support: https://discord.gg/reZw4vQV9H",
-+				"Download new builds at https://ci.pufferfish.host/job/Pufferfish");
-+		
++
 +		for (Method method : PufferfishConfig.class.getDeclaredMethods()) {
 +			if (Modifier.isStatic(method.getModifiers()) && Modifier.isPrivate(method.getModifiers()) && method.getParameterCount() == 0 &&
 +					method.getReturnType() == Void.TYPE && !method.getName().startsWith("lambda")) {
@@ -186,68 +122,36 @@ index 0000000000000000000000000000000000000000..f118544878d10e102f072a22db10c4c9
 +				}
 +			}
 +		}
-+		
-+		updates++;
-+		
-+		config.save(configFile);
++
++		yaml.save(configFile);
 +	}
-+	
++
 +	private static void setComment(String key, String... comment) {
-+		if (config.contains(key)) {
-+			config.setComment(key, String.join("\n", comment), CommentType.BLOCK);
++		if (yaml.contains(key) && comment != null && comment.length != 0) {
++			yaml.setComments(key, Arrays.asList(comment));
 +		}
 +	}
-+	
++
 +	private static void ensureDefault(String key, Object defaultValue, String... comment) {
-+		if (!config.contains(key)) {
-+			config.set(key, defaultValue);
-+			config.setComment(key, String.join("\n", comment), CommentType.BLOCK);
++		if (!yaml.contains(key)) {
++			yaml.set(key, defaultValue);
++			setComment(key, comment);
 +		}
 +	}
-+	
++
 +	private static boolean getBoolean(String key, boolean defaultValue, String... comment) {
-+		return getBoolean(key, null, defaultValue, comment);
-+	}
-+	
-+	private static boolean getBoolean(String key, @Nullable String oldKey, boolean defaultValue, String... comment) {
 +		ensureDefault(key, defaultValue, comment);
-+		return config.getBoolean(key, defaultValue);
++		return yaml.getBoolean(key, defaultValue);
 +	}
-+	
++
 +	private static int getInt(String key, int defaultValue, String... comment) {
-+		return getInt(key, null, defaultValue, comment);
-+	}
-+	
-+	private static int getInt(String key, @Nullable String oldKey, int defaultValue, String... comment) {
 +		ensureDefault(key, defaultValue, comment);
-+		return config.getInt(key, defaultValue);
++		return yaml.getInt(key, defaultValue);
 +	}
-+	
-+	private static double getDouble(String key, double defaultValue, String... comment) {
-+		return getDouble(key, null, defaultValue, comment);
-+	}
-+	
-+	private static double getDouble(String key, @Nullable String oldKey, double defaultValue, String... comment) {
-+		ensureDefault(key, defaultValue, comment);
-+		return config.getDouble(key, defaultValue);
-+	}
-+	
-+	private static String getString(String key, String defaultValue, String... comment) {
-+		return getOldString(key, null, defaultValue, comment);
-+	}
-+	
-+	private static String getOldString(String key, @Nullable String oldKey, String defaultValue, String... comment) {
-+		ensureDefault(key, defaultValue, comment);
-+		return config.getString(key, defaultValue);
-+	}
-+	
++
 +	private static List<String> getStringList(String key, List<String> defaultValue, String... comment) {
-+		return getStringList(key, null, defaultValue, comment);
-+	}
-+	
-+	private static List<String> getStringList(String key, @Nullable String oldKey, List<String> defaultValue, String... comment) {
 +		ensureDefault(key, defaultValue, comment);
-+		return config.getStringList(key);
++		return yaml.getStringList(key);
 +	}
 +}
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java

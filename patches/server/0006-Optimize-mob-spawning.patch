@@ -17,12 +17,12 @@ and, in my opinion, worth the low risk of minor mob-spawning-related
 inconsistencies.
 
 diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-index f118544878d10e102f072a22db10c4c91d4a5b0e..4682c01c3c58b5e7f0bc88e5828b45aa266cc85f 100644
+index 77a0a75b7d71ab6b373581eb75483f5c1439b698..0169a8965e57ae0a4b128270f9fdc08306702a5a 100644
 --- a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 +++ b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-@@ -131,4 +131,21 @@ public class PufferfishConfig {
+@@ -67,4 +67,21 @@ public class PufferfishConfig {
  		ensureDefault(key, defaultValue, comment);
- 		return config.getStringList(key);
+ 		return yaml.getStringList(key);
  	}
 +
 +	public static boolean enableAsyncMobSpawning;
