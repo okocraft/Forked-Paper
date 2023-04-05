@@ -80,7 +80,7 @@ index dfd0f6a5357ddf8d5f6fa94a4d6b063bbe293271..b858e06851fe73fece363d923dd34ef3
 +	}
  }
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 430bd8ce9b5d796885fc1ad48260361013205100..db05e68407f56675d0a86dc4459cdb2b3b784961 100644
+index 60076a0546b267da56e4eeb10c6286673e272399..2fecf3a92786bc8fc4a9ef8334180e771aed9048 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -709,6 +709,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
@@ -356,10 +356,10 @@ index 6023b9eb3001e1a98ab8b970d853c4e7c7603f4d..5402a084ef5fe0b3cfea897a90cffade
          if (this.assignProfessionWhenSpawned) {
              this.assignProfessionWhenSpawned = false;
 diff --git a/src/main/java/org/spigotmc/ActivationRange.java b/src/main/java/org/spigotmc/ActivationRange.java
-index e881584d38dc354204479863f004e974a0ac6c07..9dc1e8ef24d68a0652bcfe3a9e8ae0f0ea4c04af 100644
+index 52780192d6417f8085566e4cdf3a895a83638520..57fed9ddf18a3306850b95ef628fefdfbb8c2705 100644
 --- a/src/main/java/org/spigotmc/ActivationRange.java
 +++ b/src/main/java/org/spigotmc/ActivationRange.java
-@@ -216,6 +216,23 @@ public class ActivationRange
+@@ -217,6 +217,23 @@ public class ActivationRange
              for (int i = 0; i < entities.size(); i++) {
                  Entity entity = entities.get(i);
                  ActivationRange.activateEntity(entity);
@@ -383,7 +383,7 @@ index e881584d38dc354204479863f004e974a0ac6c07..9dc1e8ef24d68a0652bcfe3a9e8ae0f0
              }
              // Paper end
          }
-@@ -232,12 +249,12 @@ public class ActivationRange
+@@ -233,12 +250,12 @@ public class ActivationRange
          if ( MinecraftServer.currentTick > entity.activatedTick )
          {
              if ( entity.defaultActivationState )
