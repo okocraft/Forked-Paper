@@ -70,7 +70,7 @@ jobs:
               echo "result=upstream,rebase-required" >> $GITHUB_OUTPUT
           fi
       - name: Create a Pull Request
-        uses: peter-evans/create-pull-request@v4.2.4
+        uses: peter-evans/create-pull-request@v5.0.0
         if: always()
         with:
           title: Updated Upstream (Paper)
