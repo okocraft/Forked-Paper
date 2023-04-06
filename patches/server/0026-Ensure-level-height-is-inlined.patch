@@ -5,7 +5,7 @@ Subject: [PATCH] Ensure level height is inlined
 
 
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index c9854b28be7cd9a533e2775c7363d2d33c7f06a4..46da2e103b2a661b9047278cce92aecfc3ae2981 100644
+index e03b8231e324132ef0b15427bf9e819e7e8b7a9a..d71d4921043d80ab6d08840adb207513421f1356 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -276,6 +276,15 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
