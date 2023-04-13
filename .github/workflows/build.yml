@@ -17,11 +17,11 @@ jobs:
         uses: gradle/wrapper-validation-action@v1.0.6
       - run: chmod +x ./gradlew
       - name: Apply Patches
-        uses: gradle/gradle-build-action@v2.4.0
+        uses: gradle/gradle-build-action@v2.4.1
         with:
           arguments: applyPatches --stacktrace
       - name: Build
-        uses: gradle/gradle-build-action@v2.4.0
+        uses: gradle/gradle-build-action@v2.4.1
         with:
           arguments: createReobfPaperclipJar --stacktrace
       - name: Upload
