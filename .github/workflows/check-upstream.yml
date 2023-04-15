@@ -47,14 +47,14 @@ jobs:
       - name: Update paper-ref
         run: echo -n ${{ needs.check_upstream.outputs.latest_commit_hash }} > paper-ref
       - name: Apply Patches
-        uses: gradle/gradle-build-action@v2.4.1
+        uses: gradle/gradle-build-action@v2.4.2
         id: apply_patches
         continue-on-error: true
         with:
           arguments: applyPatches --stacktrace
           cache-read-only: false
       - name: Rebuild Patches
-        uses: gradle/gradle-build-action@v2.4.1
+        uses: gradle/gradle-build-action@v2.4.2
         if: steps.apply_patches.outcome == 'success'
         continue-on-error: true
         with:
