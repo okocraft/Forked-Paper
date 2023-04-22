@@ -53,6 +53,7 @@ jobs:
         with:
           arguments: applyPatches --stacktrace
           cache-read-only: false
+          gradle-home-cache-cleanup: true
       - name: Rebuild Patches
         uses: gradle/gradle-build-action@v2.4.2
         if: steps.apply_patches.outcome == 'success'
