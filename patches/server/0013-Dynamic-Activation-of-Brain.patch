@@ -80,7 +80,7 @@ index dfd0f6a5357ddf8d5f6fa94a4d6b063bbe293271..b858e06851fe73fece363d923dd34ef3
 +	}
  }
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 60076a0546b267da56e4eeb10c6286673e272399..2fecf3a92786bc8fc4a9ef8334180e771aed9048 100644
+index ae47ebcf9955be83c23b3f76ba19cce6abffcd32..c389ee6045129d15f8270287916249d687c6d606 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -709,6 +709,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
@@ -92,10 +92,10 @@ index 60076a0546b267da56e4eeb10c6286673e272399..2fecf3a92786bc8fc4a9ef8334180e77
                      if (false && this.shouldDiscardEntity(entity)) { // CraftBukkit - We prevent spawning in general, so this butchering is not needed
                          entity.discard();
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 4705d7066207250c03a5f98eef61554c901f2e35..adc891bd8123c81a3a104a942686d83a47153102 100644
+index df316ca580a0a3b4ba6b658f7d7bdf542f4ad85b..7f1614548ed4bdac578bd2b3ff53c6255e054a85 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -415,6 +415,11 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -416,6 +416,11 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
          return this.originWorld;
      }
      // Paper end
