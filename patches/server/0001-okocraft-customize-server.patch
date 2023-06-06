@@ -5,7 +5,7 @@ Subject: [PATCH] okocraft customize server
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 9cf389defdaeb887e9cad4f0fed3f3b95667b238..4beaf2d09e76f7af213d5769ebf72b2a46e1bc79 100644
+index 4f2fa65ade89c5703451dad4f80eeef162b277d1..ca7aabe0831ef839f3825ad0c0c17bd07dbf3704 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -7,8 +7,12 @@ plugins {
@@ -85,10 +85,10 @@ index 0000000000000000000000000000000000000000..05d4f1a98480719283d43e535e603bf9
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 64c50c52c11214740de7903e5592b8b6b2c170b3..d72f6d34858c32cbafcbaadda44a5659bc2ae4db 100644
+index 1179e9fbff93ec8ff82aa3aae477f6bf4ce9b885..ec17f1a07900a21fa63cb2e23f8a599657e5f6a8 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-@@ -464,7 +464,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+@@ -472,7 +472,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
  
      @Override
      public com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {
