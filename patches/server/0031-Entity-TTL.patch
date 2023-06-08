@@ -5,7 +5,7 @@ Subject: [PATCH] Entity TTL
 
 
 diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-index b858e06851fe73fece363d923dd34ef3d5eefcd9..c054e6e57f50e0fc2b38efa62dcde094636bc986 100644
+index b6fa00d660303bfe0a26b17b3aed63be08ed9c31..ccb00bd5917b09d3b8b297f7ed5c0f55a9d82078 100644
 --- a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 +++ b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 @@ -14,6 +14,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
@@ -17,7 +17,7 @@ index b858e06851fe73fece363d923dd34ef3d5eefcd9..c054e6e57f50e0fc2b38efa62dcde094
  
  public class PufferfishConfig {
  
-@@ -130,4 +132,20 @@ public class PufferfishConfig {
+@@ -113,4 +115,20 @@ public class PufferfishConfig {
  
  		setComment("dab", "Optimizes entity brains when", "they're far away from the player");
  	}
@@ -39,10 +39,10 @@ index b858e06851fe73fece363d923dd34ef3d5eefcd9..c054e6e57f50e0fc2b38efa62dcde094
 +	}
  }
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index a24cc0c9798580e6e07844b24b097944c4e06256..9755463a4be7b89c767bc3c505f0b6e56355ab77 100644
+index e187d0afb6b987649744b85d3a3b327d0aca771a..20c206b522dbf16708f4e2d1e0c3bd853c1d402a 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -818,6 +818,12 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -769,6 +769,12 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
      // CraftBukkit end
  
      public void baseTick() {
@@ -52,11 +52,11 @@ index a24cc0c9798580e6e07844b24b097944c4e06256..9755463a4be7b89c767bc3c505f0b6e5
 +            return;
 +        }
 +        // Pufferfish end - entity TTL
-         this.level.getProfiler().push("entityBaseTick");
+         this.level().getProfiler().push("entityBaseTick");
          if (firstTick && this instanceof net.minecraft.world.entity.NeutralMob neutralMob) neutralMob.tickInitialPersistentAnger(level); // Paper - Update last hurt when ticking
          this.feetBlockState = null;
 diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
-index 6ed367ba2d81e3c47181c7c8d93c09fc1c6737a2..c8e43a46ef5eb958c2e0a8b49cbb6dafef7cb52f 100644
+index 549474575b8edd62f87a13120c19d5ad6652c0dc..007051f9d9afc99b3f9d605b7eeab0e91790e368 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityType.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityType.java
 @@ -309,6 +309,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
