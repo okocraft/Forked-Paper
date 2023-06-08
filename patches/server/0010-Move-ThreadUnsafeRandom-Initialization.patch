@@ -8,10 +8,10 @@ require it to be initialized earlier. By moving it to the superclass, we
 initialize it earlier, ensuring that it is available sooner.
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index b89544fdfceee67fb452c37294131efca007e2fe..1751ff992cbe8036e0998af31474f7b3bf715b34 100644
+index 42d5b4ffc51da90a8f3bbec84e44ac2b0cb7b5ee..ab366fb27ba167884c792ab40cfb50b3053204a0 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -852,7 +852,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -853,7 +853,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
      }
      // Paper start - optimise random block ticking
      private final BlockPos.MutableBlockPos chunkTickMutablePosition = new BlockPos.MutableBlockPos();
@@ -21,14 +21,14 @@ index b89544fdfceee67fb452c37294131efca007e2fe..1751ff992cbe8036e0998af31474f7b3
  
      public void tickChunk(LevelChunk chunk, int randomTickSpeed) {
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 799d31874be8a7498e71e7e01f84aa81a7f1eed4..9cbd2d51a2d230bdca03478347597c4c6b5d052e 100644
+index 1363a8e0310775fdd6ef17227cd9a0499b6d15eb..3c6ed7a6f1b63083c32d3b4968b668ff85895732 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -269,6 +269,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
          return this.getNearestPlayer(null, d0, d1, d2, d3, predicate);
      }
      // Paper end - optimise checkDespawn
-+    protected final io.papermc.paper.util.math.ThreadUnsafeRandom randomTickRandom = new io.papermc.paper.util.math.ThreadUnsafeRandom(java.util.concurrent.ThreadLocalRandom.current().nextLong()); // Pufferfish - move thread unsafe random initialization
++    protected final io.papermc.paper.util.math.ThreadUnsafeRandom randomTickRandom = new io.papermc.paper.util.math.ThreadUnsafeRandom(java.util.concurrent.ThreadLocalRandom.current().nextLong());; public net.minecraft.util.RandomSource getThreadUnsafeRandom() { return this.randomTickRandom; } // Pufferfish - move thread unsafe random initialization and add getter
  
      public abstract ResourceKey<LevelStem> getTypeKey();
  

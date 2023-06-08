@@ -6,7 +6,7 @@ Subject: [PATCH] okocraft Catch and ignore CME that occurred when reloading a
 
 
 diff --git a/src/main/java/net/minecraft/commands/Commands.java b/src/main/java/net/minecraft/commands/Commands.java
-index f967e9039c87ec458da3f133743df834437b3e02..bd1582b71a1a8cac25662d9ab4cbd32239fe41cf 100644
+index 80c2c8d565f03ae0ea24fbdecdbe2bc5b9aa4b82..89c197de2d04203f18afe3a1f51eb5d775611cc1 100644
 --- a/src/main/java/net/minecraft/commands/Commands.java
 +++ b/src/main/java/net/minecraft/commands/Commands.java
 @@ -413,7 +413,12 @@ public class Commands {

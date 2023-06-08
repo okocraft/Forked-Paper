@@ -38,7 +38,7 @@ index 77a0a75b7d71ab6b373581eb75483f5c1439b698..47ac954d1c0c3bf375b2cb0fa9d28ff2
 +	}
  }
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/Projectile.java b/src/main/java/net/minecraft/world/entity/projectile/Projectile.java
-index 24b549cb21926a02d736f0bbb991006b9453068d..bdaff66cfceed4169ea76befb83ae0e54202352f 100644
+index 1b7cf6d06bdf36f146656727511a461f2520762e..459aee61b519a40d9136546c0d9356562f5757c8 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/Projectile.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/Projectile.java
 @@ -44,6 +44,36 @@ public abstract class Projectile extends Entity implements TraceableEntity {

@@ -5,10 +5,10 @@ Subject: [PATCH] Disable builtin method profiler
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index d373a5f20b017efdb9c339541b124009e07616c8..a3cbbe6a6dd6863910da7d49895986b07fe54da5 100644
+index fb82bb52f219e7683fe1d3c0fb3acbe2251de8d4..ceb6a1c5d3a4800c20860e91c66e790aeeac4530 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -2254,7 +2254,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -2260,7 +2260,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
      }
  
      public ProfilerFiller getProfiler() {
@@ -18,10 +18,10 @@ index d373a5f20b017efdb9c339541b124009e07616c8..a3cbbe6a6dd6863910da7d49895986b0
  
      public abstract boolean isSingleplayerOwner(GameProfile profile);
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 9cbd2d51a2d230bdca03478347597c4c6b5d052e..26924a13ff8e75068c418ea9353af194e09ad7ca 100644
+index 3c6ed7a6f1b63083c32d3b4968b668ff85895732..ec2d462184c7c9c4a3714bed34610982afd416de 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -1376,7 +1376,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -1462,7 +1462,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      }
  
      public ProfilerFiller getProfiler() {

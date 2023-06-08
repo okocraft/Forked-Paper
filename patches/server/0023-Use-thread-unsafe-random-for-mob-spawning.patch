@@ -4,21 +4,8 @@ Date: Tue, 22 Jun 2021 15:04:37 -0500
 Subject: [PATCH] Use thread unsafe random for mob spawning
 
 
-diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index d71d4921043d80ab6d08840adb207513421f1356..bc06b21bc8aff40ef1691398c7af1c01e2e9489d 100644
---- a/src/main/java/net/minecraft/world/level/Level.java
-+++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -274,7 +274,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
- 
-     public abstract ResourceKey<LevelStem> getTypeKey();
- 
--    protected final io.papermc.paper.util.math.ThreadUnsafeRandom randomTickRandom = new io.papermc.paper.util.math.ThreadUnsafeRandom(java.util.concurrent.ThreadLocalRandom.current().nextLong()); // Pufferfish - move thread unsafe random initialization
-+    protected final io.papermc.paper.util.math.ThreadUnsafeRandom randomTickRandom = new io.papermc.paper.util.math.ThreadUnsafeRandom(java.util.concurrent.ThreadLocalRandom.current().nextLong()); public net.minecraft.util.RandomSource getThreadUnsafeRandom() { return this.randomTickRandom; } // Pufferfish - move thread unsafe random initialization // Pufferfish - getter
- 
-     // Pufferfish start - ensure these get inlined
-     private final int minBuildHeight, minSection, height, maxBuildHeight, maxSection;
 diff --git a/src/main/java/net/minecraft/world/level/NaturalSpawner.java b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
-index 15d266fc97eb73338f4f6fb2cfe25d6861e79810..6180679d922ea61d05d452971ec2d506a724d3c3 100644
+index 089dd93d4cd4c1f72e63c4944b3b82c1e2ba732d..5d19ef5231752c6cccc73b9adfb67e53e87baf7a 100644
 --- a/src/main/java/net/minecraft/world/level/NaturalSpawner.java
 +++ b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
 @@ -417,12 +417,12 @@ public final class NaturalSpawner {

@@ -5,7 +5,7 @@ Subject: [PATCH] Throttle goal selector during inactive ticking
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index e2a25c29ec74147b3e66aa0b3deb85a8f6ee53a5..c1a3d20f114270a5addd0b5eb7726b5d15c8288b 100644
+index e2a25c29ec74147b3e66aa0b3deb85a8f6ee53a5..4149a325364081e8f092ebf1e266969d799a51e7 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
 @@ -218,11 +218,15 @@ public abstract class Mob extends LivingEntity implements Targeting {
@@ -18,7 +18,7 @@ index e2a25c29ec74147b3e66aa0b3deb85a8f6ee53a5..c1a3d20f114270a5addd0b5eb7726b5d
      public void inactiveTick() {
          super.inactiveTick();
 -        if (this.goalSelector.inactiveTick()) {
-+        // Puffrefish start -throttle inactive goal selector ticking
++        // Puffrefish start - throttle inactive goal selector ticking
 +        boolean isThrottled = _pufferfish_inactiveTickDisableCounter++ % 20 != 0;
 +        if (this.goalSelector.inactiveTick() && !isThrottled) {
 +        // Puffrefish end
