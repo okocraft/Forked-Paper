@@ -8,10 +8,10 @@ require it to be initialized earlier. By moving it to the superclass, we
 initialize it earlier, ensuring that it is available sooner.
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 5a5ff40df37db9cbd53c584ed26a3ce4888b29c0..f82a25e91dff03d41ddf952e3abf6feaf368abb6 100644
+index b89544fdfceee67fb452c37294131efca007e2fe..1751ff992cbe8036e0998af31474f7b3bf715b34 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -793,7 +793,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -852,7 +852,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
      }
      // Paper start - optimise random block ticking
      private final BlockPos.MutableBlockPos chunkTickMutablePosition = new BlockPos.MutableBlockPos();
@@ -21,15 +21,14 @@ index 5a5ff40df37db9cbd53c584ed26a3ce4888b29c0..f82a25e91dff03d41ddf952e3abf6fea
  
      public void tickChunk(LevelChunk chunk, int randomTickSpeed) {
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 34f11b6dc53a75da1fa416283e1cd1969eb1d50d..9df45355a56885bc142563a5e5022afc0391e665 100644
+index 799d31874be8a7498e71e7e01f84aa81a7f1eed4..9cbd2d51a2d230bdca03478347597c4c6b5d052e 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -274,6 +274,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -269,6 +269,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+         return this.getNearestPlayer(null, d0, d1, d2, d3, predicate);
+     }
+     // Paper end - optimise checkDespawn
++    protected final io.papermc.paper.util.math.ThreadUnsafeRandom randomTickRandom = new io.papermc.paper.util.math.ThreadUnsafeRandom(java.util.concurrent.ThreadLocalRandom.current().nextLong()); // Pufferfish - move thread unsafe random initialization
  
      public abstract ResourceKey<LevelStem> getTypeKey();
  
-+    protected final io.papermc.paper.util.math.ThreadUnsafeRandom randomTickRandom = new io.papermc.paper.util.math.ThreadUnsafeRandom(java.util.concurrent.ThreadLocalRandom.current().nextLong()); // Pufferfish - move thread unsafe random initialization
-+
-     protected Level(WritableLevelData worlddatamutable, ResourceKey<Level> resourcekey, RegistryAccess iregistrycustom, Holder<DimensionType> holder, Supplier<ProfilerFiller> supplier, boolean flag, boolean flag1, long i, int j, org.bukkit.generator.ChunkGenerator gen, org.bukkit.generator.BiomeProvider biomeProvider, org.bukkit.World.Environment env, java.util.function.Function<org.spigotmc.SpigotWorldConfig, io.papermc.paper.configuration.WorldConfiguration> paperWorldConfigCreator, java.util.concurrent.Executor executor) { // Paper - Async-Anti-Xray - Pass executor
-         this.spigotConfig = new org.spigotmc.SpigotWorldConfig(((net.minecraft.world.level.storage.PrimaryLevelData) worlddatamutable).getLevelName()); // Spigot
-         this.paperConfig = paperWorldConfigCreator.apply(this.spigotConfig); // Paper

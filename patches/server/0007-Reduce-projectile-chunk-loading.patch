@@ -20,12 +20,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-index 0169a8965e57ae0a4b128270f9fdc08306702a5a..dfd0f6a5357ddf8d5f6fa94a4d6b063bbe293271 100644
+index 77a0a75b7d71ab6b373581eb75483f5c1439b698..47ac954d1c0c3bf375b2cb0fa9d28ff2024bcd42 100644
 --- a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 +++ b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-@@ -84,4 +84,13 @@ public class PufferfishConfig {
- 			enableAsyncMobSpawning = temp;
- 		}
+@@ -67,4 +67,13 @@ public class PufferfishConfig {
+ 		ensureDefault(key, defaultValue, comment);
+ 		return yaml.getStringList(key);
  	}
 +
 +	public static int maxProjectileLoadsPerTick;
@@ -38,7 +38,7 @@ index 0169a8965e57ae0a4b128270f9fdc08306702a5a..dfd0f6a5357ddf8d5f6fa94a4d6b063b
 +	}
  }
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/Projectile.java b/src/main/java/net/minecraft/world/entity/projectile/Projectile.java
-index 8b2a3a8482018b7db7de81bc295862f783e17ce5..25f3a567a4bf0a01848bc9fa35fdb308080469cf 100644
+index 24b549cb21926a02d736f0bbb991006b9453068d..bdaff66cfceed4169ea76befb83ae0e54202352f 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/Projectile.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/Projectile.java
 @@ -44,6 +44,36 @@ public abstract class Projectile extends Entity implements TraceableEntity {
@@ -60,7 +60,7 @@ index 8b2a3a8482018b7db7de81bc295862f783e17ce5..25f3a567a4bf0a01848bc9fa35fdb308
 +        int previousX = Mth.floor(this.getX()) >> 4, previousZ = Mth.floor(this.getZ()) >> 4;
 +        int newX = Mth.floor(x) >> 4, newZ = Mth.floor(z) >> 4;
 +        if (previousX != newX || previousZ != newZ) {
-+            boolean isLoaded = ((net.minecraft.server.level.ServerChunkCache) this.level.getChunkSource()).getChunkAtIfLoadedMainThread(newX, newZ) != null;
++            boolean isLoaded = ((net.minecraft.server.level.ServerChunkCache) this.level().getChunkSource()).getChunkAtIfLoadedMainThread(newX, newZ) != null;
 +            if (!isLoaded) {
 +                if (Projectile.loadedThisTick > gg.pufferfish.pufferfish.PufferfishConfig.maxProjectileLoadsPerTick) {
 +                    if (++this.loadedLifetime > gg.pufferfish.pufferfish.PufferfishConfig.maxProjectileLoadsPerProjectile) {

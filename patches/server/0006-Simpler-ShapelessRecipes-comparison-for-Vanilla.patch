@@ -24,7 +24,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 diff --git a/src/main/java/net/minecraft/world/item/crafting/ShapelessRecipe.java b/src/main/java/net/minecraft/world/item/crafting/ShapelessRecipe.java
-index f4f3f3a19d3cadaef1ae1a47daa68251a983dcf2..a7db6375002b505b87100cc74450b3e9a05fd26f 100644
+index 7f174bb89bf4d700a5ae1b65d8abd4f5b1e7b5ed..422ce380de1b49ec08bcfb23b0b486723ae80857 100644
 --- a/src/main/java/net/minecraft/world/item/crafting/ShapelessRecipe.java
 +++ b/src/main/java/net/minecraft/world/item/crafting/ShapelessRecipe.java
 @@ -27,8 +27,14 @@ public class ShapelessRecipe implements CraftingRecipe {
