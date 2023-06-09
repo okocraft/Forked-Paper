@@ -5,7 +5,7 @@ Subject: [PATCH] Remove iterators from inventory contains
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/player/Inventory.java b/src/main/java/net/minecraft/world/entity/player/Inventory.java
-index 395cecc385e4126a7534ac9aeb15cf323efab03e..cb218b844c10e700812737642d791aca1ae6ad84 100644
+index 395cecc385e4126a7534ac9aeb15cf323efab03e..089166d9e6121df3069b2b71d6b556ae37520a26 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Inventory.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Inventory.java
 @@ -681,6 +681,8 @@ public class Inventory implements Container, Nameable {
@@ -27,7 +27,7 @@ index 395cecc385e4126a7534ac9aeb15cf323efab03e..cb218b844c10e700812737642d791aca
 +            for (int j = 0; j < list.size(); j++) {
 +                ItemStack itemstack1 = list.get(j);
 +
-+                if (!itemstack1.isEmpty() && itemstack1.sameItem(stack)) {
++                if (!itemstack1.isEmpty() && ItemStack.isSameItemSameTags(itemstack1, stack)) {
 +                    return true;
 +                }
 +            }
