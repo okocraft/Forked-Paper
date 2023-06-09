@@ -5,7 +5,7 @@ Subject: [PATCH] okocraft customize server
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 4f2fa65ade89c5703451dad4f80eeef162b277d1..ca7aabe0831ef839f3825ad0c0c17bd07dbf3704 100644
+index a3a76b9b7efa773117d2ee1ce53ef784b09b277d..56ac074c181d1cea9f3e6c6080a8dc561d399ccb 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -7,8 +7,12 @@ plugins {
@@ -16,7 +16,7 @@ index 4f2fa65ade89c5703451dad4f80eeef162b277d1..ca7aabe0831ef839f3825ad0c0c17bd0
 -    implementation(project(":paper-mojangapi"))
 +    // okocraft start
 +    implementation(project(":okocraft-api"))
-+    implementation("io.papermc.paper:paper-mojangapi:1.19.4-R0.1-SNAPSHOT") {
++    implementation("io.papermc.paper:paper-mojangapi:1.20-R0.1-SNAPSHOT") {
 +        exclude("io.papermc.paper", "paper-api")
 +    }
 +    // okocraft end
@@ -85,7 +85,7 @@ index 0000000000000000000000000000000000000000..05d4f1a98480719283d43e535e603bf9
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 1179e9fbff93ec8ff82aa3aae477f6bf4ce9b885..ec17f1a07900a21fa63cb2e23f8a599657e5f6a8 100644
+index b059bb46b649cbf82debdb8d58fe4ba77d040276..8f0f51586db76d5f79a9462ce51943a6ffbe4742 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 @@ -472,7 +472,7 @@ public final class CraftMagicNumbers implements UnsafeValues {

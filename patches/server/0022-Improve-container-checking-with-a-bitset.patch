@@ -220,7 +220,7 @@ index 04b1531572e8fff1e46fe1c94e7fc863841e0f66..8b78122316a7f44ff8dc231c0008d92f
      int LARGE_MAX_STACK_SIZE = 64;
      int DEFAULT_DISTANCE_LIMIT = 8;
 diff --git a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java
-index 08f027cdcaeeca7b545483cb8c5eb8d13e4933b9..29f38b2861de5e95f04849dbfa0c3b4bd4acc998 100644
+index 272095d7a09ab41227d741172735f66fd2798ce1..588d00d1c02ea6294b58b0f9419cd6050795adc9 100644
 --- a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java
 +++ b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java
 @@ -28,6 +28,7 @@ import org.bukkit.inventory.InventoryHolder;
@@ -339,7 +339,7 @@ index a71414397bd45ee7bcacfeef0041d80dfa25f114..fb01a8007b1762ae79f20e91f01f8c94
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
-index cba114f554644a37339c93026630c66c43f524b9..4a0f74ee168fc4fc7697a78c8cc2f7db3f65369e 100644
+index beb70310f2e9657fee89cb4b6a9885712b0116e6..e6bfcd942854f46084a5410df275900b31612d08 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 @@ -48,6 +48,7 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
@@ -441,10 +441,10 @@ index cba114f554644a37339c93026630c66c43f524b9..4a0f74ee168fc4fc7697a78c8cc2f7db
  
      public static void entityInside(Level world, BlockPos pos, BlockState state, Entity entity, HopperBlockEntity blockEntity) {
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
-index 79b01e32f89defb6b78f4764600d33d4945af592..d29b16a394e58feb008c4858cc017b7f82327fa0 100644
+index 081691f9710ff1115e4308f79ed49fbc38941193..ac6fd77843817fea7ae2638b5f0ed25b0d4e1ddc 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
-@@ -96,6 +96,7 @@ public abstract class RandomizableContainerBlockEntity extends BaseContainerBloc
+@@ -95,6 +95,7 @@ public abstract class RandomizableContainerBlockEntity extends BaseContainerBloc
      @Override
      public boolean isEmpty() {
          this.unpackLootTable((Player)null);
@@ -452,7 +452,7 @@ index 79b01e32f89defb6b78f4764600d33d4945af592..d29b16a394e58feb008c4858cc017b7f
          // Paper start
          for (final ItemStack itemStack : this.getItems()) {
              if (!itemStack.isEmpty()) {
-@@ -104,6 +105,8 @@ public abstract class RandomizableContainerBlockEntity extends BaseContainerBloc
+@@ -103,6 +104,8 @@ public abstract class RandomizableContainerBlockEntity extends BaseContainerBloc
          }
          return true;
          // Paper end
