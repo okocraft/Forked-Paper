@@ -5,10 +5,10 @@ Subject: [PATCH] Reduce entity fluid lookups if no fluids
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 4e30a4cb7b0f834c6e59c18fc7821b77c06d05ec..e187d0afb6b987649744b85d3a3b327d0aca771a 100644
+index fa3ac9436a87903a23033f31b3e876962b395e1f..2bd0f5d60f2f5186b84efe168aea93b35ac3f3f3 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -4265,16 +4265,18 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -4298,16 +4298,18 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
      }
  
      public boolean updateFluidHeightAndDoFluidPushing(TagKey<Fluid> tag, double speed) {
@@ -34,7 +34,7 @@ index 4e30a4cb7b0f834c6e59c18fc7821b77c06d05ec..e187d0afb6b987649744b85d3a3b327d
              double d1 = 0.0D;
              boolean flag = this.isPushedByFluid();
              boolean flag1 = false;
-@@ -4282,14 +4284,61 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -4315,14 +4317,61 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
              int k1 = 0;
              BlockPos.MutableBlockPos blockposition_mutableblockposition = new BlockPos.MutableBlockPos();
  
@@ -102,7 +102,7 @@ index 4e30a4cb7b0f834c6e59c18fc7821b77c06d05ec..e187d0afb6b987649744b85d3a3b327d
  
                              if (d2 >= axisalignedbb.minY) {
                                  flag1 = true;
-@@ -4311,9 +4360,12 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -4344,9 +4393,12 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
                                  // CraftBukkit end
                              }
                          }
@@ -116,7 +116,7 @@ index 4e30a4cb7b0f834c6e59c18fc7821b77c06d05ec..e187d0afb6b987649744b85d3a3b327d
              if (vec3d.length() > 0.0D) {
                  if (k1 > 0) {
 diff --git a/src/main/java/net/minecraft/world/level/chunk/LevelChunkSection.java b/src/main/java/net/minecraft/world/level/chunk/LevelChunkSection.java
-index fd4c4122e3811c8f5d8c02f8faaf3579bcb8ad79..19f35481af00bca02200c3886b4baf534939e29e 100644
+index d4477b0dda6a1ef7bd8323c0d11b636bd071d18e..5d3dd6a61366ae2c185b62bc9198440ef6227927 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/LevelChunkSection.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/LevelChunkSection.java
 @@ -25,6 +25,7 @@ public class LevelChunkSection {
@@ -127,7 +127,7 @@ index fd4c4122e3811c8f5d8c02f8faaf3579bcb8ad79..19f35481af00bca02200c3886b4baf53
      public final com.destroystokyo.paper.util.maplist.IBlockDataList tickingList = new com.destroystokyo.paper.util.maplist.IBlockDataList(); // Paper
  
      public LevelChunkSection(PalettedContainer<BlockState> datapaletteblock, PalettedContainer<Holder<Biome>> palettedcontainerro) {
-@@ -187,6 +188,7 @@ public class LevelChunkSection {
+@@ -190,6 +191,7 @@ public class LevelChunkSection {
  
          if (!fluid.isEmpty()) {
              --this.tickingFluidCount;
@@ -135,7 +135,7 @@ index fd4c4122e3811c8f5d8c02f8faaf3579bcb8ad79..19f35481af00bca02200c3886b4baf53
          }
  
          if (!state.isAir()) {
-@@ -201,6 +203,7 @@ public class LevelChunkSection {
+@@ -204,6 +206,7 @@ public class LevelChunkSection {
  
          if (!fluid1.isEmpty()) {
              ++this.tickingFluidCount;
@@ -143,7 +143,7 @@ index fd4c4122e3811c8f5d8c02f8faaf3579bcb8ad79..19f35481af00bca02200c3886b4baf53
          }
  
          this.updateKnownBlockInfo(x | (z << 4) | (y << 8), iblockdata1, state); // Paper
-@@ -246,6 +249,7 @@ public class LevelChunkSection {
+@@ -249,6 +252,7 @@ public class LevelChunkSection {
                  if (fluid.isRandomlyTicking()) {
                      this.tickingFluidCount = (short) (this.tickingFluidCount + 1);
                  }

@@ -18,10 +18,10 @@ index fb82bb52f219e7683fe1d3c0fb3acbe2251de8d4..ceb6a1c5d3a4800c20860e91c66e790a
  
      public abstract boolean isSingleplayerOwner(GameProfile profile);
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 3c6ed7a6f1b63083c32d3b4968b668ff85895732..ec2d462184c7c9c4a3714bed34610982afd416de 100644
+index 8f5529943adbba507428b149442a47ec2ba7a25a..5ad7af4ac122d5e9111832289ab9b2c2fcd4beff 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -1462,7 +1462,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -1465,7 +1465,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      }
  
      public ProfilerFiller getProfiler() {

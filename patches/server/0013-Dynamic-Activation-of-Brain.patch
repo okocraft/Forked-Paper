@@ -80,10 +80,10 @@ index 47ac954d1c0c3bf375b2cb0fa9d28ff2024bcd42..b6fa00d660303bfe0a26b17b3aed63be
 +	}
  }
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 9fde121f6afdcd624c65ac5f0bed6880fb39ef0a..0bef35c1a007d8b0dda6cda87ec572049ff905c7 100644
+index 2cba34a6feb83cfb75e50be1b727b168be544fff..2931b2de14f98e974d6622ab8ed8cdd01c719641 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -769,6 +769,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -850,6 +850,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
              org.spigotmc.ActivationRange.activateEntities(this); // Spigot
              timings.entityTick.startTiming(); // Spigot
              this.entityTickList.forEach((entity) -> {
@@ -92,10 +92,10 @@ index 9fde121f6afdcd624c65ac5f0bed6880fb39ef0a..0bef35c1a007d8b0dda6cda87ec57204
                      if (false && this.shouldDiscardEntity(entity)) { // CraftBukkit - We prevent spawning in general, so this butchering is not needed
                          entity.discard();
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index aacd6b18c3cbd49e569496b186a7235857ebeafc..4e30a4cb7b0f834c6e59c18fc7821b77c06d05ec 100644
+index 92202262eff01ae3bbeff0e6ebdcf26ad613c169..fa3ac9436a87903a23033f31b3e876962b395e1f 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -420,6 +420,11 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -421,6 +421,11 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
          return this.originWorld;
      }
      // Paper end
@@ -108,7 +108,7 @@ index aacd6b18c3cbd49e569496b186a7235857ebeafc..4e30a4cb7b0f834c6e59c18fc7821b77
          return this.yRot;
      }
 diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
-index 1eae10b9ddb10e6de941c03d54b57c815105feba..549474575b8edd62f87a13120c19d5ad6652c0dc 100644
+index 9afc81ccb237c3655d64cdbe8a0db9a4d7791043..f35e606aca0819cc96074c0e9ff63b09a591a9cc 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityType.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityType.java
 @@ -308,6 +308,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
@@ -306,7 +306,7 @@ index 27d9145693a772cd1b5d171da303c934101f3be8..e235cc9d1b3ce59ab662ef3cf3ce0267
          this.level().getProfiler().pop();
          PiglinAi.updateActivity(this);
 diff --git a/src/main/java/net/minecraft/world/entity/monster/warden/Warden.java b/src/main/java/net/minecraft/world/entity/monster/warden/Warden.java
-index 0b274c3937daf274c78d8d5854f740bbcadfb385..a8729162f40fa58ce9132db25d023029f58aabb1 100644
+index 97b763431bc5015448ee7a26a340635a932c950b..71db8bd6885377d55cfc571fccc21df6d8a57b54 100644
 --- a/src/main/java/net/minecraft/world/entity/monster/warden/Warden.java
 +++ b/src/main/java/net/minecraft/world/entity/monster/warden/Warden.java
 @@ -271,11 +271,13 @@ public class Warden extends Monster implements VibrationSystem {
