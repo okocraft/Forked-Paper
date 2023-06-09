@@ -20,12 +20,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-index 77a0a75b7d71ab6b373581eb75483f5c1439b698..47ac954d1c0c3bf375b2cb0fa9d28ff2024bcd42 100644
+index 0169a8965e57ae0a4b128270f9fdc08306702a5a..dfd0f6a5357ddf8d5f6fa94a4d6b063bbe293271 100644
 --- a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 +++ b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-@@ -67,4 +67,13 @@ public class PufferfishConfig {
- 		ensureDefault(key, defaultValue, comment);
- 		return yaml.getStringList(key);
+@@ -84,4 +84,13 @@ public class PufferfishConfig {
+ 			enableAsyncMobSpawning = temp;
+ 		}
  	}
 +
 +	public static int maxProjectileLoadsPerTick;

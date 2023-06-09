@@ -5,7 +5,7 @@ Subject: [PATCH] Cache climbing check for activation
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 0820090e8866dc8cd8adf10e2a83f80ac130c076..491dfbf06c73607131e4d7be66a9b6a249a0e10c 100644
+index 68161f8db5891032577c87aa1d397a642da364b6..73a7cda87c2828650a3d0964b5dba153625a8a16 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -1981,6 +1981,19 @@ public abstract class LivingEntity extends Entity implements Attackable {

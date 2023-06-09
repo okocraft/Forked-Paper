@@ -27,7 +27,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-index 47ac954d1c0c3bf375b2cb0fa9d28ff2024bcd42..b6fa00d660303bfe0a26b17b3aed63be08ed9c31 100644
+index dfd0f6a5357ddf8d5f6fa94a4d6b063bbe293271..b858e06851fe73fece363d923dd34ef3d5eefcd9 100644
 --- a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 +++ b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 @@ -10,6 +10,11 @@ import net.minecraft.server.MinecraftServer;
@@ -42,7 +42,7 @@ index 47ac954d1c0c3bf375b2cb0fa9d28ff2024bcd42..b6fa00d660303bfe0a26b17b3aed63be
  public class PufferfishConfig {
  
  	private static final YamlConfiguration yaml = new YamlConfiguration();
-@@ -76,4 +81,36 @@ public class PufferfishConfig {
+@@ -93,4 +98,36 @@ public class PufferfishConfig {
  
  		setComment("projectile", "Optimizes projectile settings");
  	}

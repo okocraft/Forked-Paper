@@ -5,7 +5,7 @@ Subject: [PATCH] Entity TTL
 
 
 diff --git a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
-index b6fa00d660303bfe0a26b17b3aed63be08ed9c31..ccb00bd5917b09d3b8b297f7ed5c0f55a9d82078 100644
+index b858e06851fe73fece363d923dd34ef3d5eefcd9..c054e6e57f50e0fc2b38efa62dcde094636bc986 100644
 --- a/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 +++ b/src/main/java/gg/pufferfish/pufferfish/PufferfishConfig.java
 @@ -14,6 +14,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
@@ -17,7 +17,7 @@ index b6fa00d660303bfe0a26b17b3aed63be08ed9c31..ccb00bd5917b09d3b8b297f7ed5c0f55
  
  public class PufferfishConfig {
  
-@@ -113,4 +115,20 @@ public class PufferfishConfig {
+@@ -130,4 +132,20 @@ public class PufferfishConfig {
  
  		setComment("dab", "Optimizes entity brains when", "they're far away from the player");
  	}
@@ -39,10 +39,10 @@ index b6fa00d660303bfe0a26b17b3aed63be08ed9c31..ccb00bd5917b09d3b8b297f7ed5c0f55
 +	}
  }
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 2bd0f5d60f2f5186b84efe168aea93b35ac3f3f3..969a95696112ab76ada1df0c493633a3d65e27ed 100644
+index 38c7a178b1826b7219c465274b0a8d8e9d521850..7e32c69b0ef79ed163d07832aafd2df52370e983 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -802,6 +802,12 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -824,6 +824,12 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
      // CraftBukkit end
  
      public void baseTick() {
