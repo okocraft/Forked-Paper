@@ -5,10 +5,10 @@ Subject: [PATCH] Cache climbing check for activation
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 68161f8db5891032577c87aa1d397a642da364b6..73a7cda87c2828650a3d0964b5dba153625a8a16 100644
+index 6609f518a0f28287afc7e4c47f9d8e18dd3df111..d58490d562d9265a367bf61eafcf423a255337fe 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -1981,6 +1981,19 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -1984,6 +1984,19 @@ public abstract class LivingEntity extends Entity implements Attackable {
          return this.lastClimbablePos;
      }
  
