@@ -43,10 +43,10 @@ index 77a0a75b7d71ab6b373581eb75483f5c1439b698..0169a8965e57ae0a4b128270f9fdc083
 +	}
  }
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index fb82bb52f219e7683fe1d3c0fb3acbe2251de8d4..7e6685b672888f47212936d452ca8a69d68d2185 100644
+index 80cf4852e4010eeeadaf920ab927a40df0179b40..5746b1d0945050e634f393fce3dfd5abcc9a15de 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -314,6 +314,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -312,6 +312,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
      public volatile boolean abnormalExit = false; // Paper
      public boolean isIteratingOverLevels = false; // Paper
  

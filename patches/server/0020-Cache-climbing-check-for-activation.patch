@@ -29,7 +29,7 @@ index 6609f518a0f28287afc7e4c47f9d8e18dd3df111..d58490d562d9265a367bf61eafcf423a
          if (this.isSpectator()) {
              return false;
 diff --git a/src/main/java/org/spigotmc/ActivationRange.java b/src/main/java/org/spigotmc/ActivationRange.java
-index 512110a1a4453c636f69627a781b4c7ae80fa7dc..feff523de06833c8acdc66d5c313bbc6b19a3e9e 100644
+index e00dc267c44740f092735e46ccc190b0cc6473fd..08254ed1d681435754db196224c48d8c37cdfae3 100644
 --- a/src/main/java/org/spigotmc/ActivationRange.java
 +++ b/src/main/java/org/spigotmc/ActivationRange.java
 @@ -309,7 +309,7 @@ public class ActivationRange
