@@ -92,10 +92,10 @@ index 2cba34a6feb83cfb75e50be1b727b168be544fff..2931b2de14f98e974d6622ab8ed8cdd0
                      if (false && this.shouldDiscardEntity(entity)) { // CraftBukkit - We prevent spawning in general, so this butchering is not needed
                          entity.discard();
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 92202262eff01ae3bbeff0e6ebdcf26ad613c169..fa3ac9436a87903a23033f31b3e876962b395e1f 100644
+index 513c34aa02d63f7e3c178eade818e156af4541db..463f5506b2a8ccac904953fc1f3dbd6f1a63d6c5 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -421,6 +421,11 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -433,6 +433,11 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
          return this.originWorld;
      }
      // Paper end
@@ -226,7 +226,7 @@ index 2682a49cd3948e0f80e2d7e58abcd3e6d8f7ac4e..42e22a4b9cb6841de04862cc81454da3
          this.level().getProfiler().pop();
          this.level().getProfiler().push("axolotlActivityUpdate");
 diff --git a/src/main/java/net/minecraft/world/entity/animal/frog/Frog.java b/src/main/java/net/minecraft/world/entity/animal/frog/Frog.java
-index 22eb0a8fc35baa04b34265b62aa29a71f3cc7343..95543f72548f0edb5999cb792b92fe7501262320 100644
+index 203691417e208b9e023e5f8c3b76993db2747ba8..80ddb3059d6484c2b90c55ef601043798f1a4b50 100644
 --- a/src/main/java/net/minecraft/world/entity/animal/frog/Frog.java
 +++ b/src/main/java/net/minecraft/world/entity/animal/frog/Frog.java
 @@ -162,9 +162,11 @@ public class Frog extends Animal implements VariantHolder<FrogVariant> {
@@ -355,7 +355,7 @@ index e30d5ae3e2900f43d7cafde71b8196f26e872841..9186d6ff0f8ff6a3f65d122bb29c77b5
          if (this.assignProfessionWhenSpawned) {
              this.assignProfessionWhenSpawned = false;
 diff --git a/src/main/java/org/spigotmc/ActivationRange.java b/src/main/java/org/spigotmc/ActivationRange.java
-index d4da9ec6e00bb92b70598ee9a0d0ca5816562378..512110a1a4453c636f69627a781b4c7ae80fa7dc 100644
+index eda7f0bb42f7269676d5d2193e1155912ede9920..e00dc267c44740f092735e46ccc190b0cc6473fd 100644
 --- a/src/main/java/org/spigotmc/ActivationRange.java
 +++ b/src/main/java/org/spigotmc/ActivationRange.java
 @@ -217,6 +217,23 @@ public class ActivationRange
