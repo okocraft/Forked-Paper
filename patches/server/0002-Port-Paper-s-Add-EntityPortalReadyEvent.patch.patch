@@ -1,0 +1,32 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Thu, 22 Jun 2023 11:53:26 +0900
+Subject: [PATCH] Port Paper's Add-EntityPortalReadyEvent.patch
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index deaf4b65b6c9f3dbab6578c25fb78ca84507f70b..85a979228a631f273f005d86fcfecd3538db53ac 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -4003,12 +4003,21 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+         io.papermc.paper.util.TickThread.ensureTickThread(this, "Cannot portal entity async");
+ 
+         ServerLevel destination = this.getServer().getLevel(this.level().getTypeKey() == LevelStem.NETHER ? Level.OVERWORLD : Level.NETHER);
++        // okocraft start - Port Paper's Add-EntityPortalReadyEvent.patch
++        io.papermc.paper.event.entity.EntityPortalReadyEvent event = new io.papermc.paper.event.entity.EntityPortalReadyEvent(this.getBukkitEntity(), destination == null ? null : destination.getWorld(), org.bukkit.PortalType.NETHER);
++        if (!event.callEvent()) {
++            this.portalTime = 0;
++            return false;
++        } else {
++            destination = event.getTargetWorld() == null ? null : ((CraftWorld) event.getTargetWorld()).getHandle();
++        // okocraft end
+         if (destination == null) {
+             // wat
+             return false;
+         }
+ 
+         return this.portalToAsync(destination, false, PortalType.NETHER, null);
++        } // okocraft
+     }
+ 
+     private static final java.util.concurrent.atomic.AtomicLong CREATE_PORTAL_DOUBLE_CHECK = new java.util.concurrent.atomic.AtomicLong();
