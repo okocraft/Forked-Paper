@@ -5,27 +5,23 @@ Subject: [PATCH] okocraft customize server
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index a0c5592530d2a59bfde87d1e9eb3752e7d4694da..e7e29f665e308c4f733ea13b4daf8cd111a5a0f0 100644
+index 215366d7cc3720805d2dfde0662372ecede8383c..4d803ed5f42b38945e49566e519ddd1b6ed9fb53 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -7,8 +7,12 @@ plugins {
- }
+@@ -8,8 +8,8 @@ plugins {
  
  dependencies {
--    implementation(project(":paper-api"))
--    implementation(project(":paper-mojangapi"))
-+    // okocraft start
-+    implementation(project(":okocraft-api"))
-+    implementation("io.papermc.paper:paper-mojangapi:1.20.1-R0.1-SNAPSHOT") {
-+        exclude("io.papermc.paper", "paper-api")
-+    }
-+    // okocraft end
-     // Paper start
-     implementation("org.jline:jline-terminal-jansi:3.21.0")
-     implementation("net.minecrell:terminalconsoleappender:1.3.0")
+     // Folia start
+-    implementation(project(":folia-api"))
+-    implementation("io.papermc.paper:paper-mojangapi:1.19.3-R0.1-SNAPSHOT") {
++    implementation(project(":okocraft-api")) // okocraft
++    implementation("io.papermc.paper:paper-mojangapi:1.20.1-R0.1-SNAPSHOT") { // okocraft
+         exclude("io.papermc.paper", "paper-api")
+     }
+     // Folia end
 diff --git a/src/main/java/net/okocraft/paper/OkocraftVersionFetcher.java b/src/main/java/net/okocraft/paper/OkocraftVersionFetcher.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..05d4f1a98480719283d43e535e603bf9f9d74502
+index 0000000000000000000000000000000000000000..e6de952985b5e4f2ff2a64df948fed968f7a73a5
 --- /dev/null
 +++ b/src/main/java/net/okocraft/paper/OkocraftVersionFetcher.java
 @@ -0,0 +1,55 @@
@@ -60,7 +56,7 @@ index 0000000000000000000000000000000000000000..05d4f1a98480719283d43e535e603bf9
 +                        .append(newline())
 +                        .append(text("Repository: "))
 +                        .append(text(OKOCRAFT_PAPER_REPO)
-+                                .hoverEvent(Component.text("Click to open", NamedTextColor.WHITE))
++                                .hoverEvent(text("Click to open", NamedTextColor.WHITE))
 +                                .clickEvent(ClickEvent.openUrl(OKOCRAFT_PAPER_REPO))
 +                        );
 +
@@ -81,14 +77,14 @@ index 0000000000000000000000000000000000000000..05d4f1a98480719283d43e535e603bf9
 +            return null;
 +        }
 +
-+        return Component.text("Previous version: " + oldVersion, NamedTextColor.GRAY, TextDecoration.ITALIC);
++        return text("Previous version: " + oldVersion, NamedTextColor.GRAY, TextDecoration.ITALIC);
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 83cef5ec27c31f133a23cd27349f722799c786ea..fbd8e204dee8a36b1dfe52f7fafdd0b0745c1f4b 100644
+index 61e40979a68017eb730f14a1a0978402f44c1865..e0b7c8668888e942e54219fe3f3e0906be47cd25 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-@@ -470,7 +470,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+@@ -476,7 +476,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
  
      @Override
      public com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {
@@ -98,14 +94,14 @@ index 83cef5ec27c31f133a23cd27349f722799c786ea..fbd8e204dee8a36b1dfe52f7fafdd0b0
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 774556a62eb240da42e84db4502e2ed43495be17..b2822fee256233d555e6588ba75aa9ac94688a13 100644
+index e9b6ca3aa25e140467ae866d572483050ea3fa0e..b2822fee256233d555e6588ba75aa9ac94688a13 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -11,7 +11,7 @@ public final class Versioning {
      public static String getBukkitVersion() {
          String result = "Unknown-Version";
  
--        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/io.papermc.paper/paper-api/pom.properties");
+-        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/dev.folia/folia-api/pom.properties"); // Folia
 +        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/net.okocraft.paper/okocraft-api/pom.properties"); // okocraft
          Properties properties = new Properties();
  

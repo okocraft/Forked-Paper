@@ -49,9 +49,14 @@ paperweight {
 
     remapRepo.set("https://maven.fabricmc.net/")
     decompileRepo.set("https://files.minecraftforge.net/maven/")
+    
+    useStandardUpstream("Folia") {
+        url.set(github("PaperMC", "Folia"))
+        ref.set(providers.fileContents(rootProject.layout.projectDirectory.file("paper-ref")).asText)
+        
+        withStandardPatcher {
+            baseName("Folia")
 
-    usePaperUpstream(providers.fileContents(rootProject.layout.projectDirectory.file("paper-ref")).asText) {
-        withPaperPatcher {
             apiPatchDir.set(layout.projectDirectory.dir("patches/api"))
             serverPatchDir.set(layout.projectDirectory.dir("patches/server"))
 
