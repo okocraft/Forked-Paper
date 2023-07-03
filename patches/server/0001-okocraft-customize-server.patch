@@ -5,11 +5,11 @@ Subject: [PATCH] okocraft customize server
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index a0c5592530d2a59bfde87d1e9eb3752e7d4694da..e7e29f665e308c4f733ea13b4daf8cd111a5a0f0 100644
+index 57f2c414dbfe127c193002fbc8eeb22e94e9cb55..1ba15d59c9df6f19a743f243790190bc785b9149 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -7,8 +7,12 @@ plugins {
- }
+@@ -13,8 +13,12 @@ configurations.named(log4jPlugins.compileClasspathConfigurationName) {
+ val alsoShade: Configuration by configurations.creating
  
  dependencies {
 -    implementation(project(":paper-api"))
