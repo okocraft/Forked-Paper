@@ -6,13 +6,8 @@ We currently maintain a hard forked version from Pufferfish.
 ## Building
 
 ```bash
-./gradlew build
-```
-
-Or building a Paperclip JAR for distribution:
-
-```bash
-./gradlew paperclip
+./gradlew applyPatches
+./gradlew createReobfPaperclipJar
 ```
 
 ## License
