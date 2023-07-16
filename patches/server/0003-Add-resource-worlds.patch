@@ -1,0 +1,59 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Sun, 16 Jul 2023 19:55:35 +0900
+Subject: [PATCH] Add resource worlds
+
+
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index 355acd1dd3b2e9f2a086a8d95928cdebbf63d06f..97122341f5e0cfabf645be582614d5429c807454 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -654,6 +654,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+                 this.getCustomBossEvents().load(worlddata.getCustomBossEvents());
+             }
+         }
++        server.addResourceWorlds(); // okocraft - Add resource worlds
+         this.forceDifficulty();
+         for (ServerLevel worldserver : this.getAllLevels()) {
+             this.prepareLevels(worldserver.getChunkSource().chunkMap.progressListener, worldserver);
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index 23556931a812ed9b2dac5b4b4712961c2d9aa025..dcae818817d850ba745255a70198d11e3f2a2419 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -1272,6 +1272,36 @@ public final class CraftServer implements Server {
+     @Override
+     public World createWorld(WorldCreator creator) {
+         if (true) throw new UnsupportedOperationException(); // Folia - not implemented properly yet
++    // okocraft start - Add resource worlds
++        return createWorld0(creator);
++    }
++
++    private boolean addedResourceWorlds = false;
++
++    public void addResourceWorlds() {
++        if (addedResourceWorlds) {
++            throw new IllegalStateException("Resource worlds are already added.");
++        }
++
++        addedResourceWorlds = true;
++        String resourceWorldName;
++
++        try {
++            resourceWorldName = java.nio.file.Files.readString(java.nio.file.Path.of("resource-world-name.txt"), java.nio.charset.StandardCharsets.UTF_8).trim();
++        } catch (IOException e) {
++            logger.warning("Cannot load resource worlds: " + e.getMessage());
++            return;
++        }
++
++        List.of(
++                WorldCreator.name(resourceWorldName).environment(Environment.NORMAL),
++                WorldCreator.name(resourceWorldName + "_nether").environment(Environment.NETHER),
++                WorldCreator.name(resourceWorldName + "_the_end").environment(Environment.THE_END)
++        ).forEach(this::createWorld0);
++    }
++
++    private World createWorld0(WorldCreator creator) {
++    // okocraft end
+         Preconditions.checkState(this.console.getAllLevels().iterator().hasNext(), "Cannot create additional worlds on STARTUP");
+         //Preconditions.checkState(!this.console.isIteratingOverLevels, "Cannot create a world while worlds are being ticked"); // Paper - Cat - Temp disable. We'll see how this goes.
+         Preconditions.checkArgument(creator != null, "WorldCreator cannot be null");
