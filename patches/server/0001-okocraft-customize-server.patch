@@ -5,10 +5,10 @@ Subject: [PATCH] okocraft customize server
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 215366d7cc3720805d2dfde0662372ecede8383c..4d803ed5f42b38945e49566e519ddd1b6ed9fb53 100644
+index 93f9abd2169a48a4fd32f712c68be7b49b034e83..68f65a960dc13f6c18f857bbe8a453c7025b8cb5 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -8,8 +8,8 @@ plugins {
+@@ -14,8 +14,8 @@ val alsoShade: Configuration by configurations.creating
  
  dependencies {
      // Folia start
