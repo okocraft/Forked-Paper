@@ -1,0 +1,21 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Tue, 18 Jul 2023 06:20:12 +0900
+Subject: [PATCH] Notify that PlayerSpawnLocationEvent#setSpawnLocation has no
+ effect
+
+
+diff --git a/src/main/java/org/spigotmc/event/player/PlayerSpawnLocationEvent.java b/src/main/java/org/spigotmc/event/player/PlayerSpawnLocationEvent.java
+index 2515887c20738b5add74eff02d2e9672080623d2..9db7910de00197965454434147a5ffad4ec6885f 100644
+--- a/src/main/java/org/spigotmc/event/player/PlayerSpawnLocationEvent.java
++++ b/src/main/java/org/spigotmc/event/player/PlayerSpawnLocationEvent.java
+@@ -37,6 +37,9 @@ public class PlayerSpawnLocationEvent extends PlayerEvent {
+      * @param location the spawn location
+      */
+     public void setSpawnLocation(@NotNull Location location) {
++        // okocraft start - Notify that PlayerSpawnLocationEvent#setSpawnLocation has no effect
++        org.bukkit.Bukkit.getLogger().log(java.util.logging.Level.WARNING, "PlayerSpawnLocationEvent#setSpawnLocation has no effect in this server!", new Throwable());
++        // okocraft end
+         this.spawnLocation = location;
+     }
+ 
