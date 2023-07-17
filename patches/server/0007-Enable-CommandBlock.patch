@@ -1,0 +1,20 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Tue, 18 Jul 2023 06:40:47 +0900
+Subject: [PATCH] Enable CommandBlock
+
+Of course, we know why the command block is disabled. Our server only executes teleport commands, so there should be no situation to access objects outside the region by the command block.
+
+diff --git a/src/main/java/net/minecraft/world/level/BaseCommandBlock.java b/src/main/java/net/minecraft/world/level/BaseCommandBlock.java
+index 19cb22df8eb29d1708e3da2124de3b43378b575a..af48d5c4cee478af294ca9be247c456344e474df 100644
+--- a/src/main/java/net/minecraft/world/level/BaseCommandBlock.java
++++ b/src/main/java/net/minecraft/world/level/BaseCommandBlock.java
+@@ -111,7 +111,7 @@ public abstract class BaseCommandBlock implements CommandSource {
+     }
+ 
+     public boolean performCommand(Level world) {
+-        if (true) return false; // Folia - region threading
++        //if (true) return false; // Folia - region threading // okocraft - Enable CommandBlock
+         if (!world.isClientSide && world.getGameTime() != this.lastExecution) {
+             if ("Searge".equalsIgnoreCase(this.command)) {
+                 this.lastOutput = Component.literal("#itzlipofutzli");
