@@ -1,0 +1,18 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Wed, 19 Jul 2023 18:25:46 +0900
+Subject: [PATCH] Call PlayerChangedWorldEvent
+
+
+diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+index 28cbd2cb47f88d3d013e9b7493e8e632ed41f5e2..1bc03d3b776463a57571943df0fad9c67a3d3035 100644
+--- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
++++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+@@ -1509,6 +1509,7 @@ public class ServerPlayer extends Player {
+             }
+ 
+             this.triggerDimensionChangeTriggers(originWorld);
++            new org.bukkit.event.player.PlayerChangedWorldEvent(this.getBukkitEntity(), originWorld.getWorld()).callEvent(); // okocraft - Call PlayerChangedWorldEvent
+ 
+             // finished
+ 
