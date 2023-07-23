@@ -11,10 +11,10 @@ data is already available in the blockPosition struct, so we use that
 instead of re-doing the casting.
 
 diff --git a/src/main/java/io/papermc/paper/util/MCUtil.java b/src/main/java/io/papermc/paper/util/MCUtil.java
-index c856a9a0d085b278da416c59996fc131811f790c..9add48fe0e6838d4fbb2cda06d1f2fc1514c42f4 100644
+index cb4379268b191d331c71be44642baac381ffaaf6..e12694099d532002407e14a0fc8698118f33af81 100644
 --- a/src/main/java/io/papermc/paper/util/MCUtil.java
 +++ b/src/main/java/io/papermc/paper/util/MCUtil.java
-@@ -210,7 +210,7 @@ public final class MCUtil {
+@@ -211,7 +211,7 @@ public final class MCUtil {
      }
  
      public static long getCoordinateKey(final Entity entity) {
