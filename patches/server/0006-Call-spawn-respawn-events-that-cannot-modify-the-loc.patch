@@ -5,10 +5,10 @@ Subject: [PATCH] Call spawn/respawn events that cannot modify the location
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 817f79bfca1aec161cb4635b9c7a8e21b14db7eb..28cbd2cb47f88d3d013e9b7493e8e632ed41f5e2 100644
+index febd0ba72922462364eb65243640dcb693129e21..4fd58e32484b7a9ba87c75fff67eea64817911f4 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -1229,10 +1229,15 @@ public class ServerPlayer extends Player {
+@@ -1287,10 +1287,15 @@ public class ServerPlayer extends Player {
  
          this.respawn((player) -> {
              CriteriaTriggers.CHANGED_DIMENSION.trigger(player, Level.END, Level.OVERWORLD);
