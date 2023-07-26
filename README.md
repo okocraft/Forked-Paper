@@ -1,18 +1,13 @@
 # Forked-Paper
 
 This repository is for maintaining the Minecraft server software used in OKOCRAFT. 
-We currently maintain a hard forked version from Pufferfish.
+We currently maintain a forked version from Folia.
 
 ## Building
 
 ```bash
-./gradlew build
-```
-
-Or building a Paperclip JAR for distribution:
-
-```bash
-./gradlew paperclip
+./gradlew applyPatches
+./gradlew createReobfPaperclipJar
 ```
 
 ## License
