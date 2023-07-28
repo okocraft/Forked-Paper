@@ -27,7 +27,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 2c05cf79717e05c1af42c0df47cd121364844f55..6609f518a0f28287afc7e4c47f9d8e18dd3df111 100644
+index 7ba4503e532b000a1f5c7b089b4d89ad0e5c7bbd..851d7138372a392acc13c9a013dcd6c2b845e365 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -3670,7 +3670,10 @@ public abstract class LivingEntity extends Entity implements Attackable {
@@ -64,10 +64,10 @@ index 0e8746759752b692668886370181aa5db1fd0bb0..58e5ce2afabf480f5dfd9adf43f8fc12
      default BlockHitResult clip(ClipContext raytrace1, BlockPos blockposition) {
              // Paper start - Prevent raytrace from loading chunks
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 147d802d9207e358fdb2d1c7806fc2f634dcfd98..418cfbc84115031651970dee7d9f1c988b64c3a7 100644
+index 8cf4428d8140fd03f0ad8fa1d148a04d8caefda8..a283968a3f1cb45d4e86f022be0ac96e3224df96 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -412,6 +412,91 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -429,6 +429,91 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
          return null;
      }
  
