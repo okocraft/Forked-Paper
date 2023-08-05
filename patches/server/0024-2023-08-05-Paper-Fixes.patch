@@ -1,9 +1,35 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Siroshun09 <siro.shun8@gmail.com>
 Date: Fri, 28 Jul 2023 15:25:13 +0900
-Subject: [PATCH] 2023-07-28-Paper-Fixes
+Subject: [PATCH] 2023-08-05-Paper-Fixes
 
 
+diff --git a/build.gradle.kts b/build.gradle.kts
+index 68f65a960dc13f6c18f857bbe8a453c7025b8cb5..956435fd6f85ff48bd79b2775f6dbc7067acbcdb 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -23,7 +23,7 @@ dependencies {
+     implementation("org.jline:jline-terminal-jansi:3.21.0")
+     implementation("net.minecrell:terminalconsoleappender:1.3.0")
+     implementation("net.kyori:adventure-text-serializer-ansi:4.14.0") // Keep in sync with adventureVersion from Paper-API build file
+-    implementation("net.kyori:ansi:1.0.1") // Manually bump beyond above transitive dep
++    implementation("net.kyori:ansi:1.0.3") // Manually bump beyond above transitive dep
+     /*
+           Required to add the missing Log4j2Plugins.dat file from log4j-core
+           which has been removed by Mojang. Without it, log4j has to classload
+diff --git a/src/main/java/io/papermc/paper/configuration/type/BooleanOrDefault.java b/src/main/java/io/papermc/paper/configuration/type/BooleanOrDefault.java
+index 3e422b74a377fa3edaf82dd960e7449c998c2912..33ae915b2462faf1705be3b195e113c154352653 100644
+--- a/src/main/java/io/papermc/paper/configuration/type/BooleanOrDefault.java
++++ b/src/main/java/io/papermc/paper/configuration/type/BooleanOrDefault.java
+@@ -15,7 +15,7 @@ public record BooleanOrDefault(@Nullable Boolean value) {
+     public static final ScalarSerializer<BooleanOrDefault> SERIALIZER = new Serializer();
+ 
+     public boolean or(boolean fallback) {
+-        return this.value != null && this.value;
++        return this.value == null ? fallback : this.value;
+     }
+ 
+     private static final class Serializer extends ScalarSerializer<BooleanOrDefault> {
 diff --git a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java b/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
 index 15add3f4dfd718ec09bb1db4f22223466936879c..5dfb35117c285e0b202dc9c088ad5848beb8d054 100644
 --- a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
