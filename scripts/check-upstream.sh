@@ -1,6 +1,6 @@
 CURRENT_HASH=`cat paper-ref`
 
-git clone https://github.com/PaperMC/Paper check-upstream-work -b master --single-branch
+git clone https://github.com/PaperMC/Folia check-upstream-work -b master --single-branch
 cd check-upstream-work
 
 LATEST_COMMIT_HASH=`git show --format='%H' --no-patch`
@@ -12,13 +12,13 @@ fi
 
 echo -n "$LATEST_COMMIT_HASH" > ../paper-ref
 
-COMMITS=`git log --reverse --pretty=format:"%h %s" $CURRENT_HASH..$LATEST_COMMIT_HASH | sed -e 's/\(#[0-9]*\)/Paper\1/g' | sed -e 's/\[ci skip\] //'`
+COMMITS=`git log --reverse --pretty=format:"%h %s" $CURRENT_HASH..$LATEST_COMMIT_HASH | sed -e 's/\(#[0-9]*\)/Folia\1/g' | sed -e 's/\[ci skip\] //'`
 
-echo "Paper Changes:"
+echo "Folia Changes:"
 echo "$COMMITS"
 echo ""
 echo "Latest commit hash: $LATEST_COMMIT_HASH"
-echo "See full diff at https://github.com/PaperMC/Paper/compare/$CURRENT_HASH...$LATEST_COMMIT_HASH"
+echo "See full diff at https://github.com/PaperMC/Folia/compare/$CURRENT_HASH...$LATEST_COMMIT_HASH"
 
 cd ../
 rm -rf check-upstream-work

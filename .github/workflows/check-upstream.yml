@@ -1,8 +1,6 @@
 name: Create Update Upstream PR
 on:
   workflow_dispatch:
-  schedule:
-    - cron: 0 0 * * 6
 
 jobs:
   check_upstream:
@@ -23,14 +21,14 @@ jobs:
             const result = await exec.getExecOutput('bash ./scripts/check-upstream.sh');
             const output = result.stdout;
             core.setOutput('pr_description', output);
-            core.setOutput('commit_message', 'Updated Upstream (Paper)\n' + output);
+            core.setOutput('commit_message', 'Updated Upstream (Folia)\n' + output);
       - name: Store latest commit hash to output
         id: latest_commit_hash
         run: echo "hash=$(<paper-ref)" >> $GITHUB_OUTPUT
   update_patches_and_open_pr:
     runs-on: ubuntu-latest
     needs: check_upstream
-    if: ${{ startsWith(needs.check_upstream.outputs.pr_description, 'Paper Changes:') }}
+    if: ${{ startsWith(needs.check_upstream.outputs.pr_description, 'Folia Changes:') }}
     steps:
       - name: Checkout Git Repository
         uses: actions/checkout@v3.5.3
@@ -74,7 +72,7 @@ jobs:
         uses: peter-evans/create-pull-request@v5.0.2
         if: always()
         with:
-          title: Updated Upstream (Paper)
+          title: Updated Upstream (Folia)
           body: ${{ needs.check_upstream.outputs.pr_description }}
           commit-message: ${{ needs.check_upstream.outputs.commit_message }}
           branch: upstream
