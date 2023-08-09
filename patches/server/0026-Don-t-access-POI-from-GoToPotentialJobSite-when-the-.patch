@@ -1,0 +1,20 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Wed, 9 Aug 2023 19:00:31 +0900
+Subject: [PATCH] Don't access POI from GoToPotentialJobSite when the poi
+ location is not owned by current region
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/ai/behavior/GoToPotentialJobSite.java b/src/main/java/net/minecraft/world/entity/ai/behavior/GoToPotentialJobSite.java
+index 56b2a0de7d2f0e4cf8999f859341532d27d78d26..c67d5bba85438cb59d2d1dc318a6542acf13c286 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/behavior/GoToPotentialJobSite.java
++++ b/src/main/java/net/minecraft/world/entity/ai/behavior/GoToPotentialJobSite.java
+@@ -44,7 +44,7 @@ public class GoToPotentialJobSite extends Behavior<Villager> {
+         optional.ifPresent((pos) -> {
+             BlockPos blockPos = pos.pos();
+             ServerLevel serverLevel2 = serverLevel.getServer().getLevel(pos.dimension());
+-            if (serverLevel2 != null) {
++            if (serverLevel2 != null && io.papermc.paper.util.TickThread.isTickThreadFor(serverLevel2, blockPos)) { // okocraft - Region threading
+                 PoiManager poiManager = serverLevel2.getPoiManager();
+                 if (poiManager.exists(blockPos, (poiType) -> {
+                     return true;
