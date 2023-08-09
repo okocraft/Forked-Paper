@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Wed, 9 Aug 2023 19:00:31 +0900
+Subject: [PATCH] Run POI modification on correct tick thread
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/ai/behavior/GoToPotentialJobSite.java b/src/main/java/net/minecraft/world/entity/ai/behavior/GoToPotentialJobSite.java
+index 56b2a0de7d2f0e4cf8999f859341532d27d78d26..5f83ade5c424e992cc90e6f45cf5f7dcb0b210c9 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/behavior/GoToPotentialJobSite.java
++++ b/src/main/java/net/minecraft/world/entity/ai/behavior/GoToPotentialJobSite.java
+@@ -45,6 +45,7 @@ public class GoToPotentialJobSite extends Behavior<Villager> {
+             BlockPos blockPos = pos.pos();
+             ServerLevel serverLevel2 = serverLevel.getServer().getLevel(pos.dimension());
+             if (serverLevel2 != null) {
++                Runnable run = () -> { // okocraft - region threading
+                 PoiManager poiManager = serverLevel2.getPoiManager();
+                 if (poiManager.exists(blockPos, (poiType) -> {
+                     return true;
+@@ -53,6 +54,16 @@ public class GoToPotentialJobSite extends Behavior<Villager> {
+                 }
+ 
+                 DebugPackets.sendPoiTicketCountPacket(serverLevel, blockPos);
++                // okocraft start - region threading
++                };
++                if (io.papermc.paper.util.TickThread.isTickThreadFor(serverLevel2, blockPos)) {
++                    run.run();
++                } else {
++                    io.papermc.paper.threadedregions.RegionizedServer.getInstance().taskQueue.queueChunkTask(
++                            serverLevel2, blockPos.getX() >> 4, blockPos.getZ() >> 4, run
++                    );
++                }
++                // okocraft end
+             }
+         });
+         villager.getBrain().eraseMemory(MemoryModuleType.POTENTIAL_JOB_SITE);
