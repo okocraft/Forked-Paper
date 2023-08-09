@@ -5,7 +5,7 @@ Subject: [PATCH] Call PlayerChangedWorldEvent
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 42f69f29bf37aae15c5582cd09092ef48e8e3b99..eb09a93103a8fad2fa6b67ff5f1cc105d36f66db 100644
+index f98394e9eb464d04dd5e71720df3b6161cae9572..84b1de37a2ec3f82f6d4850ef856ff457a0642a7 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -1566,6 +1566,7 @@ public class ServerPlayer extends Player {
