@@ -1,0 +1,20 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Wed, 30 Aug 2023 20:43:34 +0900
+Subject: [PATCH] Ensure that the zombie spawn point is on the current tick
+ thread
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/ai/village/VillageSiege.java b/src/main/java/net/minecraft/world/entity/ai/village/VillageSiege.java
+index 69075026c25ed1ce0f3c769ea0e4a8f3c4841f63..f1029209819be1e081ab18d0d1e9cac11cce008f 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/village/VillageSiege.java
++++ b/src/main/java/net/minecraft/world/entity/ai/village/VillageSiege.java
+@@ -115,7 +115,7 @@ public class VillageSiege implements CustomSpawner {
+         io.papermc.paper.threadedregions.RegionizedWorldData worldData = world.getCurrentWorldData(); // Folia - region threading
+         Vec3 vec3d = this.findRandomSpawnPos(world, new BlockPos(worldData.villageSiegeState.spawnX, worldData.villageSiegeState.spawnY, worldData.villageSiegeState.spawnZ)); // Folia - region threading
+ 
+-        if (vec3d != null) {
++        if (vec3d != null && io.papermc.paper.util.TickThread.isTickThreadFor(world, vec3d)) { // okocraft - region threading
+             Zombie entityzombie;
+ 
+             try {
