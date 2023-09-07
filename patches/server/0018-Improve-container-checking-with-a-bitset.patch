@@ -6,7 +6,7 @@ Subject: [PATCH] Improve container checking with a bitset
 
 diff --git a/src/main/java/gg/airplane/structs/ItemListWithBitset.java b/src/main/java/gg/airplane/structs/ItemListWithBitset.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..e0da965a088d69c72de066dd733fdb768e324464
+index 0000000000000000000000000000000000000000..3132efe684dc7e54cc2d2bda62c3d30d72364758
 --- /dev/null
 +++ b/src/main/java/gg/airplane/structs/ItemListWithBitset.java
 @@ -0,0 +1,144 @@
@@ -151,7 +151,7 @@ index 0000000000000000000000000000000000000000..e0da965a088d69c72de066dd733fdb76
 +    }
 +
 +    private void markAsNotFull(int index) {
-+        this.bitSet |= (1L << index) & ~(1L << (index + MAX_SIZE));
++        this.bitSet = (this.bitSet | 1L << index) & ~(1L << (index + MAX_SIZE));
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/world/CompoundContainer.java b/src/main/java/net/minecraft/world/CompoundContainer.java
