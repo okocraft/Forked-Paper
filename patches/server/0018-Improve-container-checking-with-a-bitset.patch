@@ -6,7 +6,7 @@ Subject: [PATCH] Improve container checking with a bitset
 
 diff --git a/src/main/java/gg/airplane/structs/ItemListWithBitset.java b/src/main/java/gg/airplane/structs/ItemListWithBitset.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..68d38cb8dcbc7e07e18455cc233c31cece52d64b
+index 0000000000000000000000000000000000000000..e0da965a088d69c72de066dd733fdb768e324464
 --- /dev/null
 +++ b/src/main/java/gg/airplane/structs/ItemListWithBitset.java
 @@ -0,0 +1,144 @@
@@ -24,8 +24,8 @@ index 0000000000000000000000000000000000000000..68d38cb8dcbc7e07e18455cc233c31ce
 +public class ItemListWithBitset extends AbstractList<ItemStack> {
 +
 +    // Hopper / Hopper Minecart: 5
-+    // Chest / Chest Minecraft / TrapChest / Barrel / ShulkerBox: 27
-+    // Dispenser: 9
++    // Chest / Chest Minecart / Trap Chest / Barrel / Shulker Box: 27
++    // Dispenser / Dropper: 9
 +    private static final int MAX_SIZE = Integer.SIZE;
 +
 +    public static ItemListWithBitset fromList(List<ItemStack> list) {
