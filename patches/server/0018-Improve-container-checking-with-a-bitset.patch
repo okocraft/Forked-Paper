@@ -339,7 +339,7 @@ index a71414397bd45ee7bcacfeef0041d80dfa25f114..fb01a8007b1762ae79f20e91f01f8c94
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
-index 1eebd3969735bff3e5559ed01ab4a2ec1c3c2de6..2be775d056c837a849ffc54378f316c55ec9b413 100644
+index 81d8de7c80bac16d874faf990cb08f1556a46adc..b83c3851f292c74dd51a0ccf52b7dd68cdca91a4 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 @@ -48,6 +48,7 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
@@ -390,36 +390,22 @@ index 1eebd3969735bff3e5559ed01ab4a2ec1c3c2de6..2be775d056c837a849ffc54378f316c5
          if (!this.tryLoadLootTable(nbt)) {
              ContainerHelper.loadAllItems(nbt, this.items);
          }
-@@ -162,7 +186,7 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
-                     flag = HopperBlockEntity.ejectItems(world, pos, state, (Container) blockEntity, blockEntity); // CraftBukkit
-                 }
+@@ -159,6 +183,14 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+     private static int getFullState(final HopperBlockEntity tileEntity) {
+         tileEntity.unpackLootTable(null);
  
--                if (!blockEntity.inventoryFull()) {
-+                if (!blockEntity.optimizedItems.hasFullStacks() || !blockEntity.inventoryFull()) { // Pufferfish - use bitset first
-                     flag |= booleansupplier.getAsBoolean();
-                 }
- 
-@@ -454,11 +478,17 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
-     }
- 
-     private static boolean isFullContainer(Container inventory, Direction direction) {
--        return allMatch(inventory, direction, STACK_SIZE_TEST); // Paper - no streams
-+        // Pufferfish start - use bitsets
-+        //return allMatch(inventory, direction, STACK_SIZE_TEST); // Paper - no streams
-+        return inventory.isCompletelyFull(direction);
++        // Puffrefish start - use bitsets
++        if (true) {
++            if (tileEntity.optimizedItems.isCompletelyEmpty()) return HOPPER_EMPTY;
++            if (tileEntity.optimizedItems.hasFullStacks()) return HOPPER_IS_FULL;
++            return HOPPER_HAS_ITEMS;
++        }
 +        // Pufferfish end
-     }
++
+         final List<ItemStack> hopperItems = tileEntity.getItems();
  
-     private static boolean isEmptyContainer(Container inv, Direction facing) {
--        return allMatch(inv, facing, IS_EMPTY_TEST);
-+        // Pufferfish start - use bitsets
-+        //return allMatch(inv, facing, IS_EMPTY_TEST);
-+        return inv.isCompletelyEmpty(facing);
-+        // Pufferfish end
-     }
- 
-     public static boolean suckInItems(Level world, Hopper hopper) {
-@@ -640,7 +670,7 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+         boolean empty = true;
+@@ -713,7 +745,7 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
  
          if (HopperBlockEntity.canPlaceItemInContainer(to, stack, slot, side)) {
              boolean flag = false;
@@ -428,7 +414,7 @@ index 1eebd3969735bff3e5559ed01ab4a2ec1c3c2de6..2be775d056c837a849ffc54378f316c5
  
              if (itemstack1.isEmpty()) {
                  // Spigot start - SPIGOT-6693, InventorySubcontainer#setItem
-@@ -835,7 +865,10 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+@@ -908,7 +940,10 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
  
      @Override
      protected void setItems(NonNullList<ItemStack> list) {

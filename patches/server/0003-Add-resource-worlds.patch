@@ -5,10 +5,10 @@ Subject: [PATCH] Add resource worlds
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 355acd1dd3b2e9f2a086a8d95928cdebbf63d06f..97122341f5e0cfabf645be582614d5429c807454 100644
+index 75eb95c330d6ab7ac1e4a69da13695bbd40f894e..85fa3d1d786c9cfa93a1212e1dec41d190239b5d 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -654,6 +654,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -653,6 +653,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
                  this.getCustomBossEvents().load(worlddata.getCustomBossEvents());
              }
          }
@@ -17,7 +17,7 @@ index 355acd1dd3b2e9f2a086a8d95928cdebbf63d06f..97122341f5e0cfabf645be582614d542
          for (ServerLevel worldserver : this.getAllLevels()) {
              this.prepareLevels(worldserver.getChunkSource().chunkMap.progressListener, worldserver);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 9485d754ec6ce4031d88734e327abda240d9db90..4c636d81bddba4b8c981ef027ef67f36da33c7d7 100644
+index a8bf1f542ab20eb7c40c80b5e42b55982677373d..8f503a9d5512da3d6c748eb51f83846fb3a1e311 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -1285,6 +1285,45 @@ public final class CraftServer implements Server {
