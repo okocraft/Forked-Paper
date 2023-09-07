@@ -6,10 +6,10 @@ Subject: [PATCH] Improve container checking with a bitset
 
 diff --git a/src/main/java/gg/airplane/structs/ItemListWithBitset.java b/src/main/java/gg/airplane/structs/ItemListWithBitset.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..e61adb212e1ba352c647dcde5c2ae1447287275e
+index 0000000000000000000000000000000000000000..54fa7e99fe87b6a9cb4f71670f573954a98de342
 --- /dev/null
 +++ b/src/main/java/gg/airplane/structs/ItemListWithBitset.java
-@@ -0,0 +1,113 @@
+@@ -0,0 +1,126 @@
 +package gg.airplane.structs;
 +
 +import net.minecraft.core.NonNullList;
@@ -38,6 +38,7 @@ index 0000000000000000000000000000000000000000..e61adb212e1ba352c647dcde5c2ae144
 +    private final ItemStack[] items;
 +
 +    private long bitSet = 0;
++    private long fullstackState = 0;
 +    private final long allBits;
 +
 +    private static class OurNonNullList extends NonNullList<ItemStack> {
@@ -67,6 +68,10 @@ index 0000000000000000000000000000000000000000..e61adb212e1ba352c647dcde5c2ae144
 +        return this.bitSet == 0;
 +    }
 +
++    public boolean isCompletelyFull() {
++        return (this.fullstackState & this.allBits) == allBits;
++    }
++
 +    public boolean hasFullStacks() {
 +        return (this.bitSet & this.allBits) == allBits;
 +    }
@@ -77,10 +82,17 @@ index 0000000000000000000000000000000000000000..e61adb212e1ba352c647dcde5c2ae144
 +
 +        this.items[index] = itemStack;
 +
-+        if (itemStack == ItemStack.EMPTY) {
++        if (itemStack.isEmpty()) {
 +            this.bitSet &= ~(1L << index);
++            this.fullstackState &= ~(1L << index);
 +        } else {
 +            this.bitSet |= 1L << index;
++
++            if (itemStack.getCount() == itemStack.getMaxStackSize()) {
++                this.fullstackState |= 1L << index;
++            } else {
++                this.fullstackState &= ~(1L << index);
++            }
 +        }
 +
 +        return existing;
@@ -118,6 +130,7 @@ index 0000000000000000000000000000000000000000..e61adb212e1ba352c647dcde5c2ae144
 +        return "ItemListWithBitset{" +
 +          "items=" + Arrays.toString(items) +
 +          ", bitSet=" + Long.toString(bitSet, 2) +
++          ", fullstackState=" + Long.toString(fullstackState, 2) +
 +          ", allBits=" + Long.toString(allBits, 2) +
 +          ", size=" + this.items.length +
 +          '}';
@@ -339,7 +352,7 @@ index a71414397bd45ee7bcacfeef0041d80dfa25f114..fb01a8007b1762ae79f20e91f01f8c94
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
-index 81d8de7c80bac16d874faf990cb08f1556a46adc..b83c3851f292c74dd51a0ccf52b7dd68cdca91a4 100644
+index 81d8de7c80bac16d874faf990cb08f1556a46adc..6f50ff86ae10944eacf4753147509a990e84c9f0 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 @@ -48,6 +48,7 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
@@ -397,7 +410,7 @@ index 81d8de7c80bac16d874faf990cb08f1556a46adc..b83c3851f292c74dd51a0ccf52b7dd68
 +        // Puffrefish start - use bitsets
 +        if (true) {
 +            if (tileEntity.optimizedItems.isCompletelyEmpty()) return HOPPER_EMPTY;
-+            if (tileEntity.optimizedItems.hasFullStacks()) return HOPPER_IS_FULL;
++            if (tileEntity.optimizedItems.isCompletelyFull()) return HOPPER_IS_FULL;
 +            return HOPPER_HAS_ITEMS;
 +        }
 +        // Pufferfish end
