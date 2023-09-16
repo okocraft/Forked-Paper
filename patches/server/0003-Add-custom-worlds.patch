@@ -1,0 +1,103 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Sun, 16 Jul 2023 19:55:35 +0900
+Subject: [PATCH] Add custom worlds
+
+
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index f9cf331202d0768a054e575c8909369920b3d59f..a5964bdb24b5e0caa8c499339c7a6f7c4e0f7b18 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -645,6 +645,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+                 this.getCustomBossEvents().load(worlddata.getCustomBossEvents());
+             }
+         }
++        server.addCustomWorlds(); // okocraft - Add custom worlds
+         this.forceDifficulty();
+         for (ServerLevel worldserver : this.getAllLevels()) {
+             this.prepareLevels(worldserver.getChunkSource().chunkMap.progressListener, worldserver);
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index 249ff636a40f6493444a6ea8b8a5e017cb2c30eb..fa3948830f61d5546aac9526a932e00a398809ad 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -1267,6 +1267,72 @@ public final class CraftServer implements Server {
+     @Override
+     public World createWorld(WorldCreator creator) {
+         if (true) throw new UnsupportedOperationException(); // Folia - not implemented properly yet
++    // okocraft start - Add custom worlds
++        return createWorld0(creator);
++    }
++
++    private boolean customWorldsAdded = false;
++
++    public void addCustomWorlds() {
++        if (customWorldsAdded) {
++            throw new IllegalStateException("Custom worlds are already added.");
++        }
++
++        customWorldsAdded = true;
++        List<String> customWorlds;
++
++        try {
++            java.nio.file.Path filepath = java.nio.file.Path.of("custom-worlds.txt");
++            if (java.nio.file.Files.isReadable(filepath)) {
++                customWorlds = java.nio.file.Files.readAllLines(filepath, java.nio.charset.StandardCharsets.UTF_8);
++            } else {
++                customWorlds = java.util.Collections.emptyList();
++            }
++        } catch (IOException e) {
++            logger.warning("Cannot load custom worlds: " + e.getMessage());
++            return;
++        }
++
++        for (String line : customWorlds) {
++            line = line.trim();
++            String worldName;
++            Environment environment;
++            int i = line.indexOf(":");
++
++            if (i == -1) {
++                worldName = line;
++                environment = Environment.NORMAL;
++            } else if (i + 1 == line.length()) {
++                worldName = line.substring(0, i);
++                environment = Environment.NORMAL;
++            } else {
++                worldName = line.substring(0, i);
++                environment = switch (line.substring(i + 1).toLowerCase(java.util.Locale.ENGLISH)) {
++                    case "nether" -> Environment.NETHER;
++                    case "end", "the_end" -> Environment.THE_END;
++                    case "resource" -> null; // for resource worlds in OKOCRAFT
++                    default -> Environment.NORMAL;
++                };
++            }
++
++            if (worldName.isEmpty()) {
++                continue;
++            }
++
++            if (environment == null) {
++                List.of(
++                        WorldCreator.name(worldName).environment(Environment.NORMAL),
++                        WorldCreator.name(worldName + "_nether").environment(Environment.NETHER),
++                        WorldCreator.name(worldName + "_the_end").environment(Environment.THE_END)
++                ).forEach(this::createWorld0);
++            } else {
++                createWorld0(WorldCreator.name(worldName).environment(environment));
++            }
++        }
++    }
++
++    private World createWorld0(WorldCreator creator) {
++    // okocraft end
+         Preconditions.checkState(this.console.getAllLevels().iterator().hasNext(), "Cannot create additional worlds on STARTUP");
+         //Preconditions.checkState(!this.console.isIteratingOverLevels, "Cannot create a world while worlds are being ticked"); // Paper - Cat - Temp disable. We'll see how this goes.
+         Preconditions.checkArgument(creator != null, "WorldCreator cannot be null");
+@@ -1394,6 +1460,7 @@ public final class CraftServer implements Server {
+         // Paper - move up
+ 
+         internal.keepSpawnInMemory = creator.keepSpawnLoaded().toBooleanOrElse(internal.getWorld().getKeepSpawnInMemory()); // Paper
++        if (false) // okocraft - Not needed for loading custom worlds
+         this.getServer().prepareLevels(internal.getChunkSource().chunkMap.progressListener, internal);
+         //internal.entityManager.tick(); // SPIGOT-6526: Load pending entities so they are available to the API // Paper - rewrite chunk system
+ 
