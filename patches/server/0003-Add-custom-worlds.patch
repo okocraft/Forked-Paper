@@ -5,7 +5,7 @@ Subject: [PATCH] Add custom worlds
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index f9cf331202d0768a054e575c8909369920b3d59f..a5964bdb24b5e0caa8c499339c7a6f7c4e0f7b18 100644
+index 6e6ba949e085744d944ca4720d2820f5be611da5..35892abd47f89780a39706013edf39e6dd9bc3b3 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -645,6 +645,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -17,10 +17,22 @@ index f9cf331202d0768a054e575c8909369920b3d59f..a5964bdb24b5e0caa8c499339c7a6f7c
          for (ServerLevel worldserver : this.getAllLevels()) {
              this.prepareLevels(worldserver.getChunkSource().chunkMap.progressListener, worldserver);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 249ff636a40f6493444a6ea8b8a5e017cb2c30eb..4bd603ef9d30d65196a8d6cbad961d45b6ba6de9 100644
+index 21b947260731e84caf3960fff1446e48314b01da..99f85a48123ac1c730087fd253fafe256f6c27f0 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -1267,6 +1267,77 @@ public final class CraftServer implements Server {
+@@ -96,10 +96,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
+ import net.minecraft.world.item.crafting.RecipeType;
+ import net.minecraft.world.item.crafting.RepairItemRecipe;
+ import net.minecraft.world.item.enchantment.Enchantments;
+-import net.minecraft.world.level.CustomSpawner;
+-import net.minecraft.world.level.GameRules;
+-import net.minecraft.world.level.GameType;
+-import net.minecraft.world.level.LevelSettings;
++import net.minecraft.world.level.*;
+ import net.minecraft.world.level.biome.BiomeManager;
+ import net.minecraft.world.level.block.Block;
+ import net.minecraft.world.level.dimension.LevelStem;
+@@ -1267,6 +1264,77 @@ public final class CraftServer implements Server {
      @Override
      public World createWorld(WorldCreator creator) {
          if (true) throw new UnsupportedOperationException(); // Folia - not implemented properly yet
@@ -98,7 +110,25 @@ index 249ff636a40f6493444a6ea8b8a5e017cb2c30eb..4bd603ef9d30d65196a8d6cbad961d45
          Preconditions.checkState(this.console.getAllLevels().iterator().hasNext(), "Cannot create additional worlds on STARTUP");
          //Preconditions.checkState(!this.console.isIteratingOverLevels, "Cannot create a world while worlds are being ticked"); // Paper - Cat - Temp disable. We'll see how this goes.
          Preconditions.checkArgument(creator != null, "WorldCreator cannot be null");
-@@ -1394,6 +1465,7 @@ public final class CraftServer implements Server {
+@@ -1388,12 +1456,25 @@ public final class CraftServer implements Server {
+         }
+ 
+         this.console.addLevel(internal); // Paper - move up
++        // okocraft start - Copied from MinecraftServer L625
++        int loadRegionRadius = ((32) >> 4);
++        internal.randomSpawnSelection = new ChunkPos(internal.getChunkSource().randomState().sampler().findSpawnPosition());
++        for (int currX = -loadRegionRadius; currX <= loadRegionRadius; ++currX) {
++            for (int currZ = -loadRegionRadius; currZ <= loadRegionRadius; ++currZ) {
++                ChunkPos pos = new ChunkPos(currX, currZ);
++                internal.chunkSource.addTicketAtLevel(
++                        TicketType.UNKNOWN, pos, io.papermc.paper.chunk.system.scheduling.ChunkHolderManager.MAX_TICKET_LEVEL, pos
++                );
++            }
++        }
++        // okocraft end
+         this.console.initWorld(internal, worlddata, worlddata, worlddata.worldGenOptions());
+ 
+         internal.setSpawnSettings(true, true);
          // Paper - move up
  
          internal.keepSpawnInMemory = creator.keepSpawnLoaded().toBooleanOrElse(internal.getWorld().getKeepSpawnInMemory()); // Paper
