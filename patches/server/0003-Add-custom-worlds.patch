@@ -17,22 +17,10 @@ index 6e6ba949e085744d944ca4720d2820f5be611da5..35892abd47f89780a39706013edf39e6
          for (ServerLevel worldserver : this.getAllLevels()) {
              this.prepareLevels(worldserver.getChunkSource().chunkMap.progressListener, worldserver);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 21b947260731e84caf3960fff1446e48314b01da..ad17c43f82cd687c1eafeacbaeba426a06d517a5 100644
+index 21b947260731e84caf3960fff1446e48314b01da..ea013026ea823c4127bf059640ae27b017edff51 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -96,10 +96,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
- import net.minecraft.world.item.crafting.RecipeType;
- import net.minecraft.world.item.crafting.RepairItemRecipe;
- import net.minecraft.world.item.enchantment.Enchantments;
--import net.minecraft.world.level.CustomSpawner;
--import net.minecraft.world.level.GameRules;
--import net.minecraft.world.level.GameType;
--import net.minecraft.world.level.LevelSettings;
-+import net.minecraft.world.level.*;
- import net.minecraft.world.level.biome.BiomeManager;
- import net.minecraft.world.level.block.Block;
- import net.minecraft.world.level.dimension.LevelStem;
-@@ -1267,6 +1264,77 @@ public final class CraftServer implements Server {
+@@ -1267,6 +1267,77 @@ public final class CraftServer implements Server {
      @Override
      public World createWorld(WorldCreator creator) {
          if (true) throw new UnsupportedOperationException(); // Folia - not implemented properly yet
@@ -110,7 +98,7 @@ index 21b947260731e84caf3960fff1446e48314b01da..ad17c43f82cd687c1eafeacbaeba426a
          Preconditions.checkState(this.console.getAllLevels().iterator().hasNext(), "Cannot create additional worlds on STARTUP");
          //Preconditions.checkState(!this.console.isIteratingOverLevels, "Cannot create a world while worlds are being ticked"); // Paper - Cat - Temp disable. We'll see how this goes.
          Preconditions.checkArgument(creator != null, "WorldCreator cannot be null");
-@@ -1388,12 +1456,26 @@ public final class CraftServer implements Server {
+@@ -1388,12 +1459,26 @@ public final class CraftServer implements Server {
          }
  
          this.console.addLevel(internal); // Paper - move up
