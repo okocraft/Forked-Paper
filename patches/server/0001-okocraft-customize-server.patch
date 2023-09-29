@@ -5,7 +5,7 @@ Subject: [PATCH] okocraft customize server
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 93f9abd2169a48a4fd32f712c68be7b49b034e83..68f65a960dc13f6c18f857bbe8a453c7025b8cb5 100644
+index 9ee90bc753e65f9dd532f28ec75cc16bf16486c8..956435fd6f85ff48bd79b2775f6dbc7067acbcdb 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -14,8 +14,8 @@ val alsoShade: Configuration by configurations.creating
@@ -81,7 +81,7 @@ index 0000000000000000000000000000000000000000..e6de952985b5e4f2ff2a64df948fed96
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 61e40979a68017eb730f14a1a0978402f44c1865..e0b7c8668888e942e54219fe3f3e0906be47cd25 100644
+index a4880371e3ec097b8bea8ecb74cbf3b9422e5afe..d690a8899e468d90120d5d353160532502d8bb97 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 @@ -476,7 +476,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
