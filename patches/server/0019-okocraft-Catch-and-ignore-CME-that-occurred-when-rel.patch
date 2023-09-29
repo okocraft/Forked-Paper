@@ -6,10 +6,10 @@ Subject: [PATCH] okocraft Catch and ignore CME that occurred when reloading a
 
 
 diff --git a/src/main/java/net/minecraft/commands/Commands.java b/src/main/java/net/minecraft/commands/Commands.java
-index 681cd79ce24fe5d952e987d46e2fd8df07a0f8a1..c213cf209b476d679e5d5a878e39f0fbdd9e7554 100644
+index 4f6bd2d88219ac82c4d08c35231e5d3314f87110..30b13dfa24c19898f8394a1b7f3d584f12605c5b 100644
 --- a/src/main/java/net/minecraft/commands/Commands.java
 +++ b/src/main/java/net/minecraft/commands/Commands.java
-@@ -413,7 +413,12 @@ public class Commands {
+@@ -419,7 +419,12 @@ public class Commands {
          // Register Vanilla commands into builtRoot as before
          // Paper start - Async command map building
          COMMAND_SENDING_POOL.execute(() -> {

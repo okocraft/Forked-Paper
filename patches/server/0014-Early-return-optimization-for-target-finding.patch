@@ -5,7 +5,7 @@ Subject: [PATCH] Early return optimization for target finding
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/ai/targeting/TargetingConditions.java b/src/main/java/net/minecraft/world/entity/ai/targeting/TargetingConditions.java
-index 58422f00c7d64dbd1cf6d7211c9838875cbe7778..d25307ae8bbdf10ae067ec70fc2cb957b852a0eb 100644
+index c157309ac78e7af084d3acb6e8b2bcd469a39d5e..ac5e5676b194a2a99e5cf53eb89c1152cac963b8 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/targeting/TargetingConditions.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/targeting/TargetingConditions.java
 @@ -75,9 +75,18 @@ public class TargetingConditions {
