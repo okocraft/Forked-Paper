@@ -171,10 +171,10 @@ index 241fec02e6869c638d3a160819b32173a081467b..645c35ca2037fb145a69e5dc8afc53ad
      public int getContainerSize() {
          return this.container1.getContainerSize() + this.container2.getContainerSize();
 diff --git a/src/main/java/net/minecraft/world/Container.java b/src/main/java/net/minecraft/world/Container.java
-index 04b1531572e8fff1e46fe1c94e7fc863841e0f66..7505a15f9ae211c1f4c5f5bf576af8f6b88f6d0f 100644
+index d6cbe98e67fdbf8db46338a88ab1356dd63b50a3..2dc60d6cbd8d0e4613e76874e0cde14c632c568a 100644
 --- a/src/main/java/net/minecraft/world/Container.java
 +++ b/src/main/java/net/minecraft/world/Container.java
-@@ -13,6 +13,45 @@ import org.bukkit.craftbukkit.entity.CraftHumanEntity;
+@@ -14,6 +14,45 @@ import org.bukkit.craftbukkit.entity.CraftHumanEntity;
  // CraftBukkit end
  
  public interface Container extends Clearable {
@@ -485,7 +485,7 @@ index 881379681c39230a00b3a1f11cd87498984396c7..1aa41c96ff1a54c861cf310c55da1046
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
-index 81d8de7c80bac16d874faf990cb08f1556a46adc..0e86f5387d08fe5d23f4661dc0f39ddde36323ea 100644
+index 97858b410769f95e4a8d8acd757216ffe06f8cf4..5b04accbaa9008fd54bdc23fcb710be167865774 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 @@ -48,6 +48,7 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
@@ -554,7 +554,7 @@ index 81d8de7c80bac16d874faf990cb08f1556a46adc..0e86f5387d08fe5d23f4661dc0f39ddd
          // Paper start - optimize hoppers
          if (inventory instanceof WorldlyContainer worldlyContainer) {
              for (final int slot : worldlyContainer.getSlotsForFace(direction)) {
-@@ -713,7 +741,7 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+@@ -716,7 +744,7 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
  
          if (HopperBlockEntity.canPlaceItemInContainer(to, stack, slot, side)) {
              boolean flag = false;
@@ -563,7 +563,7 @@ index 81d8de7c80bac16d874faf990cb08f1556a46adc..0e86f5387d08fe5d23f4661dc0f39ddd
  
              if (itemstack1.isEmpty()) {
                  // Spigot start - SPIGOT-6693, InventorySubcontainer#setItem
-@@ -908,7 +936,10 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+@@ -911,7 +939,10 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
  
      @Override
      protected void setItems(NonNullList<ItemStack> list) {
@@ -597,10 +597,10 @@ index 081691f9710ff1115e4308f79ed49fbc38941193..ac6fd77843817fea7ae2638b5f0ed25b
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java
-index b7686fd63b7c5d88c3a12ec4ee9bc01a17f997e0..e9ffe6e7a9ce869ed584606e92d5d330261fba2d 100644
+index 1fa22445a4ecc8c08dbcf0cc6bd39dc5003604c4..97819840be5a8227dda5505b0bad18ee3f8417c6 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java
-@@ -47,6 +47,7 @@ public class ShulkerBoxBlockEntity extends RandomizableContainerBlockEntity impl
+@@ -48,6 +48,7 @@ public class ShulkerBoxBlockEntity extends RandomizableContainerBlockEntity impl
      public static final String ITEMS_TAG = "Items";
      private static final int[] SLOTS = IntStream.range(0, 27).toArray();
      private NonNullList<ItemStack> itemStacks;
@@ -608,7 +608,7 @@ index b7686fd63b7c5d88c3a12ec4ee9bc01a17f997e0..e9ffe6e7a9ce869ed584606e92d5d330
      public int openCount;
      private ShulkerBoxBlockEntity.AnimationStatus animationStatus;
      private float progress;
-@@ -87,18 +88,36 @@ public class ShulkerBoxBlockEntity extends RandomizableContainerBlockEntity impl
+@@ -88,18 +89,36 @@ public class ShulkerBoxBlockEntity extends RandomizableContainerBlockEntity impl
  
      public ShulkerBoxBlockEntity(@Nullable DyeColor color, BlockPos pos, BlockState state) {
          super(BlockEntityType.SHULKER_BOX, pos, state);
@@ -647,7 +647,7 @@ index b7686fd63b7c5d88c3a12ec4ee9bc01a17f997e0..e9ffe6e7a9ce869ed584606e92d5d330
      public static void tick(Level world, BlockPos pos, BlockState state, ShulkerBoxBlockEntity blockEntity) {
          blockEntity.updateAnimation(world, pos, state);
      }
-@@ -242,7 +261,10 @@ public class ShulkerBoxBlockEntity extends RandomizableContainerBlockEntity impl
+@@ -252,7 +271,10 @@ public class ShulkerBoxBlockEntity extends RandomizableContainerBlockEntity impl
      }
  
      public void loadFromTag(CompoundTag nbt) {
@@ -659,7 +659,7 @@ index b7686fd63b7c5d88c3a12ec4ee9bc01a17f997e0..e9ffe6e7a9ce869ed584606e92d5d330
          if (!this.tryLoadLootTable(nbt) && nbt.contains("Items", 9)) {
              ContainerHelper.loadAllItems(nbt, this.itemStacks);
          }
-@@ -256,7 +278,10 @@ public class ShulkerBoxBlockEntity extends RandomizableContainerBlockEntity impl
+@@ -266,7 +288,10 @@ public class ShulkerBoxBlockEntity extends RandomizableContainerBlockEntity impl
  
      @Override
      protected void setItems(NonNullList<ItemStack> list) {

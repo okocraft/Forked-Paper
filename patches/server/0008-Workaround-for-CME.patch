@@ -8,7 +8,7 @@ java.util.ConcurrentModificationException: null
     at org.bukkit.craftbukkit.v1_20_R1.block.data.CraftBlockData.toBukkit(CraftBlockData.java:168) ~[okocraft-1.20.1.jar:git-Folia-"ff9deb2"]
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/data/CraftBlockData.java b/src/main/java/org/bukkit/craftbukkit/block/data/CraftBlockData.java
-index 78dc524549be9373a04df905deab85d41e7f7870..9cd642b02c0fe99e7e1f1d225cf8a7d09fdac3d0 100644
+index 0bf863f597f3657a0f158756a2a91bda7eb453f6..50c5970a65b70e60a8e7021df16cedd5b9474bfb 100644
 --- a/src/main/java/org/bukkit/craftbukkit/block/data/CraftBlockData.java
 +++ b/src/main/java/org/bukkit/craftbukkit/block/data/CraftBlockData.java
 @@ -152,7 +152,7 @@ public class CraftBlockData implements BlockData {

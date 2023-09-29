@@ -17,7 +17,7 @@ but is so much cheaper than the suffocation check that it's worth
 keeping it.
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index f636bdf1075fa784ce7ee25478d4d94bacb05677..091f6aeb4928a9d6c3eee0ecc8dd3157d5e1a0e5 100644
+index af739286a752b50a2e207d243cd393e492729441..8cf117b777e2305669bffbb434805c24002bb0f9 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -421,7 +421,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
@@ -29,7 +29,7 @@ index f636bdf1075fa784ce7ee25478d4d94bacb05677..091f6aeb4928a9d6c3eee0ecc8dd3157
                      this.hurt(this.damageSources().inWall(), 1.0F);
                  } else if (flag && !this.level().getWorldBorder().isWithinBounds(this.getBoundingBox())) {
                      double d0 = this.level().getWorldBorder().getDistanceToBorder(this) + this.level().getWorldBorder().getDamageSafeZone();
-@@ -1379,6 +1379,15 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -1411,6 +1411,15 @@ public abstract class LivingEntity extends Entity implements Attackable {
          return this.getHealth() <= 0.0F;
      }
  

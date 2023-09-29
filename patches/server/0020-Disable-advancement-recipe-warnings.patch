@@ -1,0 +1,31 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Fri, 4 Aug 2023 11:50:45 +0900
+Subject: [PATCH] Disable advancement/recipe warnings
+
+
+diff --git a/src/main/java/net/minecraft/server/PlayerAdvancements.java b/src/main/java/net/minecraft/server/PlayerAdvancements.java
+index e38e2e5a7ddba9c140f362021b6be0b0974f7cd1..54b3b9afcad3556723b8dfc6075437351845d846 100644
+--- a/src/main/java/net/minecraft/server/PlayerAdvancements.java
++++ b/src/main/java/net/minecraft/server/PlayerAdvancements.java
+@@ -199,7 +199,7 @@ public class PlayerAdvancements {
+             AdvancementHolder advancementholder = loader.get(minecraftkey);
+ 
+             if (advancementholder == null) {
+-                if (!minecraftkey.getNamespace().equals("minecraft")) return; // CraftBukkit
++                if (true || !minecraftkey.getNamespace().equals("minecraft")) return; // CraftBukkit // okocraft - Disable advancement warning
+                 PlayerAdvancements.LOGGER.warn("Ignored advancement '{}' in progress file {} - it doesn't exist anymore?", minecraftkey, this.playerSavePath);
+             } else {
+                 this.startProgress(advancementholder, advancementprogress);
+diff --git a/src/main/java/net/minecraft/stats/ServerRecipeBook.java b/src/main/java/net/minecraft/stats/ServerRecipeBook.java
+index 4103ddf16164e3992fef0765d368282572537e29..e4b8ced6b13dcd0a9d4842127ce10eaad755db04 100644
+--- a/src/main/java/net/minecraft/stats/ServerRecipeBook.java
++++ b/src/main/java/net/minecraft/stats/ServerRecipeBook.java
+@@ -125,6 +125,7 @@ public class ServerRecipeBook extends RecipeBook {
+                 Optional<RecipeHolder<?>> optional = recipeManager.byKey(minecraftkey);
+ 
+                 if (optional.isEmpty()) {
++                    if (false) // okocraft - Disable recipe warnings
+                     ServerRecipeBook.LOGGER.error("Tried to load unrecognized recipe: {} removed now.", minecraftkey);
+                 } else {
+                     handler.accept((RecipeHolder) optional.get());
