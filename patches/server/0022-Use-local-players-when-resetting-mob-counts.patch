@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Sun, 8 Oct 2023 12:20:14 +0900
+Subject: [PATCH] Use local players when resetting mob counts
+
+
+diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
+index 72a5973c6e150533ec70496d72b53c80a142eef7..73cb83e511081449b5947b86279c9c5b1ef0d73e 100644
+--- a/src/main/java/net/minecraft/server/level/ServerChunkCache.java
++++ b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
+@@ -491,7 +491,7 @@ public class ServerChunkCache extends ChunkSource {
+             profiler.startTimer(ca.spottedleaf.leafprofiler.LProfilerRegistry.MOB_SPAWN_ENTITY_COUNT); try { // Folia - profiler
+             if ((this.spawnFriendlies || this.spawnEnemies) && this.level.paperConfig().entities.spawning.perPlayerMobSpawns) { // don't count mobs when animals and monsters are disabled
+                 // re-set mob counts
+-                for (ServerPlayer player : this.level.players) {
++                for (ServerPlayer player : regionizedWorldData.getLocalPlayers()) { // okocraft - Use local players
+                     // Paper start - per player mob spawning backoff
+                     for (int ii = 0; ii < ServerPlayer.MOBCATEGORY_TOTAL_ENUMS; ii++) {
+                         player.mobCounts[ii] = 0;
