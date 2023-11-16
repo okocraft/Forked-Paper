@@ -5,7 +5,7 @@ Subject: [PATCH] Call spawn/respawn events that cannot modify the location
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 42ff3d94ee451ced69c1059f0dbd45085489a60d..76beb06c251a151487ded9adfb061b79838b38a7 100644
+index 97bfb92e52c3c5ef1cd22afe2b97c204eb45025a..d0e247cfe081f68a5b4c043bebbbd31b0f3934c1 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -1295,10 +1295,15 @@ public class ServerPlayer extends Player {
@@ -25,10 +25,10 @@ index 42ff3d94ee451ced69c1059f0dbd45085489a60d..76beb06c251a151487ded9adfb061b79
      }
  
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 9da89e8e9569666227081ebc6cb1f0348e1a183d..b19449a9d9b6031f545777629754a78002ab7edf 100644
+index 7edaa7558e40942f94c459e9b480ef640146ec6b..93786191700da3f7433d5a1da4420dbe02079e76 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -295,6 +295,9 @@ public abstract class PlayerList {
+@@ -312,6 +312,9 @@ public abstract class PlayerList {
              worldserver1 = worldserver;
          }
  

@@ -5,10 +5,10 @@ Subject: [PATCH] Port Paper's Add-EntityPortalReadyEvent.patch
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index e1b6673729e71bdc929bc7b76983108a59e55891..82829ed5e1fb1c6c2a4045be157cd123f92467d1 100644
+index 385d5bc08928dd990b690b926e174af86f178c64..58548e5e82078ce0977b6c5af4bbc9f19a26ca67 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -4065,12 +4065,21 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -4056,12 +4056,21 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
          io.papermc.paper.util.TickThread.ensureTickThread(this, "Cannot portal entity async");
  
          ServerLevel destination = this.getServer().getLevel(this.level().getTypeKey() == LevelStem.NETHER ? Level.OVERWORLD : Level.NETHER);

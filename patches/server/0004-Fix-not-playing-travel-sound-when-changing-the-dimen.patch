@@ -6,10 +6,10 @@ Subject: [PATCH] Fix not playing travel sound when changing the dimension by
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 82829ed5e1fb1c6c2a4045be157cd123f92467d1..3f950b86476a991b9cf7d8de16435ab522426a6f 100644
+index 58548e5e82078ce0977b6c5af4bbc9f19a26ca67..7597cdb563ff7fcba8be6008466d719f6fb67cb6 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -4048,6 +4048,13 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -4039,6 +4039,13 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
          this.processPortalCooldown();
          return false;
      }
@@ -23,7 +23,7 @@ index 82829ed5e1fb1c6c2a4045be157cd123f92467d1..3f950b86476a991b9cf7d8de16435ab5
  
      public boolean endPortalLogicAsync() {
          io.papermc.paper.util.TickThread.ensureTickThread(this, "Cannot portal entity async");
-@@ -4078,7 +4085,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -4069,7 +4076,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
              return false;
          }
  

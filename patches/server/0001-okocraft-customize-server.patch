@@ -5,7 +5,7 @@ Subject: [PATCH] okocraft customize server
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index b62a25bd32b7976dd00f53521d0e050d60c34ca7..5cb8d37ab176eefc6c1e23ee81222365bde7567c 100644
+index a748157d6ce9c088ed3c663d9ddd6f5c2d82b6d8..32562db001a5b921d2d0d23b4c3d781dcdf01621 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -14,8 +14,8 @@ val alsoShade: Configuration by configurations.creating
@@ -20,7 +20,7 @@ index b62a25bd32b7976dd00f53521d0e050d60c34ca7..5cb8d37ab176eefc6c1e23ee81222365
      }
      // Folia end
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 2f2a8a0c05024115f3b7bd69ae400fadff2f36c5..93ddacf14f9756065569bbb0a0e756c9b4bb65b0 100644
+index 4b189b54c8f326939a7b9ffdfb35edfb7d8cee63..770f0677627c558ce8ad9fa2edcf28272d335087 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1833,7 +1833,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -94,10 +94,10 @@ index 0000000000000000000000000000000000000000..e6de952985b5e4f2ff2a64df948fed96
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index a50a9ffda4875061fb8840873115119f334f0519..8410be22acc76b24dade130a9bac6eaac9f3ef07 100644
+index 4b43134f38ba203a309a412055461b57934da8f9..9c15bb3a456fad39fd5adf1eec3ffaa40df9bcf5 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -267,7 +267,7 @@ import javax.annotation.Nullable; // Paper
+@@ -269,7 +269,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {
@@ -107,10 +107,10 @@ index a50a9ffda4875061fb8840873115119f334f0519..8410be22acc76b24dade130a9bac6eaa
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 41333c019e005821e4a180f6489538be9359167d..7c616758d2296e3af77b88468277e53f681115fc 100644
+index 73c395cd5fd3dc07640cdc06e174cd99de43df4c..58c7f2cb0d11a0854eb2cc90e88d692a58e17d3c 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-@@ -468,7 +468,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+@@ -491,7 +491,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
  
      @Override
      public com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {
