@@ -5,20 +5,18 @@ Subject: [PATCH] okocraft customize server
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index a748157d6ce9c088ed3c663d9ddd6f5c2d82b6d8..32562db001a5b921d2d0d23b4c3d781dcdf01621 100644
+index 0cd12a854e544e867abfd94c18a9f138ba57e587..6c4a33f18dcb9ac242e4d2e8fd61c271b3b5cf07 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -14,8 +14,8 @@ val alsoShade: Configuration by configurations.creating
+@@ -14,7 +14,7 @@ val alsoShade: Configuration by configurations.creating
  
  dependencies {
      // Folia start
 -    implementation(project(":folia-api"))
--    implementation("io.papermc.paper:paper-mojangapi:1.19.3-R0.1-SNAPSHOT") {
 +    implementation(project(":okocraft-api")) // okocraft
-+    implementation("io.papermc.paper:paper-mojangapi:1.20.1-R0.1-SNAPSHOT") { // okocraft
+     implementation("io.papermc.paper:paper-mojangapi:${project.version}") {
          exclude("io.papermc.paper", "paper-api")
      }
-     // Folia end
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
 index 4b189b54c8f326939a7b9ffdfb35edfb7d8cee63..770f0677627c558ce8ad9fa2edcf28272d335087 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
@@ -94,7 +92,7 @@ index 0000000000000000000000000000000000000000..e6de952985b5e4f2ff2a64df948fed96
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 4b43134f38ba203a309a412055461b57934da8f9..9c15bb3a456fad39fd5adf1eec3ffaa40df9bcf5 100644
+index bc778637c7d4371cafa9bcda67f8965f57cc66d6..d8808f5d865361d93fa2d33c577b073929dabadd 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -269,7 +269,7 @@ import javax.annotation.Nullable; // Paper
