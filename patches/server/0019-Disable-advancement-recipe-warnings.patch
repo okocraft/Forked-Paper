@@ -5,10 +5,10 @@ Subject: [PATCH] Disable advancement/recipe warnings
 
 
 diff --git a/src/main/java/net/minecraft/server/PlayerAdvancements.java b/src/main/java/net/minecraft/server/PlayerAdvancements.java
-index e38e2e5a7ddba9c140f362021b6be0b0974f7cd1..54b3b9afcad3556723b8dfc6075437351845d846 100644
+index f655e0ae4a287886d0291cd0089bad2000249d0f..66101dace0b8dad55be8940b3a4a11a3ae9ccd4d 100644
 --- a/src/main/java/net/minecraft/server/PlayerAdvancements.java
 +++ b/src/main/java/net/minecraft/server/PlayerAdvancements.java
-@@ -199,7 +199,7 @@ public class PlayerAdvancements {
+@@ -198,7 +198,7 @@ public class PlayerAdvancements {
              AdvancementHolder advancementholder = loader.get(minecraftkey);
  
              if (advancementholder == null) {
