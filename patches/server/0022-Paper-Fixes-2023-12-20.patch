@@ -1,0 +1,175 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Wed, 20 Dec 2023 21:01:20 +0900
+Subject: [PATCH] Paper-Fixes-2023-12-20
+
+
+diff --git a/src/main/java/io/papermc/paper/util/CollisionUtil.java b/src/main/java/io/papermc/paper/util/CollisionUtil.java
+index 0f74d6d64437150ad8f154354162f6ffe0532180..feea642338c7fdd96d9c4d2ea5564f1c3743195c 100644
+--- a/src/main/java/io/papermc/paper/util/CollisionUtil.java
++++ b/src/main/java/io/papermc/paper/util/CollisionUtil.java
+@@ -1538,46 +1538,18 @@ public final class CollisionUtil {
+         return new Vec3(x, y, z);
+     }
+ 
+-    public static boolean isAlmostCollidingOnBorder(final WorldBorder worldborder, final AABB boundingBox) {
+-        return isAlmostCollidingOnBorder(worldborder, boundingBox.minX, boundingBox.maxX, boundingBox.minZ, boundingBox.maxZ);
++    public static boolean isCollidingWithBorder(final WorldBorder worldborder, final AABB boundingBox) {
++        return isCollidingWithBorder(worldborder, boundingBox.minX, boundingBox.maxX, boundingBox.minZ, boundingBox.maxZ);
+     }
+ 
+-    public static boolean isAlmostCollidingOnBorder(final WorldBorder worldborder, final double boxMinX, final double boxMaxX,
+-                                                    final double boxMinZ, final double boxMaxZ) {
+-        final double borderMinX = worldborder.getMinX(); // -X
+-        final double borderMaxX = worldborder.getMaxX(); // +X
+-
+-        final double borderMinZ = worldborder.getMinZ(); // -Z
+-        final double borderMaxZ = worldborder.getMaxZ(); // +Z
+-
+-        return
+-            // Not intersecting if we're smaller
+-            !voxelShapeIntersect(
+-                boxMinX + COLLISION_EPSILON, Double.NEGATIVE_INFINITY, boxMinZ + COLLISION_EPSILON,
+-                boxMaxX - COLLISION_EPSILON, Double.POSITIVE_INFINITY, boxMaxZ - COLLISION_EPSILON,
+-                borderMinX, Double.NEGATIVE_INFINITY, borderMinZ, borderMaxX, Double.POSITIVE_INFINITY, borderMaxZ
+-            )
+-            &&
+-
+-            // Are intersecting if we're larger
+-            voxelShapeIntersect(
+-                boxMinX - COLLISION_EPSILON, Double.NEGATIVE_INFINITY, boxMinZ - COLLISION_EPSILON,
+-                boxMaxX + COLLISION_EPSILON, Double.POSITIVE_INFINITY, boxMaxZ + COLLISION_EPSILON,
+-                borderMinX, Double.NEGATIVE_INFINITY, borderMinZ, borderMaxX, Double.POSITIVE_INFINITY, borderMaxZ
+-            );
+-    }
+-
+-    public static boolean isCollidingWithBorderEdge(final WorldBorder worldborder, final AABB boundingBox) {
+-        return isCollidingWithBorderEdge(worldborder, boundingBox.minX, boundingBox.maxX, boundingBox.minZ, boundingBox.maxZ);
+-    }
+-
+-    public static boolean isCollidingWithBorderEdge(final WorldBorder worldborder, final double boxMinX, final double boxMaxX,
+-                                                    final double boxMinZ, final double boxMaxZ) {
+-        final double borderMinX = worldborder.getMinX(); // -X
+-        final double borderMaxX = worldborder.getMaxX(); // +X
++    public static boolean isCollidingWithBorder(final WorldBorder worldborder, final double boxMinX, final double boxMaxX,
++                                                final double boxMinZ, final double boxMaxZ) {
++        // border size is rounded like the collide voxel shape of the border
++        final double borderMinX = Math.floor(worldborder.getMinX()); // -X
++        final double borderMaxX = Math.ceil(worldborder.getMaxX()); // +X
+ 
+-        final double borderMinZ = worldborder.getMinZ(); // -Z
+-        final double borderMaxZ = worldborder.getMaxZ(); // +Z
++        final double borderMinZ = Math.floor(worldborder.getMinZ()); // -Z
++        final double borderMaxZ = Math.ceil(worldborder.getMaxZ()); // +Z
+ 
+         // inverted check for world border enclosing the specified box expanded by -EPSILON
+         return (borderMinX - boxMinX) > CollisionUtil.COLLISION_EPSILON || (borderMaxX - boxMaxX) < -CollisionUtil.COLLISION_EPSILON ||
+@@ -1605,11 +1577,12 @@ public final class CollisionUtil {
+         boolean ret = false;
+ 
+         if ((collisionFlags & COLLISION_FLAG_CHECK_BORDER) != 0) {
+-            if (CollisionUtil.isCollidingWithBorderEdge(world.getWorldBorder(), aabb)) {
++            final WorldBorder worldBorder = world.getWorldBorder();
++            if (CollisionUtil.isCollidingWithBorder(worldBorder, aabb) && entity != null && worldBorder.isInsideCloseToBorder(entity, aabb)) {
+                 if (checkOnly) {
+                     return true;
+                 } else {
+-                    final VoxelShape borderShape = world.getWorldBorder().getCollisionShape();
++                    final VoxelShape borderShape = worldBorder.getCollisionShape();
+                     intoVoxel.add(borderShape);
+                     ret = true;
+                 }
+diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+index 40ebe42d4669ffbf2e66400cc83a2f17fd8d7928..f56570fa17fbf0d40328e4e57e0057afeb9a3baf 100644
+--- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
++++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+@@ -1050,7 +1050,7 @@ public class ServerPlayer extends Player {
+         if (!keepInventory) {
+             for (ItemStack item : this.getInventory().getContents()) {
+                 if (!item.isEmpty() && !EnchantmentHelper.hasVanishingCurse(item)) {
+-                    loot.add(new DefaultDrop(item, stack -> this.drop(stack, true, false))); // Paper - drop function taken from Inventory#dropAll
++                    loot.add(new DefaultDrop(item, stack -> this.drop(stack, true, false, false))); // Paper - drop function taken from Inventory#dropAll (don't fire drop event)
+                 }
+             }
+         }
+@@ -2887,8 +2887,8 @@ public class ServerPlayer extends Player {
+     }
+ 
+     @Override
+-    public ItemEntity drop(ItemStack stack, boolean throwRandomly, boolean retainOwnership) {
+-        ItemEntity entityitem = super.drop(stack, throwRandomly, retainOwnership);
++    public ItemEntity drop(ItemStack stack, boolean throwRandomly, boolean retainOwnership, boolean callDropEvent) { // Paper - override method with most params
++        ItemEntity entityitem = super.drop(stack, throwRandomly, retainOwnership, callDropEvent); // Paper - override method with most params
+ 
+         if (entityitem == null) {
+             return null;
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 644c41aa8db5baaa01df3439ff3ddf9d983bc849..3b6f4cefa91a73243465dccfa349c55d8fe2d3a8 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -421,7 +421,6 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+     @javax.annotation.Nullable
+     private UUID originWorld;
+     public boolean freezeLocked = false; // Paper - Freeze Tick Lock API
+-    public boolean collidingWithWorldBorder; // Paper
+     public boolean fixedPose = false; // Paper
+ 
+     public void setOrigin(@javax.annotation.Nonnull Location location) {
+@@ -1497,14 +1496,10 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+ 
+         io.papermc.paper.util.CollisionUtil.getCollisions(
+                 world, this, collisionBox, potentialCollisionsVoxel, potentialCollisionsBB,
+-                (0),
++                io.papermc.paper.util.CollisionUtil.COLLISION_FLAG_CHECK_BORDER,
+                 null, null
+         );
+ 
+-        if (collidingWithWorldBorder = io.papermc.paper.util.CollisionUtil.isCollidingWithBorderEdge(world.getWorldBorder(), collisionBox)) { // Paper - this line *is* correct, ignore the IDE warning about assignments being used as a condition
+-            potentialCollisionsVoxel.add(world.getWorldBorder().getCollisionShape());
+-        }
+-
+         if (potentialCollisionsVoxel.isEmpty() && potentialCollisionsBB.isEmpty()) {
+             return movement;
+         }
+diff --git a/src/main/java/net/minecraft/world/entity/monster/Spider.java b/src/main/java/net/minecraft/world/entity/monster/Spider.java
+index 6f12e342adf1a008709fd9a4fbbbe1da8ec31b83..9063f66b0497a3eb3893e307e685be692cc5c128 100644
+--- a/src/main/java/net/minecraft/world/entity/monster/Spider.java
++++ b/src/main/java/net/minecraft/world/entity/monster/Spider.java
+@@ -86,7 +86,7 @@ public class Spider extends Monster {
+     public void tick() {
+         super.tick();
+         if (!this.level().isClientSide) {
+-            this.setClimbing(this.horizontalCollision && (this.level().paperConfig().entities.behavior.allowSpiderWorldBorderClimbing || !collidingWithWorldBorder)); // Paper
++            this.setClimbing(this.horizontalCollision && (this.level().paperConfig().entities.behavior.allowSpiderWorldBorderClimbing || !io.papermc.paper.util.CollisionUtil.isCollidingWithBorder(this.level().getWorldBorder(), this.getBoundingBox().inflate(io.papermc.paper.util.CollisionUtil.COLLISION_EPSILON)))); // Paper - inflate by +EPSILON as collision will place us outside the border, but just barely
+         }
+ 
+     }
+diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaSuspiciousStew.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaSuspiciousStew.java
+index bafc7215a3577c857fb7585f0d6dec54e1b95e90..5468b5dd74f81544b4716d46b7430082908b0d26 100644
+--- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaSuspiciousStew.java
++++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaSuspiciousStew.java
+@@ -49,7 +49,14 @@ public class CraftMetaSuspiciousStew extends CraftMetaItem implements Suspicious
+                 if (type == null) {
+                     continue;
+                 }
+-                int duration = effect.getInt(CraftMetaSuspiciousStew.DURATION.NBT);
++                // Paper start - default duration is 160
++                final int duration;
++                if (effect.contains(CraftMetaSuspiciousStew.DURATION.NBT)) {
++                    duration = effect.getInt(CraftMetaSuspiciousStew.DURATION.NBT);
++                } else {
++                    duration = net.minecraft.world.item.SuspiciousStewItem.DEFAULT_DURATION;
++                }
++                // Paper end start - default duration is 160
+                 this.customEffects.add(new PotionEffect(type, duration, 0));
+             }
+         }
+@@ -80,7 +87,7 @@ public class CraftMetaSuspiciousStew extends CraftMetaItem implements Suspicious
+             for (PotionEffect effect : this.customEffects) {
+                 CompoundTag effectData = new CompoundTag();
+                 effectData.putString(CraftMetaSuspiciousStew.ID.NBT, effect.getType().getKey().toString());
+-                effectData.putInt(CraftMetaSuspiciousStew.DURATION.NBT, effect.getDuration());
++                if (effect.getDuration() != net.minecraft.world.item.SuspiciousStewItem.DEFAULT_DURATION) effectData.putInt(CraftMetaSuspiciousStew.DURATION.NBT, effect.getDuration()); // Paper - don't save duration if it's the default value
+                 effectList.add(effectData);
+             }
+         }
