@@ -24,7 +24,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 diff --git a/src/main/java/net/minecraft/world/item/crafting/ShapelessRecipe.java b/src/main/java/net/minecraft/world/item/crafting/ShapelessRecipe.java
-index 38f7d1ece27ec1a3deda21fb6a6f0e788c8ed718..b57c6ac2819a014d0115e69a2c932844d3992eb5 100644
+index 27b0a79f7a7c47047216aae42944bac2a2151181..602dcbb5c780fb1ea121e41df49f3d54e9d73ead 100644
 --- a/src/main/java/net/minecraft/world/item/crafting/ShapelessRecipe.java
 +++ b/src/main/java/net/minecraft/world/item/crafting/ShapelessRecipe.java
 @@ -26,8 +26,16 @@ public class ShapelessRecipe extends io.papermc.paper.inventory.recipe.RecipeBoo
