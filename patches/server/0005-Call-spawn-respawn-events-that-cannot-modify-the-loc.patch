@@ -5,10 +5,10 @@ Subject: [PATCH] Call spawn/respawn events that cannot modify the location
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index a22173984c418e648ae5308de26fbd5f9cbe6973..0f67e2fd4fb2ee9173ce236a10bb438f3fb968d2 100644
+index 3d2b059254fdc08d1e4f9281946028a46884d7c8..46ce4d20c49c362d92bd2454ebe4577bb5fb79a2 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -1297,10 +1297,15 @@ public class ServerPlayer extends Player {
+@@ -1298,10 +1298,15 @@ public class ServerPlayer extends Player {
  
          this.respawn((player) -> {
              CriteriaTriggers.CHANGED_DIMENSION.trigger(player, Level.END, Level.OVERWORLD);
@@ -25,7 +25,7 @@ index a22173984c418e648ae5308de26fbd5f9cbe6973..0f67e2fd4fb2ee9173ce236a10bb438f
      }
  
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index dfc0e3ce3ba88c3dbff909524de348fbe76de3a9..55493052ad770c19ef730278717c6a2cd42a2c63 100644
+index ded539dd20a2d037fa5d175be06d59dd76660ffe..ed7a12fb3b8084436cf0ea9e6b08a5163d49cdbd 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -310,6 +310,9 @@ public abstract class PlayerList {

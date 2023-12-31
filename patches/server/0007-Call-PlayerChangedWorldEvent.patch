@@ -5,10 +5,10 @@ Subject: [PATCH] Call PlayerChangedWorldEvent
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 0f67e2fd4fb2ee9173ce236a10bb438f3fb968d2..40ebe42d4669ffbf2e66400cc83a2f17fd8d7928 100644
+index 46ce4d20c49c362d92bd2454ebe4577bb5fb79a2..7225dab8f8e4dfa47b290a01cc1342eb12c4e3b9 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -1569,6 +1569,7 @@ public class ServerPlayer extends Player {
+@@ -1570,6 +1570,7 @@ public class ServerPlayer extends Player {
              }
  
              this.triggerDimensionChangeTriggers(originWorld);

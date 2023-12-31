@@ -5,12 +5,12 @@ Subject: [PATCH] okocraft customize server
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 03abea227c555decd559dd58b33913127f3549a4..8be01a555caf24031b17f2e11b610705e0620d06 100644
+index 38352926640d97449256d50ebdec619ce9e695a0..fb998641dd4f9d6fafea0551e7f493ac6b62b33c 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -28,7 +28,7 @@ repositories {
+@@ -14,7 +14,7 @@ val alsoShade: Configuration by configurations.creating
+ 
  dependencies {
-     extraRuntime(platform("net.kyori:adventure-bom:4.15.0-SNAPSHOT"))
      // Folia start
 -    implementation(project(":folia-api"))
 +    implementation(project(":okocraft-api")) // okocraft
@@ -92,7 +92,7 @@ index 0000000000000000000000000000000000000000..e6de952985b5e4f2ff2a64df948fed96
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index bea388ced64da6192166f6f8461abdc0921ed7b0..8abf1fc74b49b23e7cc3ab37ae075a9c8ce89e36 100644
+index 7d1be59d03fa4e46295bc91943fea16bd9c7c802..017697c6ccd483001601f6f99c6adcce2295c6b4 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -264,7 +264,7 @@ import javax.annotation.Nullable; // Paper
