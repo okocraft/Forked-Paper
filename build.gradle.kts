@@ -63,6 +63,13 @@ paperweight {
             apiOutputDir.set(layout.projectDirectory.dir("okocraft-api"))
             serverOutputDir.set(layout.projectDirectory.dir("okocraft-server"))
         }
+
+        patchTasks.register("generatedApi") {
+            isBareDirectory = true
+            upstreamDirPath = "paper-api-generator/generated"
+            patchDir = layout.projectDirectory.dir("patches/generatedApi")
+            outputDir = layout.projectDirectory.dir("paper-api-generator/generated")
+        }
     }
 }
 
