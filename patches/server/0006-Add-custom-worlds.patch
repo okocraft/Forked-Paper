@@ -17,7 +17,7 @@ index 6ea64ca8ce980f73a4c527ac79367bf4a1e48c89..0fbd1c52b2f59cf3d47c5fe4d529d880
          for (ServerLevel worldserver : this.getAllLevels()) {
              this.prepareLevels(worldserver.getChunkSource().chunkMap.progressListener, worldserver);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 8abf1fc74b49b23e7cc3ab37ae075a9c8ce89e36..2cb49486e1335452cc5aeda091169958ed231ce2 100644
+index 017697c6ccd483001601f6f99c6adcce2295c6b4..4f1235fdf6b11d669d2d99fcd3f135e9f0b4610c 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -1265,6 +1265,77 @@ public final class CraftServer implements Server {

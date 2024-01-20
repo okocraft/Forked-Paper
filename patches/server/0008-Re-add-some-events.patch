@@ -50,14 +50,14 @@ index ded539dd20a2d037fa5d175be06d59dd76660ffe..ed7a12fb3b8084436cf0ea9e6b08a516
          if (nbttagcompound == null) {
              player.spawnReason = org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.DEFAULT; // set Player SpawnReason to DEFAULT on first login
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 0a060023da8c1ca1e4a0646e94170c8f489f48b1..64ce3a1fd3a09e223bf11be1f9610ba8c66420be 100644
+index cd45d36c2a047ee84a5d933f8a9feb61b95b49ff..f26b7e7b3eafdf488ff9edaddf624adecf7f2f84 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -4110,12 +4110,21 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+@@ -4117,12 +4117,21 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
          io.papermc.paper.util.TickThread.ensureTickThread(this, "Cannot portal entity async");
  
          ServerLevel destination = this.getServer().getLevel(this.level().getTypeKey() == LevelStem.NETHER ? Level.OVERWORLD : Level.NETHER);
-+        // okocraft start - Port Paper's Add-EntityPortalReadyEvent.patch
++        // okocraft start - call EntityPortalReadyEvent
 +        io.papermc.paper.event.entity.EntityPortalReadyEvent event = new io.papermc.paper.event.entity.EntityPortalReadyEvent(this.getBukkitEntity(), destination == null ? null : destination.getWorld(), org.bukkit.PortalType.NETHER);
 +        if (!event.callEvent()) {
 +            this.portalTime = 0;
@@ -70,8 +70,8 @@ index 0a060023da8c1ca1e4a0646e94170c8f489f48b1..64ce3a1fd3a09e223bf11be1f9610ba8
              return false;
          }
  
-         return this.portalToAsync(destination, false, PortalType.NETHER, null);
-+        } // okocraft
+         return this.portalToAsync(destination, false, PortalType.NETHER, SEND_TRAVEL_EVENT); // okocraft - Fix not playing travel sound when changing the dimension by portals
++        } // okocraft - call EntityPortalReadyEvent
      }
  
      private static final java.util.concurrent.atomic.AtomicLong CREATE_PORTAL_DOUBLE_CHECK = new java.util.concurrent.atomic.AtomicLong();
