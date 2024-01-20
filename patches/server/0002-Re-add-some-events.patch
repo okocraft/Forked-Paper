@@ -1,11 +1,14 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Siroshun09 <siro.shun8@gmail.com>
-Date: Tue, 18 Jul 2023 06:20:25 +0900
-Subject: [PATCH] Call spawn/respawn events that cannot modify the location
+Date: Thu, 22 Jun 2023 11:53:26 +0900
+Subject: [PATCH] Re-add some events
 
+- EntityPortalReadyEvent
+- spawn/respawn events (that cannot modify the location)
+- PlayerChangedWorldEvent
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 3d2b059254fdc08d1e4f9281946028a46884d7c8..46ce4d20c49c362d92bd2454ebe4577bb5fb79a2 100644
+index 3d2b059254fdc08d1e4f9281946028a46884d7c8..7225dab8f8e4dfa47b290a01cc1342eb12c4e3b9 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -1298,10 +1298,15 @@ public class ServerPlayer extends Player {
@@ -24,6 +27,14 @@ index 3d2b059254fdc08d1e4f9281946028a46884d7c8..46ce4d20c49c362d92bd2454ebe4577b
          this.respawn(respawnComplete, false);
      }
  
+@@ -1565,6 +1570,7 @@ public class ServerPlayer extends Player {
+             }
+ 
+             this.triggerDimensionChangeTriggers(originWorld);
++            new org.bukkit.event.player.PlayerChangedWorldEvent(this.getBukkitEntity(), originWorld.getWorld()).callEvent(); // okocraft - Call PlayerChangedWorldEvent
+ 
+             // finished
+ 
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
 index ded539dd20a2d037fa5d175be06d59dd76660ffe..ed7a12fb3b8084436cf0ea9e6b08a5163d49cdbd 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
@@ -38,3 +49,29 @@ index ded539dd20a2d037fa5d175be06d59dd76660ffe..ed7a12fb3b8084436cf0ea9e6b08a516
          // Paper start
          if (nbttagcompound == null) {
              player.spawnReason = org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.DEFAULT; // set Player SpawnReason to DEFAULT on first login
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 0a060023da8c1ca1e4a0646e94170c8f489f48b1..64ce3a1fd3a09e223bf11be1f9610ba8c66420be 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -4110,12 +4110,21 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+         io.papermc.paper.util.TickThread.ensureTickThread(this, "Cannot portal entity async");
+ 
+         ServerLevel destination = this.getServer().getLevel(this.level().getTypeKey() == LevelStem.NETHER ? Level.OVERWORLD : Level.NETHER);
++        // okocraft start - Port Paper's Add-EntityPortalReadyEvent.patch
++        io.papermc.paper.event.entity.EntityPortalReadyEvent event = new io.papermc.paper.event.entity.EntityPortalReadyEvent(this.getBukkitEntity(), destination == null ? null : destination.getWorld(), org.bukkit.PortalType.NETHER);
++        if (!event.callEvent()) {
++            this.portalTime = 0;
++            return false;
++        } else {
++            destination = event.getTargetWorld() == null ? null : ((CraftWorld) event.getTargetWorld()).getHandle();
++        // okocraft end
+         if (destination == null) {
+             // wat
+             return false;
+         }
+ 
+         return this.portalToAsync(destination, false, PortalType.NETHER, null);
++        } // okocraft
+     }
+ 
+     private static final java.util.concurrent.atomic.AtomicLong CREATE_PORTAL_DOUBLE_CHECK = new java.util.concurrent.atomic.AtomicLong();
