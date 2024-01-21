@@ -5,7 +5,7 @@ Subject: [PATCH] Add custom worlds
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 6ea64ca8ce980f73a4c527ac79367bf4a1e48c89..0fbd1c52b2f59cf3d47c5fe4d529d880e24497e3 100644
+index 4f988608368cdccfa65d83991fc3bbaeecc6c2f1..705ce1f2bc7ce1f0d0686b2c251a0ee619347805 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -690,6 +690,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -17,10 +17,10 @@ index 6ea64ca8ce980f73a4c527ac79367bf4a1e48c89..0fbd1c52b2f59cf3d47c5fe4d529d880
          for (ServerLevel worldserver : this.getAllLevels()) {
              this.prepareLevels(worldserver.getChunkSource().chunkMap.progressListener, worldserver);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 017697c6ccd483001601f6f99c6adcce2295c6b4..4f1235fdf6b11d669d2d99fcd3f135e9f0b4610c 100644
+index 21a1fbcb5cbaa6c7b042eb80a1c44def84f17527..e38102fb1b2ea2637904d668c3b678f0b9892ab9 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -1265,6 +1265,77 @@ public final class CraftServer implements Server {
+@@ -1267,6 +1267,77 @@ public final class CraftServer implements Server {
      @Override
      public World createWorld(WorldCreator creator) {
          if (true) throw new UnsupportedOperationException(); // Folia - not implemented properly yet
@@ -98,10 +98,10 @@ index 017697c6ccd483001601f6f99c6adcce2295c6b4..4f1235fdf6b11d669d2d99fcd3f135e9
          Preconditions.checkState(this.console.getAllLevels().iterator().hasNext(), "Cannot create additional worlds on STARTUP");
          //Preconditions.checkState(!this.console.isIteratingOverLevels, "Cannot create a world while worlds are being ticked"); // Paper - Cat - Temp disable. We'll see how this goes.
          Preconditions.checkArgument(creator != null, "WorldCreator cannot be null");
-@@ -1424,12 +1495,26 @@ public final class CraftServer implements Server {
+@@ -1426,12 +1497,26 @@ public final class CraftServer implements Server {
          }
  
-         this.console.addLevel(internal); // Paper - move up
+         this.console.addLevel(internal); // Paper - Put world into worldlist before initing the world; move up
 +        // okocraft start - Copied from MinecraftServer L625
 +        int loadRegionRadius = ((32) >> 4);
 +        internal.randomSpawnSelection = new net.minecraft.world.level.ChunkPos(internal.getChunkSource().randomState().sampler().findSpawnPosition());
@@ -118,7 +118,7 @@ index 017697c6ccd483001601f6f99c6adcce2295c6b4..4f1235fdf6b11d669d2d99fcd3f135e9
          this.console.initWorld(internal, worlddata, worlddata, worlddata.worldGenOptions());
  
          internal.setSpawnSettings(true, true);
-         // Paper - move up
+         // Paper - Put world into worldlist before initing the world; move up
  
          internal.keepSpawnInMemory = creator.keepSpawnLoaded().toBooleanOrElse(internal.getWorld().getKeepSpawnInMemory()); // Paper
 +        if (false) // okocraft - Not needed for loading custom worlds
