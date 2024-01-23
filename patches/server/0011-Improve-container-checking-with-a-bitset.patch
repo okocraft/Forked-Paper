@@ -148,7 +148,7 @@ index 0000000000000000000000000000000000000000..957f923c0fd427aa2644ae126dcc8d19
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/world/CompoundContainer.java b/src/main/java/net/minecraft/world/CompoundContainer.java
-index 241fec02e6869c638d3a160819b32173a081467b..645c35ca2037fb145a69e5dc8afc53ad37b21623 100644
+index 241fec02e6869c638d3a160819b32173a081467b..058ace26745de5422326cbc69f47a915da52d186 100644
 --- a/src/main/java/net/minecraft/world/CompoundContainer.java
 +++ b/src/main/java/net/minecraft/world/CompoundContainer.java
 @@ -64,6 +64,18 @@ public class CompoundContainer implements Container {
@@ -157,13 +157,13 @@ index 241fec02e6869c638d3a160819b32173a081467b..645c35ca2037fb145a69e5dc8afc53ad
  
 +    // Pufferfish start
 +    @Override
-+    public boolean isCompletelyFull(@org.jetbrains.annotations.Nullable net.minecraft.core.Direction enumdirection) {
-+        return this.container1.isCompletelyFull(null) && this.container2.isCompletelyFull(null);
++    public Container.OptionalState hasEmptySlot() {
++        return this.container1.hasEmptySlot().and(this.container2.hasEmptySlot());
 +    }
 +
 +    @Override
-+    public boolean isCompletelyEmpty(@org.jetbrains.annotations.Nullable net.minecraft.core.Direction enumdirection) {
-+        return this.container1.isCompletelyEmpty(null) && this.container2.isCompletelyEmpty(null);
++    public Container.OptionalState isCompletelyEmpty() {
++        return this.container1.isCompletelyEmpty().and(this.container2.isCompletelyEmpty());
 +    }
 +    // Pufferfish end
 +
@@ -171,68 +171,62 @@ index 241fec02e6869c638d3a160819b32173a081467b..645c35ca2037fb145a69e5dc8afc53ad
      public int getContainerSize() {
          return this.container1.getContainerSize() + this.container2.getContainerSize();
 diff --git a/src/main/java/net/minecraft/world/Container.java b/src/main/java/net/minecraft/world/Container.java
-index d6cbe98e67fdbf8db46338a88ab1356dd63b50a3..2dc60d6cbd8d0e4613e76874e0cde14c632c568a 100644
+index d6cbe98e67fdbf8db46338a88ab1356dd63b50a3..ee911b91b52acc6809f753b658ea59be0e0bcc19 100644
 --- a/src/main/java/net/minecraft/world/Container.java
 +++ b/src/main/java/net/minecraft/world/Container.java
-@@ -14,6 +14,45 @@ import org.bukkit.craftbukkit.entity.CraftHumanEntity;
+@@ -14,6 +14,28 @@ import org.bukkit.craftbukkit.entity.CraftHumanEntity;
  // CraftBukkit end
  
  public interface Container extends Clearable {
 +    // Pufferfish start - allow the inventory to override and optimize these frequent calls
-+    default boolean isCompletelyFull(@org.jetbrains.annotations.Nullable net.minecraft.core.Direction enumdirection) { // every stack is maxed
-+        if (this instanceof WorldlyContainer worldlyContainer) {
-+            for (int i : worldlyContainer.getSlotsForFace(enumdirection)) {
-+                ItemStack itemStack = this.getItem(i);
-+                if (itemStack.getCount() < itemStack.getMaxStackSize()) {
-+                    return false;
-+                }
++    enum OptionalState {
++        TRUE,
++        FALSE,
++        NOT_IMPLEMENTED;
++
++        public OptionalState and(OptionalState other) {
++            if (this == NOT_IMPLEMENTED || other == NOT_IMPLEMENTED) {
++                return NOT_IMPLEMENTED;
 +            }
-+        } else {
-+            int size = this.getContainerSize();
-+            for (int i = 0; i < size; i++) {
-+                ItemStack itemStack = this.getItem(i);
-+                if (itemStack.getCount() < itemStack.getMaxStackSize()) {
-+                    return false;
-+                }
-+            }
++            return this == TRUE ? other : FALSE;
 +        }
-+        return true;
 +    }
 +
-+    default boolean isCompletelyEmpty(@org.jetbrains.annotations.Nullable net.minecraft.core.Direction enumdirection) {
-+        if (this instanceof WorldlyContainer worldlyContainer) {
-+            for (int i : worldlyContainer.getSlotsForFace(enumdirection)) {
-+                if (!this.getItem(i).isEmpty()) {
-+                    return false;
-+                }
-+            }
-+        } else {
-+            int size = this.getContainerSize();
-+            for (int i = 0; i < size; i++) {
-+                if (!this.getItem(i).isEmpty()) {
-+                    return false;
-+                }
-+            }
-+        }
-+        return true;
++    default OptionalState hasEmptySlot() {
++        return OptionalState.NOT_IMPLEMENTED;
++    }
++
++    default OptionalState isCompletelyEmpty() {
++        return OptionalState.NOT_IMPLEMENTED;
 +    }
 +    // Pufferfish end
  
      int LARGE_MAX_STACK_SIZE = 64;
      int DEFAULT_DISTANCE_LIMIT = 8;
 diff --git a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java
-index 6d23c39e4eadf23616080d6d08672e13b5d3c37d..30d0c355396c20c4c5705b7ad9a1f3638e0787ab 100644
+index 6d23c39e4eadf23616080d6d08672e13b5d3c37d..408564abe8b9b14e6d993cb6fc90a142a3edd644 100644
 --- a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java
 +++ b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java
-@@ -28,6 +28,7 @@ import org.bukkit.inventory.InventoryHolder;
+@@ -28,6 +28,18 @@ import org.bukkit.inventory.InventoryHolder;
  public abstract class AbstractMinecartContainer extends AbstractMinecart implements ContainerEntity {
  
      private NonNullList<ItemStack> itemStacks;
-+    private gg.airplane.structs.ItemListWithBitset optimizedItems; // Pufferfish
++    // Pufferfish start
++    private gg.airplane.structs.ItemListWithBitset optimizedItems;
++    @Override
++    public Container.OptionalState hasEmptySlot() {
++        return this.optimizedItems.isSlotFilled() ? Container.OptionalState.TRUE : Container.OptionalState.FALSE;
++    }
++
++    @Override
++    public Container.OptionalState isCompletelyEmpty() {
++        return this.optimizedItems.isCompletelyEmpty() ? Container.OptionalState.TRUE : Container.OptionalState.FALSE;
++    }
++    // Pufferfish end
      @Nullable
      public ResourceLocation lootTable;
      public long lootTableSeed;
-@@ -89,14 +90,32 @@ public abstract class AbstractMinecartContainer extends AbstractMinecart impleme
+@@ -89,12 +101,18 @@ public abstract class AbstractMinecartContainer extends AbstractMinecart impleme
  
      protected AbstractMinecartContainer(EntityType<?> type, Level world) {
          super(type, world);
@@ -252,22 +246,8 @@ index 6d23c39e4eadf23616080d6d08672e13b5d3c37d..30d0c355396c20c4c5705b7ad9a1f363
 +        // Pufferfish end
      }
  
-+    // Pufferfish start
-+    @Override
-+    public boolean isCompletelyFull(@org.jetbrains.annotations.Nullable net.minecraft.core.Direction enumdirection) {
-+        return this.optimizedItems.isSlotFilled() && ContainerEntity.super.isCompletelyFull(enumdirection);
-+    }
-+
-+    @Override
-+    public boolean isCompletelyEmpty(@org.jetbrains.annotations.Nullable net.minecraft.core.Direction enumdirection) {
-+        return this.optimizedItems.isCompletelyEmpty();
-+    }
-+    // Pufferfish end
-+
      @Override
-     public void destroy(DamageSource source) {
-         super.destroy(source);
-@@ -156,6 +175,10 @@ public abstract class AbstractMinecartContainer extends AbstractMinecart impleme
+@@ -156,6 +174,10 @@ public abstract class AbstractMinecartContainer extends AbstractMinecart impleme
      protected void readAdditionalSaveData(CompoundTag nbt) {
          super.readAdditionalSaveData(nbt);
          this.lootableData.loadNbt(nbt); // Paper
@@ -278,7 +258,7 @@ index 6d23c39e4eadf23616080d6d08672e13b5d3c37d..30d0c355396c20c4c5705b7ad9a1f363
          this.readChestVehicleSaveData(nbt);
      }
  
-@@ -232,6 +255,9 @@ public abstract class AbstractMinecartContainer extends AbstractMinecart impleme
+@@ -232,6 +254,9 @@ public abstract class AbstractMinecartContainer extends AbstractMinecart impleme
  
      @Override
      public void clearItemStacks() {
@@ -290,14 +270,26 @@ index 6d23c39e4eadf23616080d6d08672e13b5d3c37d..30d0c355396c20c4c5705b7ad9a1f363
      }
  }
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BarrelBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BarrelBlockEntity.java
-index 416aa989ebb18a8741cc9d605a1180ab830f6643..a69b34034d91e0f2e83f8002a69d2c4fd0adba34 100644
+index 416aa989ebb18a8741cc9d605a1180ab830f6643..ae74e49d1d9ccebc996e40792a606ab347b75dc2 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BarrelBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BarrelBlockEntity.java
-@@ -63,11 +63,15 @@ public class BarrelBlockEntity extends RandomizableContainerBlockEntity {
+@@ -62,12 +62,27 @@ public class BarrelBlockEntity extends RandomizableContainerBlockEntity {
+         this.maxStack = i;
      }
      // CraftBukkit end
++    // Pufferfish start
++    private gg.airplane.structs.ItemListWithBitset optimizedItems;
++    @Override
++    public Container.OptionalState hasEmptySlot() {
++        return this.optimizedItems.isSlotFilled() ? Container.OptionalState.TRUE : Container.OptionalState.FALSE;
++    }
++
++    @Override
++    public Container.OptionalState isCompletelyEmpty() {
++        return this.optimizedItems.isCompletelyEmpty() ? Container.OptionalState.TRUE : Container.OptionalState.FALSE;
++    }
++    // Pufferfish end
      private NonNullList<ItemStack> items;
-+    private gg.airplane.structs.ItemListWithBitset optimizedItems; // Pufferfish
      public final ContainerOpenersCounter openersCounter;
  
      public BarrelBlockEntity(BlockPos pos, BlockState state) {
@@ -310,26 +302,7 @@ index 416aa989ebb18a8741cc9d605a1180ab830f6643..a69b34034d91e0f2e83f8002a69d2c4f
          this.openersCounter = new ContainerOpenersCounter() {
              @Override
              protected void onOpen(Level world, BlockPos pos, BlockState state) {
-@@ -97,6 +101,18 @@ public class BarrelBlockEntity extends RandomizableContainerBlockEntity {
-         };
-     }
- 
-+    // Pufferfish start
-+    @Override
-+    public boolean isCompletelyFull(@org.jetbrains.annotations.Nullable net.minecraft.core.Direction enumdirection) {
-+        return this.optimizedItems.isSlotFilled() && super.isCompletelyFull(enumdirection);
-+    }
-+
-+    @Override
-+    public boolean isCompletelyEmpty(@org.jetbrains.annotations.Nullable Direction enumdirection) {
-+        return this.optimizedItems.isCompletelyEmpty();
-+    }
-+    // Pufferfish end
-+
-     @Override
-     protected void saveAdditional(CompoundTag nbt) {
-         super.saveAdditional(nbt);
-@@ -109,7 +125,10 @@ public class BarrelBlockEntity extends RandomizableContainerBlockEntity {
+@@ -109,7 +124,10 @@ public class BarrelBlockEntity extends RandomizableContainerBlockEntity {
      @Override
      public void load(CompoundTag nbt) {
          super.load(nbt);
@@ -341,7 +314,7 @@ index 416aa989ebb18a8741cc9d605a1180ab830f6643..a69b34034d91e0f2e83f8002a69d2c4f
          if (!this.tryLoadLootTable(nbt)) {
              ContainerHelper.loadAllItems(nbt, this.items);
          }
-@@ -128,7 +147,10 @@ public class BarrelBlockEntity extends RandomizableContainerBlockEntity {
+@@ -128,7 +146,10 @@ public class BarrelBlockEntity extends RandomizableContainerBlockEntity {
  
      @Override
      protected void setItems(NonNullList<ItemStack> list) {
@@ -354,18 +327,29 @@ index 416aa989ebb18a8741cc9d605a1180ab830f6643..a69b34034d91e0f2e83f8002a69d2c4f
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/ChestBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/ChestBlockEntity.java
-index a71414397bd45ee7bcacfeef0041d80dfa25f114..4f0ce0a10bc46ecee5462059cc54d8002f7d2b21 100644
+index a71414397bd45ee7bcacfeef0041d80dfa25f114..116821e94da2d1f269a3d011f126588bb5f96d10 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/ChestBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/ChestBlockEntity.java
-@@ -32,6 +32,7 @@ public class ChestBlockEntity extends RandomizableContainerBlockEntity implement
+@@ -29,6 +29,18 @@ import org.bukkit.entity.HumanEntity;
+ // CraftBukkit end
+ 
+ public class ChestBlockEntity extends RandomizableContainerBlockEntity implements LidBlockEntity {
++    // Pufferfish start
++    private gg.airplane.structs.ItemListWithBitset optimizedItems;
++    @Override
++    public Container.OptionalState hasEmptySlot() {
++        return this.optimizedItems.isSlotFilled() ? Container.OptionalState.TRUE : Container.OptionalState.FALSE;
++    }
++
++    @Override
++    public Container.OptionalState isCompletelyEmpty() {
++        return this.optimizedItems.isCompletelyEmpty() ? Container.OptionalState.TRUE : Container.OptionalState.FALSE;
++    }
++    // Pufferfish end
  
      private static final int EVENT_SET_OPEN_COUNT = 1;
      private NonNullList<ItemStack> items;
-+    private gg.airplane.structs.ItemListWithBitset optimizedItems; // Pufferfish
-     public final ContainerOpenersCounter openersCounter;
-     private final ChestLidController chestLidController;
- 
-@@ -67,7 +68,10 @@ public class ChestBlockEntity extends RandomizableContainerBlockEntity implement
+@@ -67,7 +79,10 @@ public class ChestBlockEntity extends RandomizableContainerBlockEntity implement
  
      protected ChestBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
          super(type, pos, state);
@@ -377,26 +361,7 @@ index a71414397bd45ee7bcacfeef0041d80dfa25f114..4f0ce0a10bc46ecee5462059cc54d800
          this.openersCounter = new ContainerOpenersCounter() {
              @Override
              protected void onOpen(Level world, BlockPos pos, BlockState state) {
-@@ -102,6 +106,18 @@ public class ChestBlockEntity extends RandomizableContainerBlockEntity implement
-         this(BlockEntityType.CHEST, pos, state);
-     }
- 
-+    // Pufferfish start
-+    @Override
-+    public boolean isCompletelyFull(@org.jetbrains.annotations.Nullable net.minecraft.core.Direction enumdirection) {
-+        return this.optimizedItems.isSlotFilled() && super.isCompletelyFull(enumdirection);
-+    }
-+
-+    @Override
-+    public boolean isCompletelyEmpty(@org.jetbrains.annotations.Nullable Direction enumdirection) {
-+        return this.optimizedItems.isCompletelyEmpty();
-+    }
-+    // Pufferfish end
-+
-     @Override
-     public int getContainerSize() {
-         return 27;
-@@ -115,7 +131,10 @@ public class ChestBlockEntity extends RandomizableContainerBlockEntity implement
+@@ -115,7 +130,10 @@ public class ChestBlockEntity extends RandomizableContainerBlockEntity implement
      @Override
      public void load(CompoundTag nbt) {
          super.load(nbt);
@@ -408,7 +373,7 @@ index a71414397bd45ee7bcacfeef0041d80dfa25f114..4f0ce0a10bc46ecee5462059cc54d800
          if (!this.tryLoadLootTable(nbt)) {
              ContainerHelper.loadAllItems(nbt, this.items);
          }
-@@ -187,7 +206,10 @@ public class ChestBlockEntity extends RandomizableContainerBlockEntity implement
+@@ -187,7 +205,10 @@ public class ChestBlockEntity extends RandomizableContainerBlockEntity implement
  
      @Override
      protected void setItems(NonNullList<ItemStack> list) {
@@ -421,18 +386,37 @@ index a71414397bd45ee7bcacfeef0041d80dfa25f114..4f0ce0a10bc46ecee5462059cc54d800
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/DispenserBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/DispenserBlockEntity.java
-index 881379681c39230a00b3a1f11cd87498984396c7..1aa41c96ff1a54c861cf310c55da10464e44679a 100644
+index 881379681c39230a00b3a1f11cd87498984396c7..255faaf7b899472e0d274b451c83a1e59a4bfee5 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/DispenserBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/DispenserBlockEntity.java
-@@ -22,6 +22,7 @@ public class DispenserBlockEntity extends RandomizableContainerBlockEntity {
+@@ -5,6 +5,7 @@ import net.minecraft.core.NonNullList;
+ import net.minecraft.nbt.CompoundTag;
+ import net.minecraft.network.chat.Component;
+ import net.minecraft.util.RandomSource;
++import net.minecraft.world.Container;
+ import net.minecraft.world.ContainerHelper;
+ import net.minecraft.world.entity.player.Inventory;
+ import net.minecraft.world.entity.player.Player;
+@@ -19,6 +20,18 @@ import org.bukkit.entity.HumanEntity;
+ // CraftBukkit end
+ 
+ public class DispenserBlockEntity extends RandomizableContainerBlockEntity {
++    // Pufferfish start
++    private gg.airplane.structs.ItemListWithBitset optimizedItems;
++    @Override
++    public Container.OptionalState hasEmptySlot() {
++        return this.optimizedItems.isSlotFilled() ? Container.OptionalState.TRUE : Container.OptionalState.FALSE;
++    }
++
++    @Override
++    public Container.OptionalState isCompletelyEmpty() {
++        return this.optimizedItems.isCompletelyEmpty() ? Container.OptionalState.TRUE : Container.OptionalState.FALSE;
++    }
++    // Pufferfish end
  
      public static final int CONTAINER_SIZE = 9;
      private NonNullList<ItemStack> items;
-+    private gg.airplane.structs.ItemListWithBitset optimizedItems; // Pufferfish
- 
-     // CraftBukkit start - add fields and methods
-     public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
-@@ -55,12 +56,26 @@ public class DispenserBlockEntity extends RandomizableContainerBlockEntity {
+@@ -55,7 +68,10 @@ public class DispenserBlockEntity extends RandomizableContainerBlockEntity {
  
      protected DispenserBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
          super(type, pos, state);
@@ -444,23 +428,7 @@ index 881379681c39230a00b3a1f11cd87498984396c7..1aa41c96ff1a54c861cf310c55da1046
      }
  
      public DispenserBlockEntity(BlockPos pos, BlockState state) {
-         this(BlockEntityType.DISPENSER, pos, state);
-     }
-+    // Pufferfish start
-+    @Override
-+    public boolean isCompletelyFull(@org.jetbrains.annotations.Nullable net.minecraft.core.Direction enumdirection) {
-+        return this.optimizedItems.isSlotFilled() && super.isCompletelyFull(enumdirection);
-+    }
-+
-+    @Override
-+    public boolean isCompletelyEmpty(@org.jetbrains.annotations.Nullable net.minecraft.core.Direction enumdirection) {
-+        return this.optimizedItems.isCompletelyEmpty();
-+    }
-+    // Pufferfish end
- 
-     @Override
-     public int getContainerSize() {
-@@ -100,7 +115,10 @@ public class DispenserBlockEntity extends RandomizableContainerBlockEntity {
+@@ -100,7 +116,10 @@ public class DispenserBlockEntity extends RandomizableContainerBlockEntity {
      @Override
      public void load(CompoundTag nbt) {
          super.load(nbt);
@@ -472,7 +440,7 @@ index 881379681c39230a00b3a1f11cd87498984396c7..1aa41c96ff1a54c861cf310c55da1046
          if (!this.tryLoadLootTable(nbt)) {
              ContainerHelper.loadAllItems(nbt, this.items);
          }
-@@ -123,7 +141,10 @@ public class DispenserBlockEntity extends RandomizableContainerBlockEntity {
+@@ -123,7 +142,10 @@ public class DispenserBlockEntity extends RandomizableContainerBlockEntity {
  
      @Override
      protected void setItems(NonNullList<ItemStack> list) {
@@ -485,18 +453,29 @@ index 881379681c39230a00b3a1f11cd87498984396c7..1aa41c96ff1a54c861cf310c55da1046
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
-index 26ff1a3d07c92f7035020d08d35116f7feede600..98a1b220493438aa4f2f68e748b08a9186376ccb 100644
+index 26ff1a3d07c92f7035020d08d35116f7feede600..a8cba1645ac01c8d21b5ac10c536e9ec3546c2a7 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
-@@ -48,6 +48,7 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+@@ -44,6 +44,18 @@ import org.bukkit.inventory.Inventory;
+ // CraftBukkit end
+ 
+ public class HopperBlockEntity extends RandomizableContainerBlockEntity implements Hopper {
++    // Pufferfish start
++    private gg.airplane.structs.ItemListWithBitset optimizedItems;
++    @Override
++    public Container.OptionalState hasEmptySlot() {
++        return this.optimizedItems.isSlotFilled() ? Container.OptionalState.TRUE : Container.OptionalState.FALSE;
++    }
++
++    @Override
++    public Container.OptionalState isCompletelyEmpty() {
++        return this.optimizedItems.isCompletelyEmpty() ? Container.OptionalState.TRUE : Container.OptionalState.FALSE;
++    }
++    // Pufferfish end
+ 
      public static final int MOVE_ITEM_SPEED = 8;
      public static final int HOPPER_CONTAINER_SIZE = 5;
-     private NonNullList<ItemStack> items;
-+    private gg.airplane.structs.ItemListWithBitset optimizedItems; // Pufferfish
-     private int cooldownTime;
-     private long tickedGameTime;
- 
-@@ -83,14 +84,32 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+@@ -83,14 +95,20 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
  
      public HopperBlockEntity(BlockPos pos, BlockState state) {
          super(BlockEntityType.HOPPER, pos, state);
@@ -508,18 +487,6 @@ index 26ff1a3d07c92f7035020d08d35116f7feede600..98a1b220493438aa4f2f68e748b08a91
          this.cooldownTime = -1;
      }
  
-+    // Pufferfish start
-+    @Override
-+    public boolean isCompletelyFull(@org.jetbrains.annotations.Nullable net.minecraft.core.Direction enumdirection) {
-+        return this.optimizedItems.isSlotFilled() && super.isCompletelyFull(enumdirection);
-+    }
-+
-+    @Override
-+    public boolean isCompletelyEmpty(@org.jetbrains.annotations.Nullable Direction enumdirection) {
-+        return this.optimizedItems.isCompletelyEmpty();
-+    }
-+    // Pufferfish end
-+
      @Override
      public void load(CompoundTag nbt) {
          super.load(nbt);
@@ -531,7 +498,7 @@ index 26ff1a3d07c92f7035020d08d35116f7feede600..98a1b220493438aa4f2f68e748b08a91
          if (!this.tryLoadLootTable(nbt)) {
              ContainerHelper.loadAllItems(nbt, this.items);
          }
-@@ -159,6 +178,14 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+@@ -159,6 +177,14 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
      private static int getFullState(final HopperBlockEntity tileEntity) {
          tileEntity.unpackLootTable(null);
  
@@ -546,15 +513,14 @@ index 26ff1a3d07c92f7035020d08d35116f7feede600..98a1b220493438aa4f2f68e748b08a91
          final List<ItemStack> hopperItems = tileEntity.getItems();
  
          boolean empty = true;
-@@ -716,7 +743,7 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+@@ -493,6 +519,7 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+     }
  
-         if (HopperBlockEntity.canPlaceItemInContainer(to, stack, slot, side)) {
-             boolean flag = false;
--            boolean flag1 = to.isEmpty();
-+            boolean flag1 = to.isCompletelyEmpty(side); // Pufferfish
- 
-             if (itemstack1.isEmpty()) {
-                 // Spigot start - SPIGOT-6693, InventorySubcontainer#setItem
+     private static boolean isFullContainer(Container inventory, Direction direction) {
++        if (inventory.hasEmptySlot() == Container.OptionalState.TRUE) return false; // Pufferfish
+         // Paper start - Perf: Optimize Hoppers
+         if (inventory instanceof WorldlyContainer worldlyContainer) {
+             for (final int slot : worldlyContainer.getSlotsForFace(direction)) {
 @@ -911,7 +938,10 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
  
      @Override
@@ -568,39 +534,49 @@ index 26ff1a3d07c92f7035020d08d35116f7feede600..98a1b220493438aa4f2f68e748b08a91
  
      public static void entityInside(Level world, BlockPos pos, BlockState state, Entity entity, HopperBlockEntity blockEntity) {
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
-index a94300a457b25f0e33a8eeabba6dd5720ca9ab1e..f335f3c319eec72b883d1b62c1cedc6f5cd094b8 100644
+index a94300a457b25f0e33a8eeabba6dd5720ca9ab1e..d9eb7cbcd4b016d0ba7b3ca855c384bc8537eb9a 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
 @@ -93,6 +93,7 @@ public abstract class RandomizableContainerBlockEntity extends BaseContainerBloc
      @Override
      public boolean isEmpty() {
          this.unpackLootTable((Player)null);
-+        /* Pufferfish start - use super
++        if (this.isCompletelyEmpty() == Container.OptionalState.TRUE) return true; // Pufferfish
          // Paper start - Perf: Optimize Hoppers
          for (final ItemStack itemStack : this.getItems()) {
              if (!itemStack.isEmpty()) {
-@@ -101,6 +102,8 @@ public abstract class RandomizableContainerBlockEntity extends BaseContainerBloc
-         }
-         return true;
-         // Paper end - Perf: Optimize Hoppers
-+        */
-+        return this.isCompletelyEmpty(null); // Pufferfish - use super
-     }
- 
-     @Override
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java
-index 1fa22445a4ecc8c08dbcf0cc6bd39dc5003604c4..97819840be5a8227dda5505b0bad18ee3f8417c6 100644
+index 1fa22445a4ecc8c08dbcf0cc6bd39dc5003604c4..5d9add5e69a00a25c82ee497750c8159c6b0581c 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java
-@@ -48,6 +48,7 @@ public class ShulkerBoxBlockEntity extends RandomizableContainerBlockEntity impl
-     public static final String ITEMS_TAG = "Items";
-     private static final int[] SLOTS = IntStream.range(0, 27).toArray();
-     private NonNullList<ItemStack> itemStacks;
-+    private gg.airplane.structs.ItemListWithBitset optimizedItems; // Pufferfish
-     public int openCount;
-     private ShulkerBoxBlockEntity.AnimationStatus animationStatus;
-     private float progress;
-@@ -88,18 +89,36 @@ public class ShulkerBoxBlockEntity extends RandomizableContainerBlockEntity impl
+@@ -12,6 +12,7 @@ import net.minecraft.network.chat.Component;
+ import net.minecraft.sounds.SoundEvents;
+ import net.minecraft.sounds.SoundSource;
+ import net.minecraft.util.Mth;
++import net.minecraft.world.Container;
+ import net.minecraft.world.ContainerHelper;
+ import net.minecraft.world.WorldlyContainer;
+ import net.minecraft.world.entity.Entity;
+@@ -37,6 +38,18 @@ import org.bukkit.entity.HumanEntity;
+ // CraftBukkit end
+ 
+ public class ShulkerBoxBlockEntity extends RandomizableContainerBlockEntity implements WorldlyContainer {
++    // Pufferfish start
++    private gg.airplane.structs.ItemListWithBitset optimizedItems;
++    @Override
++    public Container.OptionalState hasEmptySlot() {
++        return this.optimizedItems.isSlotFilled() ? Container.OptionalState.TRUE : Container.OptionalState.FALSE;
++    }
++
++    @Override
++    public Container.OptionalState isCompletelyEmpty() {
++        return this.optimizedItems.isCompletelyEmpty() ? Container.OptionalState.TRUE : Container.OptionalState.FALSE;
++    }
++    // Pufferfish end
+ 
+     public static final int COLUMNS = 9;
+     public static final int ROWS = 3;
+@@ -88,14 +101,20 @@ public class ShulkerBoxBlockEntity extends RandomizableContainerBlockEntity impl
  
      public ShulkerBoxBlockEntity(@Nullable DyeColor color, BlockPos pos, BlockState state) {
          super(BlockEntityType.SHULKER_BOX, pos, state);
@@ -622,22 +598,6 @@ index 1fa22445a4ecc8c08dbcf0cc6bd39dc5003604c4..97819840be5a8227dda5505b0bad18ee
 +        // Pufferfish end
          this.animationStatus = ShulkerBoxBlockEntity.AnimationStatus.CLOSED;
          this.color = ShulkerBoxBlock.getColorFromBlock(state.getBlock());
-     }
- 
-+    // Pufferfish start
-+    @Override
-+    public boolean isCompletelyFull(@org.jetbrains.annotations.Nullable net.minecraft.core.Direction enumdirection) {
-+        return this.optimizedItems.isSlotFilled() && super.isCompletelyFull(enumdirection);
-+    }
-+
-+    @Override
-+    public boolean isCompletelyEmpty(@org.jetbrains.annotations.Nullable Direction enumdirection) {
-+        return this.optimizedItems.isCompletelyEmpty();
-+    }
-+    // Pufferfish end
-+
-     public static void tick(Level world, BlockPos pos, BlockState state, ShulkerBoxBlockEntity blockEntity) {
-         blockEntity.updateAnimation(world, pos, state);
      }
 @@ -252,7 +271,10 @@ public class ShulkerBoxBlockEntity extends RandomizableContainerBlockEntity impl
      }
