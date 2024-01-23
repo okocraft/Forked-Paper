@@ -8,7 +8,7 @@ Subject: [PATCH] Re-add some events
 - PlayerChangedWorldEvent
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 3d2b059254fdc08d1e4f9281946028a46884d7c8..7225dab8f8e4dfa47b290a01cc1342eb12c4e3b9 100644
+index 79009dfa6edafb1e5ee0d475a1a02e7e8bca4a55..6362eb1572eebc8794353896452c8bcf3beb7f4f 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -1298,10 +1298,15 @@ public class ServerPlayer extends Player {
@@ -27,16 +27,16 @@ index 3d2b059254fdc08d1e4f9281946028a46884d7c8..7225dab8f8e4dfa47b290a01cc1342eb
          this.respawn(respawnComplete, false);
      }
  
-@@ -1565,6 +1570,7 @@ public class ServerPlayer extends Player {
-             }
+@@ -1566,6 +1571,7 @@ public class ServerPlayer extends Player {
  
+             this.connection.send(new ClientboundLevelEventPacket(net.minecraft.world.level.block.LevelEvent.SOUND_PORTAL_TRAVEL, BlockPos.ZERO, 0, false)); // okocraft - Fix not playing travel sound when changing the dimension by portals
              this.triggerDimensionChangeTriggers(originWorld);
 +            new org.bukkit.event.player.PlayerChangedWorldEvent(this.getBukkitEntity(), originWorld.getWorld()).callEvent(); // okocraft - Call PlayerChangedWorldEvent
  
              // finished
  
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index ded539dd20a2d037fa5d175be06d59dd76660ffe..ed7a12fb3b8084436cf0ea9e6b08a5163d49cdbd 100644
+index 5d4876fc53eb12ee8e4a0159177e05cee847f077..299616c19765463bb045401cea7141d50dea1a34 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -310,6 +310,9 @@ public abstract class PlayerList {
@@ -50,10 +50,10 @@ index ded539dd20a2d037fa5d175be06d59dd76660ffe..ed7a12fb3b8084436cf0ea9e6b08a516
          if (nbttagcompound == null) {
              player.spawnReason = org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.DEFAULT; // set Player SpawnReason to DEFAULT on first login
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index cd45d36c2a047ee84a5d933f8a9feb61b95b49ff..f26b7e7b3eafdf488ff9edaddf624adecf7f2f84 100644
+index cc4eb106b3ff1953de11f1faa7c04f3f9982fca2..80e4bc9444f5c870b3924b5e1347e174af7a901f 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -4117,12 +4117,21 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+@@ -4110,12 +4110,21 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
          io.papermc.paper.util.TickThread.ensureTickThread(this, "Cannot portal entity async");
  
          ServerLevel destination = this.getServer().getLevel(this.level().getTypeKey() == LevelStem.NETHER ? Level.OVERWORLD : Level.NETHER);
@@ -70,7 +70,7 @@ index cd45d36c2a047ee84a5d933f8a9feb61b95b49ff..f26b7e7b3eafdf488ff9edaddf624ade
              return false;
          }
  
-         return this.portalToAsync(destination, false, PortalType.NETHER, SEND_TRAVEL_EVENT); // okocraft - Fix not playing travel sound when changing the dimension by portals
+         return this.portalToAsync(destination, false, PortalType.NETHER, null);
 +        } // okocraft - call EntityPortalReadyEvent
      }
  

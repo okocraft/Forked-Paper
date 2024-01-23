@@ -5,30 +5,15 @@ Subject: [PATCH] Fix not playing travel sound when changing the dimension by
  portals
 
 
-diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 0a060023da8c1ca1e4a0646e94170c8f489f48b1..cd45d36c2a047ee84a5d933f8a9feb61b95b49ff 100644
---- a/src/main/java/net/minecraft/world/entity/Entity.java
-+++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -4093,6 +4093,13 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
-         this.processPortalCooldown();
-         return false;
-     }
-+    // okocraft start - Fix not playing travel sound when changing the dimension by portals
-+    private static final java.util.function.Consumer<Entity> SEND_TRAVEL_EVENT = entity -> {
-+        if (entity instanceof ServerPlayer player) {
-+            player.connection.send(new net.minecraft.network.protocol.game.ClientboundLevelEventPacket(1032, BlockPos.ZERO, 0, false));
-+        }
-+    };
-+    // okocraft end
+diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+index bd9edb8271e3111431d45eb908d8336e0e7e23bc..79009dfa6edafb1e5ee0d475a1a02e7e8bca4a55 100644
+--- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
++++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+@@ -1564,6 +1564,7 @@ public class ServerPlayer extends Player {
+                 this.connection.send(new ClientboundUpdateMobEffectPacket(this.getId(), mobEffect));
+             }
  
-     public boolean endPortalLogicAsync() {
-         io.papermc.paper.util.TickThread.ensureTickThread(this, "Cannot portal entity async");
-@@ -4115,7 +4122,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
-             return false;
-         }
++            this.connection.send(new ClientboundLevelEventPacket(net.minecraft.world.level.block.LevelEvent.SOUND_PORTAL_TRAVEL, BlockPos.ZERO, 0, false)); // okocraft - Fix not playing travel sound when changing the dimension by portals
+             this.triggerDimensionChangeTriggers(originWorld);
  
--        return this.portalToAsync(destination, false, PortalType.NETHER, null);
-+        return this.portalToAsync(destination, false, PortalType.NETHER, SEND_TRAVEL_EVENT); // okocraft - Fix not playing travel sound when changing the dimension by portals
-     }
- 
-     private static final java.util.concurrent.atomic.AtomicLong CREATE_PORTAL_DOUBLE_CHECK = new java.util.concurrent.atomic.AtomicLong();
+             // finished
