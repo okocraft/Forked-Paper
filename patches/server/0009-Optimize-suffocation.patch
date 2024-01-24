@@ -17,7 +17,7 @@ but is so much cheaper than the suffocation check that it's worth
 keeping it.
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 8d8c80a41e01df4d0fef7d045b9c5d283a8f168d..d25c53a18c753fd594d2b1d2daee77b548715a6a 100644
+index 8d8c80a41e01df4d0fef7d045b9c5d283a8f168d..adbeb37f7e2bc82a495d782c24a746ac930dc962 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -420,7 +420,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
@@ -25,28 +25,29 @@ index 8d8c80a41e01df4d0fef7d045b9c5d283a8f168d..d25c53a18c753fd594d2b1d2daee77b5
  
              if (!this.level().isClientSide) {
 -                if (this.isInWall()) {
-+                if (shouldCheckForSuffocation() && this.isInWall()) { // Pufferfish - optimize suffocation
++                if (this.shouldCheckForSuffocation() && this.isInWall()) { // Pufferfish - optimize suffocation
                      this.hurt(this.damageSources().inWall(), 1.0F);
                  } else if (flag && !this.level().getWorldBorder().isWithinBounds(this.getBoundingBox())) {
                      double d0 = this.level().getWorldBorder().getDistanceToBorder(this) + this.level().getWorldBorder().getDamageSafeZone();
-@@ -1420,6 +1420,15 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -1420,6 +1420,16 @@ public abstract class LivingEntity extends Entity implements Attackable {
          return this.getHealth() <= 0.0F;
      }
  
 +    // Pufferfish start - optimize suffocation
 +    public boolean shouldCheckForSuffocation() {
-+        return tickCount % 10 == 0 && couldPossiblyBeHurt(1.0F);
++        return this.tickCount % 10 == 0 && this.couldPossiblyBeHurt(1.0F);
 +    }
++
 +    public boolean couldPossiblyBeHurt(float amount) {
 +        return !((float) this.invulnerableTime > (float) this.invulnerableDuration / 2.0F) || !(amount <= this.lastHurt);
 +    }
-+    // Pufferfish end
++    // Pufferfish end - optimize suffocation
 +
      @Override
      public boolean hurt(DamageSource source, float amount) {
          if (this.isInvulnerableTo(source)) {
 diff --git a/src/main/java/net/minecraft/world/entity/boss/wither/WitherBoss.java b/src/main/java/net/minecraft/world/entity/boss/wither/WitherBoss.java
-index ac9eaeaf7df1e84ee588f371628c0a10784d50bc..ea8883b0661e894a466eca24bfc247ac37f40a81 100644
+index ac9eaeaf7df1e84ee588f371628c0a10784d50bc..ddf8b0ea9e569179f5b788ac661d683e40bcb9ff 100644
 --- a/src/main/java/net/minecraft/world/entity/boss/wither/WitherBoss.java
 +++ b/src/main/java/net/minecraft/world/entity/boss/wither/WitherBoss.java
 @@ -150,6 +150,13 @@ public class WitherBoss extends Monster implements PowerableMob, RangedAttackMob
@@ -58,7 +59,7 @@ index ac9eaeaf7df1e84ee588f371628c0a10784d50bc..ea8883b0661e894a466eca24bfc247ac
 +    public boolean shouldCheckForSuffocation() {
 +        return true;
 +    }
-+    // Pufferfish end
++    // Pufferfish end - optimize suffocation
 +
      @Override
      protected SoundEvent getAmbientSound() {
