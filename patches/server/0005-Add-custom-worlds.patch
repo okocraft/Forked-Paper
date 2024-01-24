@@ -5,22 +5,103 @@ Subject: [PATCH] Add custom worlds
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 4f988608368cdccfa65d83991fc3bbaeecc6c2f1..705ce1f2bc7ce1f0d0686b2c251a0ee619347805 100644
+index 4f988608368cdccfa65d83991fc3bbaeecc6c2f1..bc3a062d060c35bb96ea23b3dd912e40c399d720 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -690,6 +690,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -690,6 +690,13 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
                  this.getCustomBossEvents().load(worlddata.getCustomBossEvents());
              }
          }
-+        server.addCustomWorlds(); // okocraft - Add custom worlds
++        // okocraft start - Add custom worlds
++        try {
++            net.okocraft.paper.CustomWorldFile.read(java.nio.file.Path.of("custom-worlds.txt")).forEach(this.server::createWorld0);
++        } catch (IOException e) {
++            LOGGER.warn("Cannot load custom worlds: {}", e.getMessage());
++        }
++        // okocraft end
          this.forceDifficulty();
          for (ServerLevel worldserver : this.getAllLevels()) {
              this.prepareLevels(worldserver.getChunkSource().chunkMap.progressListener, worldserver);
+diff --git a/src/main/java/net/okocraft/paper/CustomWorldFile.java b/src/main/java/net/okocraft/paper/CustomWorldFile.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..fc81541ad6683bf2eb0f628505e47211362c1f8c
+--- /dev/null
++++ b/src/main/java/net/okocraft/paper/CustomWorldFile.java
+@@ -0,0 +1,69 @@
++package net.okocraft.paper;
++
++import org.bukkit.World;
++import org.bukkit.WorldCreator;
++
++import java.io.IOException;
++import java.nio.charset.StandardCharsets;
++import java.nio.file.Files;
++import java.nio.file.Path;
++import java.util.Locale;
++import java.util.Objects;
++import java.util.stream.Stream;
++
++public final class CustomWorldFile {
++
++    @SuppressWarnings("resource")
++    public static Stream<WorldCreator> read(Path filepath) throws IOException {
++        return Files.lines(filepath, StandardCharsets.UTF_8)
++                .flatMap(CustomWorldFile::readLine)
++                .filter(Objects::nonNull);
++    }
++
++    private static Stream<WorldCreator> readLine(String originalLine) {
++        var line = originalLine.trim().replace(" ", "");
++
++        if (line.startsWith("#")) {
++            return null;
++        }
++
++        String worldName;
++        World.Environment environment;
++
++        int i = line.indexOf(":");
++
++        if (i == -1) {
++            worldName = line;
++            environment = World.Environment.NORMAL;
++        } else if (i + 1 == line.length()) {
++            worldName = line.substring(0, i);
++            environment = World.Environment.NORMAL;
++        } else {
++            worldName = line.substring(0, i);
++            environment = switch (line.substring(i + 1).toLowerCase(Locale.ENGLISH)) {
++                case "nether" -> World.Environment.NETHER;
++                case "end", "the_end" -> World.Environment.THE_END;
++                case "resource" -> null; // for resource worlds in OKOCRAFT
++                default -> World.Environment.NORMAL;
++            };
++        }
++
++        if (worldName.isEmpty()) {
++            return null;
++        }
++
++        if (environment == null) {
++            return Stream.of(
++                    WorldCreator.name(worldName).environment(World.Environment.NORMAL),
++                    WorldCreator.name(worldName + "_nether").environment(World.Environment.NETHER),
++                    WorldCreator.name(worldName + "_the_end").environment(World.Environment.THE_END)
++            );
++        } else {
++            return Stream.of(WorldCreator.name(worldName).environment(environment));
++        }
++    }
++
++    private CustomWorldFile() {
++        throw new UnsupportedOperationException();
++    }
++}
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 21a1fbcb5cbaa6c7b042eb80a1c44def84f17527..e38102fb1b2ea2637904d668c3b678f0b9892ab9 100644
+index 21a1fbcb5cbaa6c7b042eb80a1c44def84f17527..25d9e7497b9afa2c82028603238a4583cd88ffd3 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -1267,6 +1267,77 @@ public final class CraftServer implements Server {
+@@ -1267,6 +1267,12 @@ public final class CraftServer implements Server {
      @Override
      public World createWorld(WorldCreator creator) {
          if (true) throw new UnsupportedOperationException(); // Folia - not implemented properly yet
@@ -28,77 +109,12 @@ index 21a1fbcb5cbaa6c7b042eb80a1c44def84f17527..e38102fb1b2ea2637904d668c3b678f0
 +        return createWorld0(creator);
 +    }
 +
-+    private boolean customWorldsAdded = false;
-+
-+    public void addCustomWorlds() {
-+        if (customWorldsAdded) {
-+            throw new IllegalStateException("Custom worlds are already added.");
-+        }
-+
-+        customWorldsAdded = true;
-+        List<String> customWorlds;
-+
-+        try {
-+            java.nio.file.Path filepath = java.nio.file.Path.of("custom-worlds.txt");
-+            if (java.nio.file.Files.isReadable(filepath)) {
-+                customWorlds = java.nio.file.Files.readAllLines(filepath, java.nio.charset.StandardCharsets.UTF_8);
-+            } else {
-+                customWorlds = java.util.Collections.emptyList();
-+            }
-+        } catch (IOException e) {
-+            logger.warning("Cannot load custom worlds: " + e.getMessage());
-+            return;
-+        }
-+
-+        for (String line : customWorlds) {
-+            line = line.trim().replace(" ", "");
-+
-+            if (line.startsWith("#")) {
-+                continue;
-+            }
-+
-+            String worldName;
-+            Environment environment;
-+            int i = line.indexOf(":");
-+
-+            if (i == -1) {
-+                worldName = line;
-+                environment = Environment.NORMAL;
-+            } else if (i + 1 == line.length()) {
-+                worldName = line.substring(0, i);
-+                environment = Environment.NORMAL;
-+            } else {
-+                worldName = line.substring(0, i);
-+                environment = switch (line.substring(i + 1).toLowerCase(java.util.Locale.ENGLISH)) {
-+                    case "nether" -> Environment.NETHER;
-+                    case "end", "the_end" -> Environment.THE_END;
-+                    case "resource" -> null; // for resource worlds in OKOCRAFT
-+                    default -> Environment.NORMAL;
-+                };
-+            }
-+
-+            if (worldName.isEmpty()) {
-+                continue;
-+            }
-+
-+            if (environment == null) {
-+                List.of(
-+                        WorldCreator.name(worldName).environment(Environment.NORMAL),
-+                        WorldCreator.name(worldName + "_nether").environment(Environment.NETHER),
-+                        WorldCreator.name(worldName + "_the_end").environment(Environment.THE_END)
-+                ).forEach(this::createWorld0);
-+            } else {
-+                createWorld0(WorldCreator.name(worldName).environment(environment));
-+            }
-+        }
-+    }
-+
-+    private World createWorld0(WorldCreator creator) {
++    public World createWorld0(WorldCreator creator) {
 +    // okocraft end
          Preconditions.checkState(this.console.getAllLevels().iterator().hasNext(), "Cannot create additional worlds on STARTUP");
          //Preconditions.checkState(!this.console.isIteratingOverLevels, "Cannot create a world while worlds are being ticked"); // Paper - Cat - Temp disable. We'll see how this goes.
          Preconditions.checkArgument(creator != null, "WorldCreator cannot be null");
-@@ -1426,12 +1497,26 @@ public final class CraftServer implements Server {
+@@ -1426,12 +1432,26 @@ public final class CraftServer implements Server {
          }
  
          this.console.addLevel(internal); // Paper - Put world into worldlist before initing the world; move up
