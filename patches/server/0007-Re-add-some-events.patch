@@ -52,7 +52,7 @@ index 5d4876fc53eb12ee8e4a0159177e05cee847f077..68698698d0eb45113ee7f71f6d1f6d3e
  
          player.spawnIn(worldserver1);
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index cc4eb106b3ff1953de11f1faa7c04f3f9982fca2..b408adc2d498c895a5f66635f947ed082b5f18c0 100644
+index 363a1bec9f6e22fb43a3c4d8e993633a1c2e0035..e8b624c95687b68238e5b85f2addc6a876e71e83 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -4110,12 +4110,21 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
@@ -72,7 +72,7 @@ index cc4eb106b3ff1953de11f1faa7c04f3f9982fca2..b408adc2d498c895a5f66635f947ed08
              return false;
          }
  
-         return this.portalToAsync(destination, false, PortalType.NETHER, null);
+         return this.portalToAsync(destination, false, PortalType.NETHER, net.okocraft.paper.PortalLevelEventSender.INSTANCE); // okocraft - Fix not playing travel sound when changing the dimension by portals
 +        } // okocraft - Call EntityPortalReadyEvent
      }
  

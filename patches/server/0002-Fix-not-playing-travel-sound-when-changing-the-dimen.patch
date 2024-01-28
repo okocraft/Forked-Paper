@@ -17,3 +17,55 @@ index bd9edb8271e3111431d45eb908d8336e0e7e23bc..79009dfa6edafb1e5ee0d475a1a02e7e
              this.triggerDimensionChangeTriggers(originWorld);
  
              // finished
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index cc4eb106b3ff1953de11f1faa7c04f3f9982fca2..363a1bec9f6e22fb43a3c4d8e993633a1c2e0035 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -4103,7 +4103,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+             return false;
+         }
+ 
+-        return this.portalToAsync(destination, false, PortalType.END, null);
++        return this.portalToAsync(destination, false, PortalType.END, net.okocraft.paper.PortalLevelEventSender.INSTANCE); // okocraft - Fix not playing travel sound when changing the dimension by portals
+     }
+ 
+     public boolean netherPortalLogicAsync() {
+@@ -4115,7 +4115,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+             return false;
+         }
+ 
+-        return this.portalToAsync(destination, false, PortalType.NETHER, null);
++        return this.portalToAsync(destination, false, PortalType.NETHER, net.okocraft.paper.PortalLevelEventSender.INSTANCE); // okocraft - Fix not playing travel sound when changing the dimension by portals
+     }
+ 
+     private static final java.util.concurrent.atomic.AtomicLong CREATE_PORTAL_DOUBLE_CHECK = new java.util.concurrent.atomic.AtomicLong();
+diff --git a/src/main/java/net/okocraft/paper/PortalLevelEventSender.java b/src/main/java/net/okocraft/paper/PortalLevelEventSender.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..e38cda2801f4bd7f437719afbecb63e837d8427e
+--- /dev/null
++++ b/src/main/java/net/okocraft/paper/PortalLevelEventSender.java
+@@ -0,0 +1,24 @@
++package net.okocraft.paper;
++
++import net.minecraft.core.BlockPos;
++import net.minecraft.network.protocol.game.ClientboundLevelEventPacket;
++import net.minecraft.server.level.ServerPlayer;
++import net.minecraft.world.entity.Entity;
++import net.minecraft.world.level.block.LevelEvent;
++
++import java.util.function.Consumer;
++
++public final class PortalLevelEventSender implements Consumer<Entity> {
++
++    public static final PortalLevelEventSender INSTANCE = new PortalLevelEventSender();
++
++    private PortalLevelEventSender() {
++    }
++
++    @Override
++    public void accept(Entity entity) {
++        if (entity instanceof ServerPlayer serverPlayer) {
++            serverPlayer.connection.send(new ClientboundLevelEventPacket(LevelEvent.SOUND_PORTAL_TRAVEL, BlockPos.ZERO, 0, false));
++        }
++    }
++}
