@@ -8,7 +8,7 @@ Subject: [PATCH] Re-add some events
 - PlayerChangedWorldEvent
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 79009dfa6edafb1e5ee0d475a1a02e7e8bca4a55..d617bb6bae15655166d6e78d293d4883a37ef058 100644
+index bd9edb8271e3111431d45eb908d8336e0e7e23bc..eb09640e0b054dbc5eb6957bec1e5ca4d76bf6a2 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -1298,11 +1298,12 @@ public class ServerPlayer extends Player {
@@ -25,9 +25,9 @@ index 79009dfa6edafb1e5ee0d475a1a02e7e8bca4a55..d617bb6bae15655166d6e78d293d4883
      }
  
      private void respawn(java.util.function.Consumer<ServerPlayer> respawnComplete, boolean alive) {
-@@ -1566,6 +1567,7 @@ public class ServerPlayer extends Player {
+@@ -1565,6 +1566,7 @@ public class ServerPlayer extends Player {
+             }
  
-             this.connection.send(new ClientboundLevelEventPacket(net.minecraft.world.level.block.LevelEvent.SOUND_PORTAL_TRAVEL, BlockPos.ZERO, 0, false)); // okocraft - Fix not playing travel sound when changing the dimension by portals
              this.triggerDimensionChangeTriggers(originWorld);
 +            new org.bukkit.event.player.PlayerChangedWorldEvent(this.getBukkitEntity(), originWorld.getWorld()).callEvent(); // okocraft - Call PlayerChangedWorldEvent
  
