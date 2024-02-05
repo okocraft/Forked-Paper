@@ -8,7 +8,7 @@ Subject: [PATCH] Re-add some events
 - PlayerChangedWorldEvent
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index bd9edb8271e3111431d45eb908d8336e0e7e23bc..eb09640e0b054dbc5eb6957bec1e5ca4d76bf6a2 100644
+index c8ee0307fa6c13c34a1db80ddf65d8381fd556be..3f4ffbfe11351ec6b55cf90e16c394448d425609 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -1298,11 +1298,12 @@ public class ServerPlayer extends Player {
@@ -34,7 +34,7 @@ index bd9edb8271e3111431d45eb908d8336e0e7e23bc..eb09640e0b054dbc5eb6957bec1e5ca4
              // finished
  
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 5d4876fc53eb12ee8e4a0159177e05cee847f077..68698698d0eb45113ee7f71f6d1f6d3e8e036866 100644
+index d13edeff0de64cb77d7668e5b964cabcf9729388..772fe731e8ee882575a4095eb5c1f3d600d86eb9 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -350,9 +350,10 @@ public abstract class PlayerList {
@@ -50,10 +50,10 @@ index 5d4876fc53eb12ee8e4a0159177e05cee847f077..68698698d0eb45113ee7f71f6d1f6d3e
  
          player.spawnIn(worldserver1);
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 363a1bec9f6e22fb43a3c4d8e993633a1c2e0035..e8b624c95687b68238e5b85f2addc6a876e71e83 100644
+index eaa42e9b4caf656fffa154e16a5e12e1b0c4fd8c..6740c95004bf38e607a55eb0fa03f0f7568f2386 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -4110,12 +4110,21 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+@@ -4098,12 +4098,21 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
          io.papermc.paper.util.TickThread.ensureTickThread(this, "Cannot portal entity async");
  
          ServerLevel destination = this.getServer().getLevel(this.level().getTypeKey() == LevelStem.NETHER ? Level.OVERWORLD : Level.NETHER);

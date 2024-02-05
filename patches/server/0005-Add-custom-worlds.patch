@@ -5,10 +5,10 @@ Subject: [PATCH] Add custom worlds
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 4f988608368cdccfa65d83991fc3bbaeecc6c2f1..f4fd96588072d8e298285c2294810d8a87b8a409 100644
+index 4285a5557f36814213a0f0bd63a853d9abfd7568..c281f2d905357cc2dca35e3ee5ba8f21081161d4 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -690,6 +690,13 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -688,6 +688,13 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
                  this.getCustomBossEvents().load(worlddata.getCustomBossEvents());
              }
          }
@@ -98,7 +98,7 @@ index 0000000000000000000000000000000000000000..fc81541ad6683bf2eb0f628505e47211
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 21a1fbcb5cbaa6c7b042eb80a1c44def84f17527..56f18bbeb166cc4a6b4f31d3c218670d61047e1f 100644
+index 7e1fa0450df3854c70892242fba9af00474439c0..4b653bee145efe7c7383708b33b3778b663d0a93 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -1267,6 +1267,12 @@ public final class CraftServer implements Server {
@@ -139,5 +139,5 @@ index 21a1fbcb5cbaa6c7b042eb80a1c44def84f17527..56f18bbeb166cc4a6b4f31d3c218670d
          internal.keepSpawnInMemory = creator.keepSpawnLoaded().toBooleanOrElse(internal.getWorld().getKeepSpawnInMemory()); // Paper
 +        if (false) // okocraft - Add custom worlds; Not needed for loading custom worlds
          this.getServer().prepareLevels(internal.getChunkSource().chunkMap.progressListener, internal);
-         //internal.entityManager.tick(); // SPIGOT-6526: Load pending entities so they are available to the API // Paper - rewrite chunk system
  
+         this.pluginManager.callEvent(new WorldLoadEvent(internal.getWorld()));
