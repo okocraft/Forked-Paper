@@ -11,20 +11,20 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@v2.0.0
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3.0.0
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/folia' }}
+          gradle-home-cache-cleanup: true
       - name: Configure Git User Details
         run: git config --global user.email "actions@github.com" && git config --global user.name "Github Actions"
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v1.1.0
       - run: chmod +x ./gradlew
       - name: Apply Patches
-        uses: gradle/gradle-build-action@v2.12.0
-        with:
-          arguments: applyPatches --stacktrace
-          gradle-home-cache-cleanup: true
+        run: ./gradlew applyPatches --stacktrace
       - name: Build
-        uses: gradle/gradle-build-action@v2.12.0
-        with:
-          arguments: createReobfPaperclipJar --stacktrace
+        run: ./gradlew createReobfPaperclipJar --stacktrace
       - name: Upload
         uses: actions/upload-artifact@v4.3.0
         continue-on-error: true
