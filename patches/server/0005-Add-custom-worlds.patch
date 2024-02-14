@@ -98,10 +98,10 @@ index 0000000000000000000000000000000000000000..fc81541ad6683bf2eb0f628505e47211
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 7e1fa0450df3854c70892242fba9af00474439c0..4b653bee145efe7c7383708b33b3778b663d0a93 100644
+index 2a27130925ca9b53c56af3e8b90d185633485517..318b5ad9456e46f109099c171824e04c199fa4c7 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -1267,6 +1267,12 @@ public final class CraftServer implements Server {
+@@ -1284,6 +1284,12 @@ public final class CraftServer implements Server {
      @Override
      public World createWorld(WorldCreator creator) {
          if (true) throw new UnsupportedOperationException(); // Folia - not implemented properly yet
@@ -114,7 +114,7 @@ index 7e1fa0450df3854c70892242fba9af00474439c0..4b653bee145efe7c7383708b33b3778b
          Preconditions.checkState(this.console.getAllLevels().iterator().hasNext(), "Cannot create additional worlds on STARTUP");
          //Preconditions.checkState(!this.console.isIteratingOverLevels, "Cannot create a world while worlds are being ticked"); // Paper - Cat - Temp disable. We'll see how this goes.
          Preconditions.checkArgument(creator != null, "WorldCreator cannot be null");
-@@ -1426,12 +1432,26 @@ public final class CraftServer implements Server {
+@@ -1443,12 +1449,26 @@ public final class CraftServer implements Server {
          }
  
          this.console.addLevel(internal); // Paper - Put world into worldlist before initing the world; move up
