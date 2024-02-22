@@ -5,7 +5,7 @@ Subject: [PATCH] okocraft customize server
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 959e62d800de05b2dd77a252f442c3daf8438490..2764919cadd8b638609f15818f2e3849f6e537a5 100644
+index 08d434023226af0d2c469055a3b2188fe8a4ed38..52fcfc3c86eba84727d3f1e8882f5c8b55560be3 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -14,7 +14,7 @@ val alsoShade: Configuration by configurations.creating
@@ -18,10 +18,10 @@ index 959e62d800de05b2dd77a252f442c3daf8438490..2764919cadd8b638609f15818f2e3849
          exclude("io.papermc.paper", "paper-api")
      }
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index b73699a08a368e6305759438c00066b0d5e7b39a..4285a5557f36814213a0f0bd63a853d9abfd7568 100644
+index 3ec07e77748ee9bb21f9d09230f935bca2217e4d..0824f40e62e8a9d668fc30aadd43d11c7df361c2 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1954,7 +1954,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1953,7 +1953,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
