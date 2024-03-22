@@ -5,7 +5,7 @@ Subject: [PATCH] Disable advancement/recipe warnings
 
 
 diff --git a/src/main/java/net/minecraft/server/PlayerAdvancements.java b/src/main/java/net/minecraft/server/PlayerAdvancements.java
-index f655e0ae4a287886d0291cd0089bad2000249d0f..66101dace0b8dad55be8940b3a4a11a3ae9ccd4d 100644
+index 24e5993b281448734eb67c7a8439a349bbf9fd72..1725a5282e8b7ee727d89f537afd13cb7cab030d 100644
 --- a/src/main/java/net/minecraft/server/PlayerAdvancements.java
 +++ b/src/main/java/net/minecraft/server/PlayerAdvancements.java
 @@ -198,7 +198,7 @@ public class PlayerAdvancements {

@@ -316,7 +316,7 @@ index 416aa989ebb18a8741cc9d605a1180ab830f6643..7f6a215f39fc20bd8bff30ef31d3aa13
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/ChestBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/ChestBlockEntity.java
-index a71414397bd45ee7bcacfeef0041d80dfa25f114..1f98530a1fec0103dd2017a1b7b41274274d470d 100644
+index 9b1243d96e0694c62fc9e82e9be540bce0d2b3ad..cca44da752e07834e8233605863529ed3859da24 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/ChestBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/ChestBlockEntity.java
 @@ -29,6 +29,18 @@ import org.bukkit.entity.HumanEntity;
@@ -515,7 +515,7 @@ index 26ff1a3d07c92f7035020d08d35116f7feede600..e2f43cb67f83f7f7a7b7b0699d00613a
  
      public static void entityInside(Level world, BlockPos pos, BlockState state, Entity entity, HopperBlockEntity blockEntity) {
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
-index a94300a457b25f0e33a8eeabba6dd5720ca9ab1e..5831ca542adfa9dd46fb5ba4cb23ecc2589d78c1 100644
+index f52ccd4f3e062af3c7cc6eaea5b074a3bbd21690..0cc271ef8f646c7babef6b894565984853b2d943 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
 @@ -93,6 +93,7 @@ public abstract class RandomizableContainerBlockEntity extends BaseContainerBloc

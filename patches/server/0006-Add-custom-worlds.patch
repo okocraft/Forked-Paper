@@ -5,7 +5,7 @@ Subject: [PATCH] Add custom worlds
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 4285a5557f36814213a0f0bd63a853d9abfd7568..c281f2d905357cc2dca35e3ee5ba8f21081161d4 100644
+index 0824f40e62e8a9d668fc30aadd43d11c7df361c2..a7c3b24e6a10ff4859f531a05e5f4240393e4c96 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -688,6 +688,13 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa

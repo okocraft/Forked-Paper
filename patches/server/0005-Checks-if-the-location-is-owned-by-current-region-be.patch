@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Fri, 22 Mar 2024 19:53:24 +0900
+Subject: [PATCH] Checks if the location is owned by current region before
+ accessing poi
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/ai/behavior/YieldJobSite.java b/src/main/java/net/minecraft/world/entity/ai/behavior/YieldJobSite.java
+index 7c9bb28738cab0a5695fef1144f9252e481510bc..75c6abd5089e6ef6d2935de90a373e1c33d5ff89 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/behavior/YieldJobSite.java
++++ b/src/main/java/net/minecraft/world/entity/ai/behavior/YieldJobSite.java
+@@ -24,6 +24,7 @@ public class YieldJobSite {
+                         return false;
+                     } else if (entity.getVillagerData().getProfession() != VillagerProfession.NONE) {
+                         return false;
++                    } else if (io.papermc.paper.util.TickThread.isTickThreadFor(world, entity.position())) { return false; // okocraft - region threading
+                     } else {
+                         BlockPos blockPos = context.<GlobalPos>get(potentialJobSite).pos();
+                         Optional<Holder<PoiType>> optional = world.getPoiManager().getType(blockPos);
