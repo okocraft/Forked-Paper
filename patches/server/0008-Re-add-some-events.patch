@@ -34,10 +34,10 @@ index cbc89b8898f9243776af88c2b04ad3c2e4e23fb6..a6a85bceed4b11724e2299ff2e7086b7
              // finished
  
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index d13edeff0de64cb77d7668e5b964cabcf9729388..772fe731e8ee882575a4095eb5c1f3d600d86eb9 100644
+index 90be312057221a5a78066d89783c5e22008d797d..3d598c0b98beab2f667bf9ad5a84b8002c3c23a6 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -350,9 +350,10 @@ public abstract class PlayerList {
+@@ -358,9 +358,10 @@ public abstract class PlayerList {
          // Spigot start - spawn location event
          Player spawnPlayer = player.getBukkitEntity();
          org.spigotmc.event.player.PlayerSpawnLocationEvent ev = new com.destroystokyo.paper.event.player.PlayerInitialSpawnEvent(spawnPlayer, spawnPlayer.getLocation()); // Paper use our duplicate event
@@ -50,10 +50,10 @@ index d13edeff0de64cb77d7668e5b964cabcf9729388..772fe731e8ee882575a4095eb5c1f3d6
  
          player.spawnIn(worldserver1);
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 297995160f763a7605d76bca6e01a7bda2ba95e6..71491296b802804de831f0cd02db5e530493d52e 100644
+index a482e080d3ac8002902e93332c829f438de67af7..7408921ea2daa29804a5f5dbca9eeb95e1800a60 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -4101,12 +4101,21 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+@@ -4117,12 +4117,21 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
          io.papermc.paper.util.TickThread.ensureTickThread(this, "Cannot portal entity async");
  
          ServerLevel destination = this.getServer().getLevel(this.level().getTypeKey() == LevelStem.NETHER ? Level.OVERWORLD : Level.NETHER);
