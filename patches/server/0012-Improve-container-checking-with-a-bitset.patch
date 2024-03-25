@@ -204,10 +204,10 @@ index d6cbe98e67fdbf8db46338a88ab1356dd63b50a3..8ee8a0c88cd2766cdac4eae862b57829
      int LARGE_MAX_STACK_SIZE = 64;
      int DEFAULT_DISTANCE_LIMIT = 8;
 diff --git a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java
-index 6d23c39e4eadf23616080d6d08672e13b5d3c37d..62702d7af09980f3e28db0ca07b96c9fd09e150d 100644
+index 756d0434472921992c9d84597d7c9c824e93614c..a9bd802ce6d7e2c4a8b3ab837b454025dce277fb 100644
 --- a/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java
 +++ b/src/main/java/net/minecraft/world/entity/vehicle/AbstractMinecartContainer.java
-@@ -28,6 +28,18 @@ import org.bukkit.inventory.InventoryHolder;
+@@ -29,6 +29,18 @@ import org.bukkit.inventory.InventoryHolder;
  public abstract class AbstractMinecartContainer extends AbstractMinecart implements ContainerEntity {
  
      private NonNullList<ItemStack> itemStacks;
@@ -226,7 +226,7 @@ index 6d23c39e4eadf23616080d6d08672e13b5d3c37d..62702d7af09980f3e28db0ca07b96c9f
      @Nullable
      public ResourceLocation lootTable;
      public long lootTableSeed;
-@@ -89,12 +101,18 @@ public abstract class AbstractMinecartContainer extends AbstractMinecart impleme
+@@ -90,12 +102,18 @@ public abstract class AbstractMinecartContainer extends AbstractMinecart impleme
  
      protected AbstractMinecartContainer(EntityType<?> type, Level world) {
          super(type, world);
@@ -247,7 +247,7 @@ index 6d23c39e4eadf23616080d6d08672e13b5d3c37d..62702d7af09980f3e28db0ca07b96c9f
      }
  
      @Override
-@@ -232,6 +250,9 @@ public abstract class AbstractMinecartContainer extends AbstractMinecart impleme
+@@ -240,6 +258,9 @@ public abstract class AbstractMinecartContainer extends AbstractMinecart impleme
  
      @Override
      public void clearItemStacks() {
@@ -434,10 +434,10 @@ index 881379681c39230a00b3a1f11cd87498984396c7..87431c617db4fd86fb0f479269b1c4d0
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
-index 26ff1a3d07c92f7035020d08d35116f7feede600..e2f43cb67f83f7f7a7b7b0699d00613afcd1d9ce 100644
+index 4fe1b822b4c280de9d5b46c1dc965045791c83d0..4f58d0541f4c21d7caf35e699c3e64354fd371a2 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
-@@ -44,6 +44,18 @@ import org.bukkit.inventory.Inventory;
+@@ -45,6 +45,18 @@ import org.bukkit.inventory.Inventory;
  // CraftBukkit end
  
  public class HopperBlockEntity extends RandomizableContainerBlockEntity implements Hopper {
@@ -456,7 +456,7 @@ index 26ff1a3d07c92f7035020d08d35116f7feede600..e2f43cb67f83f7f7a7b7b0699d00613a
  
      public static final int MOVE_ITEM_SPEED = 8;
      public static final int HOPPER_CONTAINER_SIZE = 5;
-@@ -83,14 +95,20 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+@@ -84,14 +96,20 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
  
      public HopperBlockEntity(BlockPos pos, BlockState state) {
          super(BlockEntityType.HOPPER, pos, state);
@@ -479,7 +479,7 @@ index 26ff1a3d07c92f7035020d08d35116f7feede600..e2f43cb67f83f7f7a7b7b0699d00613a
          if (!this.tryLoadLootTable(nbt)) {
              ContainerHelper.loadAllItems(nbt, this.items);
          }
-@@ -159,6 +177,14 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+@@ -160,6 +178,14 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
      private static int getFullState(final HopperBlockEntity tileEntity) {
          tileEntity.unpackLootTable(null);
  
@@ -494,7 +494,7 @@ index 26ff1a3d07c92f7035020d08d35116f7feede600..e2f43cb67f83f7f7a7b7b0699d00613a
          final List<ItemStack> hopperItems = tileEntity.getItems();
  
          boolean empty = true;
-@@ -493,6 +519,7 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+@@ -494,6 +520,7 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
      }
  
      private static boolean isFullContainer(Container inventory, Direction direction) {
@@ -502,7 +502,7 @@ index 26ff1a3d07c92f7035020d08d35116f7feede600..e2f43cb67f83f7f7a7b7b0699d00613a
          // Paper start - Perf: Optimize Hoppers
          if (inventory instanceof WorldlyContainer worldlyContainer) {
              for (final int slot : worldlyContainer.getSlotsForFace(direction)) {
-@@ -911,7 +938,10 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+@@ -912,7 +939,10 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
  
      @Override
      protected void setItems(NonNullList<ItemStack> list) {
