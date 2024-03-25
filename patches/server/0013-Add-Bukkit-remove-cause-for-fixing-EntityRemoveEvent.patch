@@ -1,0 +1,32 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Mon, 25 Mar 2024 15:40:30 +0900
+Subject: [PATCH] Add Bukkit remove cause for fixing EntityRemoveEventTest
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/projectile/ThrownEnderpearl.java b/src/main/java/net/minecraft/world/entity/projectile/ThrownEnderpearl.java
+index 977ea70cc444ca66bcc797f4c96f976e4897f955..d25a815ddd2e5a47fc1cad62610c5d92b9bb282d 100644
+--- a/src/main/java/net/minecraft/world/entity/projectile/ThrownEnderpearl.java
++++ b/src/main/java/net/minecraft/world/entity/projectile/ThrownEnderpearl.java
+@@ -137,7 +137,7 @@ public class ThrownEnderpearl extends ThrowableItemProjectile {
+                 if (entity != null) {
+                     attemptTeleport(entity, (ServerLevel)this.level(), this.position());
+                 }
+-                this.discard();
++                this.discard(org.bukkit.event.entity.EntityRemoveEvent.Cause.HIT); // okocraft - add Bukkit remove cause for fixing EntityRemoveEventTest
+                 return;
+             }
+             // Folia end - region threading
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java
+index 8bec28f6935a54e133dcbdf774a218991bf6df3f..d4360ad9d6129545637f26ff4fc64bf5e40a6c94 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity.java
+@@ -247,7 +247,7 @@ public class TheEndGatewayBlockEntity extends TheEndPortalBlockEntity {
+                 // to teleport the vehicle, rather just the owner given the lack of getRootVehicle
+                 owner.unRide();
+                 chosenEntity = owner;
+-                pearl.discard();
++                pearl.discard(org.bukkit.event.entity.EntityRemoveEvent.Cause.HIT); // okocraft - add Bukkit remove cause for fixing EntityRemoveEventTest
+             } else {
+                 // see above for unRide()
+                 pearl.unRide();
