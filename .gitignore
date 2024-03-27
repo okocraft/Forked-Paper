@@ -7,3 +7,5 @@ build/
 .idea/
 
 check-upstream-work
+
+paper-api-generator
