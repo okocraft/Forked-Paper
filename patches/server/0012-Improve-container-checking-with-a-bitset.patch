@@ -434,7 +434,7 @@ index 881379681c39230a00b3a1f11cd87498984396c7..87431c617db4fd86fb0f479269b1c4d0
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
-index 4fe1b822b4c280de9d5b46c1dc965045791c83d0..4f58d0541f4c21d7caf35e699c3e64354fd371a2 100644
+index c1d835555fe57745c3d9e416044bd049a537eecf..d28912bfc3698ebb09617502e45be90e5e2582f9 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 @@ -45,6 +45,18 @@ import org.bukkit.inventory.Inventory;
@@ -456,7 +456,7 @@ index 4fe1b822b4c280de9d5b46c1dc965045791c83d0..4f58d0541f4c21d7caf35e699c3e6435
  
      public static final int MOVE_ITEM_SPEED = 8;
      public static final int HOPPER_CONTAINER_SIZE = 5;
-@@ -84,14 +96,20 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+@@ -92,14 +104,20 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
  
      public HopperBlockEntity(BlockPos pos, BlockState state) {
          super(BlockEntityType.HOPPER, pos, state);
@@ -479,7 +479,7 @@ index 4fe1b822b4c280de9d5b46c1dc965045791c83d0..4f58d0541f4c21d7caf35e699c3e6435
          if (!this.tryLoadLootTable(nbt)) {
              ContainerHelper.loadAllItems(nbt, this.items);
          }
-@@ -160,6 +178,14 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+@@ -168,6 +186,14 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
      private static int getFullState(final HopperBlockEntity tileEntity) {
          tileEntity.unpackLootTable(null);
  
@@ -494,7 +494,7 @@ index 4fe1b822b4c280de9d5b46c1dc965045791c83d0..4f58d0541f4c21d7caf35e699c3e6435
          final List<ItemStack> hopperItems = tileEntity.getItems();
  
          boolean empty = true;
-@@ -494,6 +520,7 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+@@ -502,6 +528,7 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
      }
  
      private static boolean isFullContainer(Container inventory, Direction direction) {
@@ -502,7 +502,7 @@ index 4fe1b822b4c280de9d5b46c1dc965045791c83d0..4f58d0541f4c21d7caf35e699c3e6435
          // Paper start - Perf: Optimize Hoppers
          if (inventory instanceof WorldlyContainer worldlyContainer) {
              for (final int slot : worldlyContainer.getSlotsForFace(direction)) {
-@@ -912,7 +939,10 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+@@ -920,7 +947,10 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
  
      @Override
      protected void setItems(NonNullList<ItemStack> list) {
