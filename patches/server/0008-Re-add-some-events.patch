@@ -50,10 +50,10 @@ index 90be312057221a5a78066d89783c5e22008d797d..3d598c0b98beab2f667bf9ad5a84b800
  
          player.spawnIn(worldserver1);
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index a482e080d3ac8002902e93332c829f438de67af7..7408921ea2daa29804a5f5dbca9eeb95e1800a60 100644
+index f39bcb71578c0b59aebfdb905ac13474c1af79a1..55bb93bcef206dbfb60e6161fba963ede683dbe4 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -4117,12 +4117,21 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+@@ -4120,12 +4120,21 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
          io.papermc.paper.util.TickThread.ensureTickThread(this, "Cannot portal entity async");
  
          ServerLevel destination = this.getServer().getLevel(this.level().getTypeKey() == LevelStem.NETHER ? Level.OVERWORLD : Level.NETHER);
