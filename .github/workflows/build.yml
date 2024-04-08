@@ -14,7 +14,7 @@ jobs:
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v2.1.2
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3.2.0
+        uses: gradle/actions/setup-gradle@v3.2.1
         with:
           cache-read-only: ${{ github.ref != 'refs/heads/folia' }}
           gradle-home-cache-cleanup: true
