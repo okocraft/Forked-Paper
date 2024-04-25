@@ -12,9 +12,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Validate Gradle wrapper
-        uses: gradle/actions/wrapper-validation@v3.3.1
+        uses: gradle/actions/wrapper-validation@v3.3.2
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3.3.1
+        uses: gradle/actions/setup-gradle@v3.3.2
         with:
           cache-read-only: ${{ github.ref != 'refs/heads/folia' }}
           gradle-home-cache-cleanup: true
