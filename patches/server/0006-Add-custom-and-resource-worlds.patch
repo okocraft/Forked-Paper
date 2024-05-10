@@ -5,11 +5,11 @@ Subject: [PATCH] Add custom and resource worlds
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 0824f40e62e8a9d668fc30aadd43d11c7df361c2..e1307c7d93327a5bbda359f5a19e90f6fc2655cc 100644
+index 49ddb72aeb0dc9b074b7be911a9b9ea23cf072ae..4cd9949b668d15c0293c7a8bb575f2877589b971 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -688,6 +688,14 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
-                 this.getCustomBossEvents().load(worlddata.getCustomBossEvents());
+@@ -699,6 +699,14 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+                 this.getCustomBossEvents().load(worlddata.getCustomBossEvents(), this.registryAccess());
              }
          }
 +        // okocraft start - Add custom worlds
@@ -132,10 +132,10 @@ index 0000000000000000000000000000000000000000..4f8c4a2cd2ec7ffb3bed08d2a6bced98
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 2a27130925ca9b53c56af3e8b90d185633485517..318b5ad9456e46f109099c171824e04c199fa4c7 100644
+index ed163d001be3c37a716e483b150e92cc8f45feec..a07da00ce130df6a213c0c355b32ac47a13c3c3f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -1284,6 +1284,12 @@ public final class CraftServer implements Server {
+@@ -1285,6 +1285,12 @@ public final class CraftServer implements Server {
      @Override
      public World createWorld(WorldCreator creator) {
          if (true) throw new UnsupportedOperationException(); // Folia - not implemented properly yet
@@ -148,7 +148,7 @@ index 2a27130925ca9b53c56af3e8b90d185633485517..318b5ad9456e46f109099c171824e04c
          Preconditions.checkState(this.console.getAllLevels().iterator().hasNext(), "Cannot create additional worlds on STARTUP");
          //Preconditions.checkState(!this.console.isIteratingOverLevels, "Cannot create a world while worlds are being ticked"); // Paper - Cat - Temp disable. We'll see how this goes.
          Preconditions.checkArgument(creator != null, "WorldCreator cannot be null");
-@@ -1443,12 +1449,26 @@ public final class CraftServer implements Server {
+@@ -1449,11 +1455,25 @@ public final class CraftServer implements Server {
          }
  
          this.console.addLevel(internal); // Paper - Put world into worldlist before initing the world; move up
@@ -170,7 +170,6 @@ index 2a27130925ca9b53c56af3e8b90d185633485517..318b5ad9456e46f109099c171824e04c
          internal.setSpawnSettings(true, true);
          // Paper - Put world into worldlist before initing the world; move up
  
-         internal.keepSpawnInMemory = creator.keepSpawnLoaded().toBooleanOrElse(internal.getWorld().getKeepSpawnInMemory()); // Paper
 +        if (false) // okocraft - Add custom worlds; Not needed for loading custom worlds
          this.getServer().prepareLevels(internal.getChunkSource().chunkMap.progressListener, internal);
  

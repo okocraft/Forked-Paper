@@ -24,10 +24,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 diff --git a/src/main/java/net/minecraft/world/item/crafting/ShapelessRecipe.java b/src/main/java/net/minecraft/world/item/crafting/ShapelessRecipe.java
-index 27b0a79f7a7c47047216aae42944bac2a2151181..917a1eb8ca0ec7f75f753f02b9bb17166bb6d587 100644
+index 3554109bcc4651ca93b6275c914e57e007e2204e..c2b43a72a8322ee13e5dd9cf63eade3058752c59 100644
 --- a/src/main/java/net/minecraft/world/item/crafting/ShapelessRecipe.java
 +++ b/src/main/java/net/minecraft/world/item/crafting/ShapelessRecipe.java
-@@ -26,8 +26,16 @@ public class ShapelessRecipe extends io.papermc.paper.inventory.recipe.RecipeBoo
+@@ -27,8 +27,16 @@ public class ShapelessRecipe extends io.papermc.paper.inventory.recipe.RecipeBoo
      final CraftingBookCategory category;
      final ItemStack result;
      final NonNullList<Ingredient> ingredients;
@@ -44,7 +44,7 @@ index 27b0a79f7a7c47047216aae42944bac2a2151181..917a1eb8ca0ec7f75f753f02b9bb1716
          this.group = group;
          this.category = category;
          this.result = result;
-@@ -77,6 +85,28 @@ public class ShapelessRecipe extends io.papermc.paper.inventory.recipe.RecipeBoo
+@@ -78,6 +86,28 @@ public class ShapelessRecipe extends io.papermc.paper.inventory.recipe.RecipeBoo
      }
  
      public boolean matches(CraftingContainer inventory, Level world) {

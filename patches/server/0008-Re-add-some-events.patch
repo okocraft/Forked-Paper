@@ -8,10 +8,10 @@ Subject: [PATCH] Re-add some events
 - PlayerChangedWorldEvent
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index cbc89b8898f9243776af88c2b04ad3c2e4e23fb6..a6a85bceed4b11724e2299ff2e7086b7e0df5575 100644
+index da87c4825c67e62ae238877f1fb3220f4c57f553..7f33c88571f8b93940b39f7af9f0b67c62f63b91 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -1298,11 +1298,12 @@ public class ServerPlayer extends Player {
+@@ -1375,11 +1375,12 @@ public class ServerPlayer extends Player {
  
          this.respawn((player) -> {
              CriteriaTriggers.CHANGED_DIMENSION.trigger(player, Level.END, Level.OVERWORLD);
@@ -25,7 +25,7 @@ index cbc89b8898f9243776af88c2b04ad3c2e4e23fb6..a6a85bceed4b11724e2299ff2e7086b7
      }
  
      private void respawn(java.util.function.Consumer<ServerPlayer> respawnComplete, boolean alive) {
-@@ -1565,6 +1566,7 @@ public class ServerPlayer extends Player {
+@@ -1642,6 +1643,7 @@ public class ServerPlayer extends Player {
              }
  
              this.triggerDimensionChangeTriggers(originWorld);
@@ -34,7 +34,7 @@ index cbc89b8898f9243776af88c2b04ad3c2e4e23fb6..a6a85bceed4b11724e2299ff2e7086b7
              // finished
  
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 90be312057221a5a78066d89783c5e22008d797d..3d598c0b98beab2f667bf9ad5a84b8002c3c23a6 100644
+index 771b259ce930d2c857a08ca9150a243679c88c80..19523c1286b43adf488acbf8fd8921cb27d26005 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -358,9 +358,10 @@ public abstract class PlayerList {
@@ -50,10 +50,10 @@ index 90be312057221a5a78066d89783c5e22008d797d..3d598c0b98beab2f667bf9ad5a84b800
  
          player.spawnIn(worldserver1);
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index f39bcb71578c0b59aebfdb905ac13474c1af79a1..55bb93bcef206dbfb60e6161fba963ede683dbe4 100644
+index 28674a5aa523f2c133cf4c8e17eabb1d0ec90497..da4a58210ce2a95d2636caa72d54741e7f5cfcc2 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -4120,12 +4120,21 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+@@ -4167,12 +4167,21 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
          io.papermc.paper.util.TickThread.ensureTickThread(this, "Cannot portal entity async");
  
          ServerLevel destination = this.getServer().getLevel(this.level().getTypeKey() == LevelStem.NETHER ? Level.OVERWORLD : Level.NETHER);
