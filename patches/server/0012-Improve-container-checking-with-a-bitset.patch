@@ -315,6 +315,18 @@ index 6186e55014bbb9d5bedaa0e9d196879c55339d42..81e3ed614cd848429100cf25532d35df
      }
  
      @Override
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/BaseContainerBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BaseContainerBlockEntity.java
+index 15fd1fe1b55b6421d2c09e8385c9f69fa0152e56..c15d9d0d845a727124c6e6b949e0c3670f7a231b 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/BaseContainerBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/BaseContainerBlockEntity.java
+@@ -119,6 +119,7 @@ public abstract class BaseContainerBlockEntity extends BlockEntity implements Co
+ 
+     @Override
+     public boolean isEmpty() {
++        if (this.isCompletelyEmpty() == net.minecraft.world.Container.OptionalState.TRUE) return true; // Pufferfish - Improve container checking with a bitset
+         Iterator iterator = this.getItems().iterator();
+ 
+         ItemStack itemstack;
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/ChestBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/ChestBlockEntity.java
 index b88aa184cd06a0485146f58a5b61a56a50911209..2fde83b44f98a70e64cd01ead235a8c79e8f6655 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/ChestBlockEntity.java
@@ -515,18 +527,6 @@ index 1280c358748bbb08f0361acd4ebc095bf6bc3496..c39e072c85d4cf299aef1f3bceed27a6
      }
  
      public static void entityInside(Level world, BlockPos pos, BlockState state, Entity entity, HopperBlockEntity blockEntity) {
-diff --git a/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
-index 17da915ffa638500a83b67db0940a7b9a9b333a1..9eb817b784c3539c89456ad607815dfdd7bdb07c 100644
---- a/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
-+++ b/src/main/java/net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.java
-@@ -99,6 +99,7 @@ public abstract class RandomizableContainerBlockEntity extends BaseContainerBloc
-     @Override
-     public boolean isEmpty() {
-         this.unpackLootTable(null);
-+        if (this.isCompletelyEmpty() == net.minecraft.world.Container.OptionalState.TRUE) return true; // Pufferfish - Improve container checking with a bitset
-         return super.isEmpty();
-     }
- 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java
 index 0d68db20f5fbe5e834f12c1e8fd429099a44e4b6..863ccc65441c868712775531b76ddc28f438b388 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java
