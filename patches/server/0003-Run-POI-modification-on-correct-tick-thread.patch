@@ -5,18 +5,17 @@ Subject: [PATCH] Run POI modification on correct tick thread
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/ai/behavior/GoToPotentialJobSite.java b/src/main/java/net/minecraft/world/entity/ai/behavior/GoToPotentialJobSite.java
-index 56b2a0de7d2f0e4cf8999f859341532d27d78d26..9b6eaf6848c2c4ee65028d8a35083a21b35c1ec9 100644
+index aac1df9e2c0652bc6348af0404deba7465f82d42..3e815dd10496f30ef13b06cb27662e437252a507 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/behavior/GoToPotentialJobSite.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/behavior/GoToPotentialJobSite.java
-@@ -45,6 +45,7 @@ public class GoToPotentialJobSite extends Behavior<Villager> {
+@@ -48,12 +48,23 @@ public class GoToPotentialJobSite extends Behavior<Villager> {
              BlockPos blockPos = pos.pos();
              ServerLevel serverLevel2 = serverLevel.getServer().getLevel(pos.dimension());
              if (serverLevel2 != null) {
 +                Runnable run = () -> { // okocraft - region threading
                  PoiManager poiManager = serverLevel2.getPoiManager();
-                 if (poiManager.exists(blockPos, (poiType) -> {
-                     return true;
-@@ -53,6 +54,16 @@ public class GoToPotentialJobSite extends Behavior<Villager> {
+                 if (poiManager.exists(blockPos, poiType -> true)) {
+                     poiManager.release(blockPos);
                  }
  
                  DebugPackets.sendPoiTicketCountPacket(serverLevel, blockPos);
