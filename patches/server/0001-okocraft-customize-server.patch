@@ -5,31 +5,38 @@ Subject: [PATCH] okocraft customize server
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index b1d621ed91c74790fd5b66339c044ec444de62ef..7c8fdffd97ed41749531a8fc0d766db4f0897f9c 100644
+index eb2f9941b24af591f1e56339b97f5284a765cf81..a421179c1deedc7437c50223f1de5a69ec60049f 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -13,7 +13,7 @@ val alsoShade: Configuration by configurations.creating
+@@ -13,7 +13,7 @@ configurations.named(log4jPlugins.compileClasspathConfigurationName) {
+ val alsoShade: Configuration by configurations.creating
  
  dependencies {
-     // Folia start
--    implementation(project(":folia-api"))
-+    implementation(project(":okocraft-api")) // okocraft
-     implementation("io.papermc.paper:paper-mojangapi:${project.version}") {
-         exclude("io.papermc.paper", "paper-api")
-     }
-diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 49a121862fbb823a00753d99d24d04c87479fcd1..49ddb72aeb0dc9b074b7be911a9b9ea23cf072ae 100644
---- a/src/main/java/net/minecraft/server/MinecraftServer.java
-+++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -2020,7 +2020,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
- 
-     @DontObfuscate
-     public String getServerModName() {
--        return "Folia"; // Paper // Folia - Folia
-+        return "OKOCRAFT"; // Paper // Folia // okocraft - okocraft
-     }
- 
-     public SystemReport fillSystemReport(SystemReport details) {
+-    implementation(project(":folia-api")) // Folia
++    implementation(project(":okocraft-api")) // Folia // okocraft
+     // Paper start
+     implementation("org.jline:jline-terminal-jansi:3.21.0")
+     implementation("net.minecrell:terminalconsoleappender:1.3.0")
+@@ -80,14 +80,14 @@ tasks.jar {
+         val gitBranch = git("rev-parse", "--abbrev-ref", "HEAD").getText().trim() // Paper
+         attributes(
+             "Main-Class" to "org.bukkit.craftbukkit.Main",
+-            "Implementation-Title" to "Folia", // Folia
++            "Implementation-Title" to "OKOCRAFT", // Folia // okocraft
+             "Implementation-Version" to implementationVersion,
+             "Implementation-Vendor" to date, // Paper
+-            "Specification-Title" to "Folia", // Folia
++            "Specification-Title" to "OKOCRAFT", // Folia // okocraft
+             "Specification-Version" to project.version,
+-            "Specification-Vendor" to "Paper Team",
+-            "Brand-Id" to "papermc:folia", // Folia
+-            "Brand-Name" to "Folia", // Folia
++            "Specification-Vendor" to "OKOCRAFT Team",
++            "Brand-Id" to "okocraft:folia", // Folia // okocraft
++            "Brand-Name" to "OKOCRAFT", // Folia // okocraft
+             "Build-Number" to (build ?: ""),
+             "Build-Time" to Instant.now().toString(),
+             "Git-Branch" to gitBranch, // Paper
 diff --git a/src/main/java/net/okocraft/paper/OkocraftVersionFetcher.java b/src/main/java/net/okocraft/paper/OkocraftVersionFetcher.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..e6de952985b5e4f2ff2a64df948fed968f7a73a5
@@ -91,24 +98,11 @@ index 0000000000000000000000000000000000000000..e6de952985b5e4f2ff2a64df948fed96
 +        return text("Previous version: " + oldVersion, NamedTextColor.GRAY, TextDecoration.ITALIC);
 +    }
 +}
-diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 57963e9e427e2533ae9cdbd1e98ff3dfadbdebac..ed163d001be3c37a716e483b150e92cc8f45feec 100644
---- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-+++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -268,7 +268,7 @@ import javax.annotation.Nullable; // Paper
- import javax.annotation.Nonnull; // Paper
- 
- public final class CraftServer implements Server {
--    private final String serverName = "Folia"; // Folia // Paper
-+    private final String serverName = "OKOCRAFT"; // okocraft // Folia // Paper
-     private final String serverVersion;
-     private final String bukkitVersion = Versioning.getBukkitVersion();
-     private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 521b9c19e3d50a0ecc59cdcce0a7d7d79544085b..535e564c695caa7ee0f19a707b351b3cb76c1b7e 100644
+index 8248cd6c908c82b6b7a18df7410a9a4a46a91959..38e0c70d48437b6fc2e9be1afbe3b7f31d85910d 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-@@ -513,7 +513,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+@@ -517,7 +517,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
  
      @Override
      public com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {

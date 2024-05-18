@@ -1,0 +1,29 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Sat, 18 May 2024 13:41:42 +0900
+Subject: [PATCH] Build Changes
+
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index fd39ed209b20c927054b8482c400beeeeab460a3..b155615196598d92da8d59dc8de82d3f4a8dde35 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -101,8 +101,10 @@ configurations {
+         config {
+             outgoing {
+                 capability("${project.group}:${project.name}:${project.version}")
++                /* // okocraft start - Build Changes - I don't know what this is for, but this makes project impossible to build (createMojimapPaperclipJar)
+                 capability("io.papermc.paper:paper-mojangapi:${project.version}")
+                 capability("com.destroystokyo.paper:paper-mojangapi:${project.version}")
++                */ // okocraft end
+             }
+         }
+     }
+@@ -142,6 +144,7 @@ tasks.jar {
+ }
+ 
+ tasks.withType<Javadoc> {
++    enabled = false // okocraft - Build Changes - Javadoc generation fails due to javadoc.io sometimes down. Disable this since this is not needed for us.
+     val options = options as StandardJavadocDocletOptions
+     options.overview = "src/main/javadoc/overview.html"
+     options.use()
