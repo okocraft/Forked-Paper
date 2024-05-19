@@ -5,21 +5,10 @@ Subject: [PATCH] Build Changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index fd39ed209b20c927054b8482c400beeeeab460a3..b155615196598d92da8d59dc8de82d3f4a8dde35 100644
+index fd39ed209b20c927054b8482c400beeeeab460a3..743cd0d17d25c4896da33ab4c13cf98e0c417cbc 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -101,8 +101,10 @@ configurations {
-         config {
-             outgoing {
-                 capability("${project.group}:${project.name}:${project.version}")
-+                /* // okocraft start - Build Changes - I don't know what this is for, but this makes project impossible to build (createMojimapPaperclipJar)
-                 capability("io.papermc.paper:paper-mojangapi:${project.version}")
-                 capability("com.destroystokyo.paper:paper-mojangapi:${project.version}")
-+                */ // okocraft end
-             }
-         }
-     }
-@@ -142,6 +144,7 @@ tasks.jar {
+@@ -142,6 +142,7 @@ tasks.jar {
  }
  
  tasks.withType<Javadoc> {
