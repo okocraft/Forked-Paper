@@ -24,7 +24,7 @@ jobs:
       - name: Apply Patches
         run: ./gradlew applyPatches --stacktrace
       - name: Build
-        run: ./gradlew createReobfPaperclipJar --stacktrace
+        run: ./gradlew createMojmapPaperclipJar --stacktrace
       - name: Upload
         uses: actions/upload-artifact@v4.3.3
         continue-on-error: true
