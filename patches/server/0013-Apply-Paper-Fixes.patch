@@ -23,6 +23,8 @@ Subject: [PATCH] Apply Paper Fixes
 - Prevent NPE if hooked entity was cleared
 - Fix Cancelling BlockPlaceEvent calling onRemove
 - Only remove worldgen block entity on changed block
+- Fix skipping custom block entity tag
+- Flatten namespaced vanilla command alias redirects
 
 diff --git a/src/main/java/com/destroystokyo/paper/entity/ai/PaperMobGoals.java b/src/main/java/com/destroystokyo/paper/entity/ai/PaperMobGoals.java
 index 02b3670cfc04209baa56d89f82b65ee30d656923..30ed9ffd6a65914d7545636150a09327aba047c3 100644
@@ -184,10 +186,31 @@ index 0000000000000000000000000000000000000000..e9436f8a73ee0a02096d66e14d73edaa
 +
 +}
 diff --git a/src/main/java/net/minecraft/commands/Commands.java b/src/main/java/net/minecraft/commands/Commands.java
-index 5e5a0fea0612d9d4521f818faf7c9bd77351d379..ab416d5b9171c9ab7d258dd00697944f69010c8e 100644
+index 5e5a0fea0612d9d4521f818faf7c9bd77351d379..83dd8f47e6d1c1b1b4002256f4fcb3a30452eb47 100644
 --- a/src/main/java/net/minecraft/commands/Commands.java
 +++ b/src/main/java/net/minecraft/commands/Commands.java
-@@ -354,8 +354,8 @@ public class Commands {
+@@ -268,11 +268,17 @@ public class Commands {
+         // Paper start - Brigadier Command API
+         // Create legacy minecraft namespace commands
+         for (final CommandNode<CommandSourceStack> node : new java.util.ArrayList<>(this.dispatcher.getRoot().getChildren())) {
++            // The brigadier dispatcher is not able to resolve nested redirects.
++            // E.g. registering the alias minecraft:tp cannot redirect to tp, as tp itself redirects to teleport.
++            // Instead, target the first none redirecting node.
++            CommandNode<CommandSourceStack> flattenedAliasTarget = node;
++            while (flattenedAliasTarget.getRedirect() != null) flattenedAliasTarget = flattenedAliasTarget.getRedirect();
++
+             this.dispatcher.register(
+                 com.mojang.brigadier.builder.LiteralArgumentBuilder.<CommandSourceStack>literal("minecraft:" + node.getName())
+-                    .executes(node.getCommand())
+-                    .requires(node.getRequirement())
+-                    .redirect(node)
++                    .executes(flattenedAliasTarget.getCommand())
++                    .requires(flattenedAliasTarget.getRequirement())
++                    .redirect(flattenedAliasTarget)
+             );
+         }
+         // Paper end - Brigadier Command API
+@@ -354,8 +360,8 @@ public class Commands {
              if (throwCommandError) throw exception;
              MutableComponent ichatmutablecomponent = Component.literal(exception.getMessage() == null ? exception.getClass().getName() : exception.getMessage());
  
@@ -598,6 +621,19 @@ index 90d45a589751231f01342b5861435b1cfb47a79e..dd5a4463f4b0273f5c7491a3c78567e3
                      return InteractionResult.FAIL;
                  }
                  // CraftBukkit end
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/BlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BlockEntity.java
+index a3aa4a567c15cb3ac124caa17fd16fdf1f7d37b7..4c2e8714c64a6fe49554a11471e37078267f1eea 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/BlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/BlockEntity.java
+@@ -161,7 +161,7 @@ public abstract class BlockEntity {
+         return nbttagcompound;
+     }
+ 
+-    private void saveId(CompoundTag nbt) {
++    public void saveId(CompoundTag nbt) {
+         ResourceLocation minecraftkey = BlockEntityType.getKey(this.getType());
+ 
+         if (minecraftkey == null) {
 diff --git a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
 index 0c3f095854396da0e5f38234060ba9a190a572de..6c158fa50dc873ac4f252f3bcf055e7227da9c30 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
@@ -631,6 +667,21 @@ index e29507dc004dda175b5e96d02865073282312427..0983938e25d2d57d5c5aad5f12effef7
      }
  
      @Override
+diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockEntityState.java b/src/main/java/org/bukkit/craftbukkit/block/CraftBlockEntityState.java
+index ce10aa64576716f530e69d2281c090cfdba5e18f..2c61e8d5bbab59c691f4cb003041e7e50e406b85 100644
+--- a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockEntityState.java
++++ b/src/main/java/org/bukkit/craftbukkit/block/CraftBlockEntityState.java
+@@ -140,6 +140,10 @@ public abstract class CraftBlockEntityState<T extends BlockEntity> extends Craft
+         this.applyTo(this.snapshot);
+         final CompoundTag nbt = this.snapshot.saveCustomOnly(this.getRegistryAccess());
+         this.snapshot.removeComponentsFromTag(nbt);
++        if (!nbt.isEmpty()) {
++            // have to include the "id" if it's going to have block entity data
++            this.snapshot.saveId(nbt);
++        }
+         return nbt;
+     }
+     // Paper end
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockStates.java b/src/main/java/org/bukkit/craftbukkit/block/CraftBlockStates.java
 index 411c2de93c71e480f95229c882cdf43b8801edc8..7537bb365695154392ba0b889737e0474ce7fd7b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockStates.java
@@ -827,7 +878,7 @@ index 04ca71d03eea61b0e7e62f2beb954b505a717f24..53df7e876c9f3e67aa2326fa1a5ce5e9
  
          return original != hash ? CraftMetaArmorStand.class.hashCode() ^ hash : hash;
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBlockState.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBlockState.java
-index 99ee41e79891d6017f065492efab5af95b1b4c38..d5448fb71808032cfeb5092c71acf0f741a5c0c4 100644
+index 99ee41e79891d6017f065492efab5af95b1b4c38..40f2be0f0a22a4cea18a393060146c03781fcd53 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBlockState.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaBlockState.java
 @@ -142,9 +142,17 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
@@ -936,7 +987,7 @@ index 99ee41e79891d6017f065492efab5af95b1b4c38..d5448fb71808032cfeb5092c71acf0f7
          this.internalTag = null;
      }
  
-@@ -208,22 +239,20 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
+@@ -208,22 +239,21 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
      void applyToItem(CraftMetaItem.Applicator tag) {
          super.applyToItem(tag);
  
@@ -953,8 +1004,9 @@ index 99ee41e79891d6017f065492efab5af95b1b4c38..d5448fb71808032cfeb5092c71acf0f7
 +        // Paper start - accurately replicate logic for creating ItemStack from BlockEntity
 +        // taken from BlockEntity#saveToItem and BlockItem#setBlockEntityData
 +        final CompoundTag nbt = this.blockEntityTag.copyTag();
-+        nbt.remove("id");
-+        if (!nbt.isEmpty()) {
++        if (nbt.contains("id", CraftMagicNumbers.NBT.TAG_STRING)) {
++            tag.put(CraftMetaBlockState.BLOCK_ENTITY_TAG, CustomData.of(nbt));
++        } else if (!nbt.isEmpty()) {
 +            BlockEntity.addEntityType(nbt, java.util.Objects.requireNonNull(CraftBlockStates.getBlockEntityType(this.materialForBlockEntityType())));
 +            tag.put(CraftMetaBlockState.BLOCK_ENTITY_TAG, CustomData.of(nbt));
 +        }
@@ -971,16 +1023,16 @@ index 99ee41e79891d6017f065492efab5af95b1b4c38..d5448fb71808032cfeb5092c71acf0f7
      }
  
      @Override
-@@ -232,14 +261,29 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
+@@ -232,14 +262,29 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
  
          if (tag.contains(CraftMetaBlockState.BLOCK_ENTITY_TAG.NBT, CraftMagicNumbers.NBT.TAG_COMPOUND)) {
              this.internalTag = tag.getCompound(CraftMetaBlockState.BLOCK_ENTITY_TAG.NBT);
 +            return; // Paper - if legacy, don't check anything else
-         }
++        }
 +        // Paper start - new serialization format
 +        if (tag.contains(CraftMetaBlockState.BLOCK_ENTITY_TAG_CUSTOM_DATA.NBT, CraftMagicNumbers.NBT.TAG_COMPOUND)) {
 +            this.blockEntityTag = CustomData.of(tag.getCompound(CraftMetaBlockState.BLOCK_ENTITY_TAG_CUSTOM_DATA.NBT));
-+        }
+         }
 +        if (tag.contains(CraftMetaBlockState.BLOCK_ENTITY_COMPONENTS.NBT, CraftMagicNumbers.NBT.TAG_COMPOUND)) {
 +            this.components = DataComponentMap.CODEC.parse(org.bukkit.craftbukkit.CraftRegistry.getMinecraftRegistry().createSerializationContext(net.minecraft.nbt.NbtOps.INSTANCE), tag.getCompound(CraftMetaBlockState.BLOCK_ENTITY_COMPONENTS.NBT)).getOrThrow();
 +        }
@@ -994,16 +1046,16 @@ index 99ee41e79891d6017f065492efab5af95b1b4c38..d5448fb71808032cfeb5092c71acf0f7
 +        // Paper start - new serialization format
 +        if (!this.blockEntityTag.isEmpty()) {
 +            internalTags.put(CraftMetaBlockState.BLOCK_ENTITY_TAG_CUSTOM_DATA.NBT, this.blockEntityTag.getUnsafe()); // unsafe because it's serialized right away
-         }
++        }
 +        if (!this.components.isEmpty()) {
 +            final Tag componentsTag = DataComponentMap.CODEC.encodeStart(org.bukkit.craftbukkit.CraftRegistry.getMinecraftRegistry().createSerializationContext(net.minecraft.nbt.NbtOps.INSTANCE), this.components).getOrThrow();
 +            internalTags.put(CraftMetaBlockState.BLOCK_ENTITY_COMPONENTS.NBT, componentsTag);
-+        }
+         }
 +        // Paper end - new serialization format
      }
  
      @Override
-@@ -253,9 +297,10 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
+@@ -253,9 +298,10 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
      int applyHash() {
          final int original;
          int hash = original = super.applyHash();
@@ -1017,7 +1069,7 @@ index 99ee41e79891d6017f065492efab5af95b1b4c38..d5448fb71808032cfeb5092c71acf0f7
          return original != hash ? CraftMetaBlockState.class.hashCode() ^ hash : hash;
      }
  
-@@ -267,19 +312,19 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
+@@ -267,19 +313,19 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
          if (meta instanceof CraftMetaBlockState) {
              CraftMetaBlockState that = (CraftMetaBlockState) meta;
  
@@ -1040,7 +1092,7 @@ index 99ee41e79891d6017f065492efab5af95b1b4c38..d5448fb71808032cfeb5092c71acf0f7
      }
  
      @Override
-@@ -290,27 +335,53 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
+@@ -290,27 +336,53 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
      @Override
      public CraftMetaBlockState clone() {
          CraftMetaBlockState meta = (CraftMetaBlockState) super.clone();
@@ -1101,7 +1153,7 @@ index 99ee41e79891d6017f065492efab5af95b1b4c38..d5448fb71808032cfeb5092c71acf0f7
      }
  
      private static CraftBlockEntityState<?> getBlockState(Material material, CompoundTag blockEntityTag) {
-@@ -340,13 +411,21 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
+@@ -340,13 +412,24 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
          Class<?> blockStateType = CraftBlockStates.getBlockStateType(stateMaterial);
          Preconditions.checkArgument(blockStateType == blockState.getClass() && blockState instanceof CraftBlockEntityState, "Invalid blockState for " + this.material);
  
@@ -1118,6 +1170,9 @@ index 99ee41e79891d6017f065492efab5af95b1b4c38..d5448fb71808032cfeb5092c71acf0f7
 +        final net.minecraft.core.component.DataComponentMap map = craftBlockState.collectComponents();
          patchedMap.setAll(map);
 -        this.updateFromPatch(patchedMap.asPatch(), null);
++        if (!data.isEmpty()) {
++            patchedMap.set(BLOCK_ENTITY_TAG.TYPE, CustomData.of(data));
++        }
 +        final DataComponentPatch patch = patchedMap.asPatch();
 +        this.updateFromPatch(patch, null);
 +        // we have to reset the fields because this should be like a "new" block entity is being used
