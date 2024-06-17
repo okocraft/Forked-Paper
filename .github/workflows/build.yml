@@ -10,7 +10,7 @@ jobs:
         uses: actions/setup-java@v4.2.1
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
       - name: Validate Gradle wrapper
         uses: gradle/actions/wrapper-validation@v3.3.2
       - name: Setup Gradle
@@ -24,7 +24,7 @@ jobs:
       - name: Apply Patches
         run: ./gradlew applyPatches --stacktrace
       - name: Build
-        run: ./gradlew createReobfPaperclipJar --stacktrace
+        run: ./gradlew createMojmapPaperclipJar --stacktrace
       - name: Upload
         uses: actions/upload-artifact@v4.3.3
         continue-on-error: true

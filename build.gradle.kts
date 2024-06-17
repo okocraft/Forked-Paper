@@ -2,8 +2,7 @@ import io.papermc.paperweight.util.constants.PAPERCLIP_CONFIG
 
 plugins {
     java
-    id("com.github.johnrengelman.shadow") version "8.1.1" apply false
-    id("io.papermc.paperweight.patcher") version "1.5.11"
+    id("io.papermc.paperweight.patcher") version "1.7.1"
 }
 
 repositories {
@@ -14,8 +13,8 @@ repositories {
 }
 
 dependencies {
-    remapper("net.fabricmc:tiny-remapper:0.10.1:fat")
-    decompiler("net.minecraftforge:forgeflower:2.0.629.2")
+    remapper("net.fabricmc:tiny-remapper:0.10.2:fat")
+    decompiler("org.vineflower:vineflower:1.10.1")
     paperclip("io.papermc:paperclip:3.0.3")
 }
 
@@ -23,12 +22,12 @@ subprojects {
     apply(plugin = "java")
 
     java {
-        toolchain { languageVersion.set(JavaLanguageVersion.of(17)) }
+        toolchain { languageVersion.set(JavaLanguageVersion.of(21)) }
     }
 
     tasks.withType<JavaCompile>().configureEach {
         options.encoding = "UTF-8"
-        options.release.set(17)
+        options.release.set(21)
     }
 
     repositories {
@@ -74,8 +73,8 @@ paperweight {
 }
 
 tasks {
-    // Add an alias for "createReobfPaperclipJar" task
+    // Add an alias for "createMojmapPaperclipJar" task
     create("clip") {
-        dependsOn(createReobfPaperclipJar)
+        dependsOn(createMojmapPaperclipJar)
     }
 }

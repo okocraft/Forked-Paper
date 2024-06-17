@@ -1,0 +1,18 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Sat, 18 May 2024 13:41:42 +0900
+Subject: [PATCH] Build Changes
+
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index fd39ed209b20c927054b8482c400beeeeab460a3..743cd0d17d25c4896da33ab4c13cf98e0c417cbc 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -142,6 +142,7 @@ tasks.jar {
+ }
+ 
+ tasks.withType<Javadoc> {
++    enabled = false // okocraft - Build Changes - Javadoc generation fails due to javadoc.io sometimes down. Disable this since this is not needed for us.
+     val options = options as StandardJavadocDocletOptions
+     options.overview = "src/main/javadoc/overview.html"
+     options.use()

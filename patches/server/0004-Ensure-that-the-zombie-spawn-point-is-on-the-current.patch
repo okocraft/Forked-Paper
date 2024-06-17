@@ -6,10 +6,10 @@ Subject: [PATCH] Ensure that the zombie spawn point is on the current tick
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/ai/village/VillageSiege.java b/src/main/java/net/minecraft/world/entity/ai/village/VillageSiege.java
-index 37a86fe9585ebf004876a48808e19eb272e2372d..5644d1a0f63e55ad5363831c1f113160ac474681 100644
+index 316b5db25f749854052449c1a2a48f20b8ead05b..77846fb36660e9021a9189074ed07c8fc8998603 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/village/VillageSiege.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/village/VillageSiege.java
-@@ -115,7 +115,7 @@ public class VillageSiege implements CustomSpawner {
+@@ -114,7 +114,7 @@ public class VillageSiege implements CustomSpawner {
          io.papermc.paper.threadedregions.RegionizedWorldData worldData = world.getCurrentWorldData(); // Folia - region threading
          Vec3 vec3d = this.findRandomSpawnPos(world, new BlockPos(worldData.villageSiegeState.spawnX, worldData.villageSiegeState.spawnY, worldData.villageSiegeState.spawnZ)); // Folia - region threading
  

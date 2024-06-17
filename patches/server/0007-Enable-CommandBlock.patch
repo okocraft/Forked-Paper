@@ -6,10 +6,10 @@ Subject: [PATCH] Enable CommandBlock
 Of course, we know why the command block is disabled. Our server only executes teleport commands, so there should be no situation to access objects outside the region by the command block.
 
 diff --git a/src/main/java/net/minecraft/world/level/BaseCommandBlock.java b/src/main/java/net/minecraft/world/level/BaseCommandBlock.java
-index 50b3025189938374886c7e2725dd3e4d54ac2160..a829a478cdbd310c99573b0512a59b1b69383e7c 100644
+index b8a571fcc44f67ac8f6089e039a8620bf6c40603..a9da8eccc2783e83bbf9618578a87eb3a6a8dc82 100644
 --- a/src/main/java/net/minecraft/world/level/BaseCommandBlock.java
 +++ b/src/main/java/net/minecraft/world/level/BaseCommandBlock.java
-@@ -111,7 +111,7 @@ public abstract class BaseCommandBlock implements CommandSource {
+@@ -117,7 +117,7 @@ public abstract class BaseCommandBlock implements CommandSource {
      }
  
      public boolean performCommand(Level world) {
