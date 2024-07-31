@@ -131,22 +131,10 @@ index 0000000000000000000000000000000000000000..082ff119c1e1ee7af4a9d07100e14c01
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 60b10a6e1fcc06430c5cacd4c49d92e1de6e4778..d3552fc1f6f1ae77ff0d8cd4673537cd79a1d158 100644
+index 60b10a6e1fcc06430c5cacd4c49d92e1de6e4778..a259c384b4262ed53dfe6b61e71e2b8e060d7266 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -91,10 +91,7 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
- import net.minecraft.world.item.crafting.RecipeHolder;
- import net.minecraft.world.item.crafting.RecipeType;
- import net.minecraft.world.item.crafting.RepairItemRecipe;
--import net.minecraft.world.level.CustomSpawner;
--import net.minecraft.world.level.GameRules;
--import net.minecraft.world.level.GameType;
--import net.minecraft.world.level.LevelSettings;
-+import net.minecraft.world.level.*;
- import net.minecraft.world.level.biome.BiomeManager;
- import net.minecraft.world.level.block.Block;
- import net.minecraft.world.level.dimension.LevelStem;
-@@ -1311,6 +1308,12 @@ public final class CraftServer implements Server {
+@@ -1311,6 +1311,12 @@ public final class CraftServer implements Server {
      @Override
      public World createWorld(WorldCreator creator) {
          if (true) throw new UnsupportedOperationException(); // Folia - not implemented properly yet
@@ -159,7 +147,7 @@ index 60b10a6e1fcc06430c5cacd4c49d92e1de6e4778..d3552fc1f6f1ae77ff0d8cd4673537cd
          Preconditions.checkState(this.console.getAllLevels().iterator().hasNext(), "Cannot create additional worlds on STARTUP");
          //Preconditions.checkState(!this.console.isIteratingOverLevels, "Cannot create a world while worlds are being ticked"); // Paper - Cat - Temp disable. We'll see how this goes.
          Preconditions.checkArgument(creator != null, "WorldCreator cannot be null");
-@@ -1470,11 +1473,25 @@ public final class CraftServer implements Server {
+@@ -1470,11 +1476,25 @@ public final class CraftServer implements Server {
          }
  
          this.console.addLevel(internal); // Paper - Put world into worldlist before initing the world; move up
