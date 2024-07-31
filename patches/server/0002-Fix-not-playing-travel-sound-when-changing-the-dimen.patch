@@ -6,24 +6,24 @@ Subject: [PATCH] Fix not playing travel sound when changing the dimension by
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index d8be7c8dca41b6ad6d9a28590be9e33ef9045bdb..28674a5aa523f2c133cf4c8e17eabb1d0ec90497 100644
+index 7a102b4e90fbc09b8653e5b566299efe24a04cf6..89167c4e216212c90c66bf4bd4aeab4a8ea1c87c 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -4160,7 +4160,7 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
+@@ -4149,7 +4149,7 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
              return false;
          }
  
--        return this.portalToAsync(destination, false, PortalType.END, null);
-+        return this.portalToAsync(destination, false, PortalType.END, net.okocraft.paper.PortalLevelEventSender.INSTANCE); // okocraft - Fix not playing travel sound when changing the dimension by portals
+-        return this.portalToAsync(destination, portalPos, true, PortalType.END, null);
++        return this.portalToAsync(destination, portalPos, true, PortalType.END, net.okocraft.paper.PortalLevelEventSender.INSTANCE); // okocraft - Fix not playing travel sound when changing the dimension by portals
      }
  
-     public boolean netherPortalLogicAsync() {
-@@ -4172,7 +4172,7 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
+     public boolean netherPortalLogicAsync(BlockPos portalPos) {
+@@ -4161,7 +4161,7 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
              return false;
          }
  
--        return this.portalToAsync(destination, false, PortalType.NETHER, null);
-+        return this.portalToAsync(destination, false, PortalType.NETHER, net.okocraft.paper.PortalLevelEventSender.INSTANCE); // okocraft - Fix not playing travel sound when changing the dimension by portals
+-        return this.portalToAsync(destination, portalPos, true, PortalType.NETHER, null);
++        return this.portalToAsync(destination, portalPos, true, PortalType.NETHER, net.okocraft.paper.PortalLevelEventSender.INSTANCE); // okocraft - Fix not playing travel sound when changing the dimension by portals
      }
  
      private static final java.util.concurrent.atomic.AtomicLong CREATE_PORTAL_DOUBLE_CHECK = new java.util.concurrent.atomic.AtomicLong();

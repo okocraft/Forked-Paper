@@ -5,7 +5,7 @@ Subject: [PATCH] Run POI modification on correct tick thread
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/ai/behavior/GoToPotentialJobSite.java b/src/main/java/net/minecraft/world/entity/ai/behavior/GoToPotentialJobSite.java
-index aac1df9e2c0652bc6348af0404deba7465f82d42..3e815dd10496f30ef13b06cb27662e437252a507 100644
+index aac1df9e2c0652bc6348af0404deba7465f82d42..75bfbc9a37aead6a24e6c1c9b72167516caf56d9 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/behavior/GoToPotentialJobSite.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/behavior/GoToPotentialJobSite.java
 @@ -48,12 +48,23 @@ public class GoToPotentialJobSite extends Behavior<Villager> {
@@ -21,7 +21,7 @@ index aac1df9e2c0652bc6348af0404deba7465f82d42..3e815dd10496f30ef13b06cb27662e43
                  DebugPackets.sendPoiTicketCountPacket(serverLevel, blockPos);
 +                // okocraft start - region threading
 +                };
-+                if (io.papermc.paper.util.TickThread.isTickThreadFor(serverLevel2, blockPos)) {
++                if (ca.spottedleaf.moonrise.common.util.TickThread.isTickThreadFor(serverLevel2, blockPos)) {
 +                    run.run();
 +                } else {
 +                    io.papermc.paper.threadedregions.RegionizedServer.getInstance().taskQueue.queueChunkTask(

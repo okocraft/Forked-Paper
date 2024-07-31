@@ -5,7 +5,7 @@ Subject: [PATCH] okocraft customize server
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index eb2f9941b24af591f1e56339b97f5284a765cf81..a421179c1deedc7437c50223f1de5a69ec60049f 100644
+index f0a90d13a17160cd363d54d494add4f6433b4758..02de3c69d108d09e5ec8e60f595311478f52b346 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -13,7 +13,7 @@ configurations.named(log4jPlugins.compileClasspathConfigurationName) {
@@ -17,7 +17,7 @@ index eb2f9941b24af591f1e56339b97f5284a765cf81..a421179c1deedc7437c50223f1de5a69
      // Paper start
      implementation("org.jline:jline-terminal-jansi:3.21.0")
      implementation("net.minecrell:terminalconsoleappender:1.3.0")
-@@ -80,14 +80,14 @@ tasks.jar {
+@@ -84,14 +84,14 @@ tasks.jar {
          val gitBranch = git("rev-parse", "--abbrev-ref", "HEAD").getText().trim() // Paper
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",
@@ -99,10 +99,10 @@ index 0000000000000000000000000000000000000000..e6de952985b5e4f2ff2a64df948fed96
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 8248cd6c908c82b6b7a18df7410a9a4a46a91959..38e0c70d48437b6fc2e9be1afbe3b7f31d85910d 100644
+index f89e08c22bc76dba5df730a83b37324e38d2956d..edc2dd612957bc8193f8f5861f5404a7f430c32e 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-@@ -517,7 +517,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+@@ -493,7 +493,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
  
      @Override
      public com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {

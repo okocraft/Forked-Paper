@@ -6,7 +6,7 @@ Subject: [PATCH] Ensure that the zombie spawn point is on the current tick
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/ai/village/VillageSiege.java b/src/main/java/net/minecraft/world/entity/ai/village/VillageSiege.java
-index 316b5db25f749854052449c1a2a48f20b8ead05b..77846fb36660e9021a9189074ed07c8fc8998603 100644
+index a2bc957bd643b90595711270ab88382c957e24b6..14901b40a251499c7d3941d527ab1c572bafb821 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/village/VillageSiege.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/village/VillageSiege.java
 @@ -114,7 +114,7 @@ public class VillageSiege implements CustomSpawner {
@@ -14,7 +14,7 @@ index 316b5db25f749854052449c1a2a48f20b8ead05b..77846fb36660e9021a9189074ed07c8f
          Vec3 vec3d = this.findRandomSpawnPos(world, new BlockPos(worldData.villageSiegeState.spawnX, worldData.villageSiegeState.spawnY, worldData.villageSiegeState.spawnZ)); // Folia - region threading
  
 -        if (vec3d != null) {
-+        if (vec3d != null && io.papermc.paper.util.TickThread.isTickThreadFor(world, vec3d)) { // okocraft - region threading
++        if (vec3d != null && ca.spottedleaf.moonrise.common.util.TickThread.isTickThreadFor(world, vec3d)) { // okocraft - region threading
              Zombie entityzombie;
  
              try {

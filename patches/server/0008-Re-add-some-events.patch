@@ -8,25 +8,11 @@ Subject: [PATCH] Re-add some events
 - PlayerChangedWorldEvent
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index da87c4825c67e62ae238877f1fb3220f4c57f553..7f33c88571f8b93940b39f7af9f0b67c62f63b91 100644
+index 2480166aa0f7acefc1302bc44bc31b6ad48c0711..a6859fe0a5e521963d22e44328ab668fb24282d2 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -1375,11 +1375,12 @@ public class ServerPlayer extends Player {
- 
-         this.respawn((player) -> {
-             CriteriaTriggers.CHANGED_DIMENSION.trigger(player, Level.END, Level.OVERWORLD);
-+            net.okocraft.paper.EventCaller.callRespawnByEndPortalEvent(player.getBukkitEntity()); // okocraft - Call PlayerRespawnEvent
-         }, true);
-     }
- 
-     public void respawn(java.util.function.Consumer<ServerPlayer> respawnComplete) {
--        this.respawn(respawnComplete, false);
-+        this.respawn(net.okocraft.paper.EventCaller.appendCallingRespawnEvent(respawnComplete), false); // okocraft - Call PlayerRespawnEvent
-     }
- 
-     private void respawn(java.util.function.Consumer<ServerPlayer> respawnComplete, boolean alive) {
-@@ -1642,6 +1643,7 @@ public class ServerPlayer extends Player {
-             }
+@@ -1758,6 +1758,7 @@ public class ServerPlayer extends net.minecraft.world.entity.player.Player imple
+             // Paper end - Reset shield blocking on dimension change
  
              this.triggerDimensionChangeTriggers(originWorld);
 +            new org.bukkit.event.player.PlayerChangedWorldEvent(this.getBukkitEntity(), originWorld.getWorld()).callEvent(); // okocraft - Call PlayerChangedWorldEvent
@@ -34,13 +20,13 @@ index da87c4825c67e62ae238877f1fb3220f4c57f553..7f33c88571f8b93940b39f7af9f0b67c
              // finished
  
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 771b259ce930d2c857a08ca9150a243679c88c80..19523c1286b43adf488acbf8fd8921cb27d26005 100644
+index 683b5c164bf40a9d900cb96134350f2fdd06b620..cc9dfdc4d042ca1185f54c912ae462def4e7b8d4 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -358,9 +358,10 @@ public abstract class PlayerList {
          // Spigot start - spawn location event
          Player spawnPlayer = player.getBukkitEntity();
-         org.spigotmc.event.player.PlayerSpawnLocationEvent ev = new com.destroystokyo.paper.event.player.PlayerInitialSpawnEvent(spawnPlayer, spawnPlayer.getLocation()); // Paper use our duplicate event
+         org.spigotmc.event.player.PlayerSpawnLocationEvent ev = new org.spigotmc.event.player.PlayerSpawnLocationEvent(spawnPlayer, spawnPlayer.getLocation());
 +        ev.callEvent(); // okocraft - Call PlayerSpawnLocationEvent that cannot modify spawn location
          //this.cserver.getPluginManager().callEvent(ev); // Folia - region threading - TODO WTF TO DO WITH THIS EVENT?
  
@@ -49,32 +35,6 @@ index 771b259ce930d2c857a08ca9150a243679c88c80..19523c1286b43adf488acbf8fd8921cb
          worldserver1 = ((CraftWorld) loc.getWorld()).getHandle();
  
          player.spawnIn(worldserver1);
-diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 28674a5aa523f2c133cf4c8e17eabb1d0ec90497..da4a58210ce2a95d2636caa72d54741e7f5cfcc2 100644
---- a/src/main/java/net/minecraft/world/entity/Entity.java
-+++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -4167,12 +4167,21 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
-         io.papermc.paper.util.TickThread.ensureTickThread(this, "Cannot portal entity async");
- 
-         ServerLevel destination = this.getServer().getLevel(this.level().getTypeKey() == LevelStem.NETHER ? Level.OVERWORLD : Level.NETHER);
-+        // okocraft start - Call EntityPortalReadyEvent
-+        io.papermc.paper.event.entity.EntityPortalReadyEvent event = new io.papermc.paper.event.entity.EntityPortalReadyEvent(this.getBukkitEntity(), destination == null ? null : destination.getWorld(), org.bukkit.PortalType.NETHER);
-+        if (!event.callEvent()) {
-+            this.portalTime = 0;
-+            return false;
-+        } else {
-+            destination = event.getTargetWorld() == null ? null : ((CraftWorld) event.getTargetWorld()).getHandle();
-+        // okocraft end - Call EntityPortalReadyEvent
-         if (destination == null) {
-             // wat
-             return false;
-         }
- 
-         return this.portalToAsync(destination, false, PortalType.NETHER, net.okocraft.paper.PortalLevelEventSender.INSTANCE); // okocraft - Fix not playing travel sound when changing the dimension by portals
-+        } // okocraft - Call EntityPortalReadyEvent
-     }
- 
-     private static final java.util.concurrent.atomic.AtomicLong CREATE_PORTAL_DOUBLE_CHECK = new java.util.concurrent.atomic.AtomicLong();
 diff --git a/src/main/java/net/okocraft/paper/EventCaller.java b/src/main/java/net/okocraft/paper/EventCaller.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..3af73127825b504eb5c30154578a6c7e3526de1c

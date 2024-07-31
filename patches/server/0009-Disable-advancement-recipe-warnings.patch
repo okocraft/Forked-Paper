@@ -5,7 +5,7 @@ Subject: [PATCH] Disable advancement/recipe warnings
 
 
 diff --git a/src/main/java/net/minecraft/server/PlayerAdvancements.java b/src/main/java/net/minecraft/server/PlayerAdvancements.java
-index 24e5993b281448734eb67c7a8439a349bbf9fd72..1725a5282e8b7ee727d89f537afd13cb7cab030d 100644
+index 9fabf9322acd663c4452b562494e74aa42eb19da..c65ec58183089be9e0b6644156b20e6b5f14933f 100644
 --- a/src/main/java/net/minecraft/server/PlayerAdvancements.java
 +++ b/src/main/java/net/minecraft/server/PlayerAdvancements.java
 @@ -198,7 +198,7 @@ public class PlayerAdvancements {
@@ -18,7 +18,7 @@ index 24e5993b281448734eb67c7a8439a349bbf9fd72..1725a5282e8b7ee727d89f537afd13cb
              } else {
                  this.startProgress(advancementholder, advancementprogress);
 diff --git a/src/main/java/net/minecraft/stats/ServerRecipeBook.java b/src/main/java/net/minecraft/stats/ServerRecipeBook.java
-index 4103ddf16164e3992fef0765d368282572537e29..e4b8ced6b13dcd0a9d4842127ce10eaad755db04 100644
+index 8a2584deccbf19de8a18fcfcb9c65318b60afe57..869577eb94f631059de9e6190537a666b5b77d22 100644
 --- a/src/main/java/net/minecraft/stats/ServerRecipeBook.java
 +++ b/src/main/java/net/minecraft/stats/ServerRecipeBook.java
 @@ -125,6 +125,7 @@ public class ServerRecipeBook extends RecipeBook {

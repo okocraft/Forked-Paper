@@ -5,10 +5,10 @@ Subject: [PATCH] Fix Firework equality
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaFirework.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaFirework.java
-index 4c09c57c263b18ee2e0156cc4a49ac02a025c651..1368888cb1af0bfec0acc28f3324b8c14110ab9a 100644
+index 0eceacbb096481d3bd31f5f99e964c88aea2e3fb..f8645c44e60b2e82d15a7acdcbbde52df215a999 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaFirework.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaFirework.java
-@@ -242,7 +242,7 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
+@@ -234,7 +234,7 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
          if (meta instanceof CraftMetaFirework that) {
  
              return (this.hasPower() ? that.hasPower() && this.power == that.power : !that.hasPower())
@@ -17,7 +17,7 @@ index 4c09c57c263b18ee2e0156cc4a49ac02a025c651..1368888cb1af0bfec0acc28f3324b8c1
          }
  
          return true;
-@@ -260,7 +260,7 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
+@@ -252,7 +252,7 @@ class CraftMetaFirework extends CraftMetaItem implements FireworkMeta {
          if (this.hasPower()) {
              hash = 61 * hash + this.power;
          }

@@ -6,14 +6,14 @@ Subject: [PATCH] Checks if the location is owned by current region before
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/ai/behavior/YieldJobSite.java b/src/main/java/net/minecraft/world/entity/ai/behavior/YieldJobSite.java
-index d1a9b62d3304916275dd6b4c4e783cf1563b5e21..c9ec096e065488c22512423882fe56abd13941f9 100644
+index d1a9b62d3304916275dd6b4c4e783cf1563b5e21..7e55610664d1e34a0bdb02cd67890d305a24e969 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/behavior/YieldJobSite.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/behavior/YieldJobSite.java
 @@ -32,6 +32,7 @@ public class YieldJobSite {
                                      return false;
                                  } else if (entity.getVillagerData().getProfession() != VillagerProfession.NONE) {
                                      return false;
-+                                } else if (!io.papermc.paper.util.TickThread.isTickThreadFor(world, entity.position())) { return false; // okocraft - region threading
++                                } else if (!ca.spottedleaf.moonrise.common.util.TickThread.isTickThreadFor(world, entity.position())) { return false; // okocraft - region threading
                                  } else {
                                      BlockPos blockPos = context.<GlobalPos>get(potentialJobSite).pos();
                                      Optional<Holder<PoiType>> optional = world.getPoiManager().getType(blockPos);
