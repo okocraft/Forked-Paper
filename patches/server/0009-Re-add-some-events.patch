@@ -53,19 +53,17 @@ index 683b5c164bf40a9d900cb96134350f2fdd06b620..cc9dfdc4d042ca1185f54c912ae462de
  
          player.spawnIn(worldserver1);
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 89167c4e216212c90c66bf4bd4aeab4a8ea1c87c..5d634be94d01e21784684ed43c5961dfe8b530df 100644
+index 89167c4e216212c90c66bf4bd4aeab4a8ea1c87c..36379d38c6eeee9df4591de895efcbded2057c73 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -4144,24 +4144,46 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
+@@ -4144,24 +4144,42 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
          ca.spottedleaf.moonrise.common.util.TickThread.ensureTickThread(this, "Cannot portal entity async");
  
          ServerLevel destination = this.getServer().getLevel(this.level().getTypeKey() == net.minecraft.world.level.dimension.LevelStem.END ? Level.OVERWORLD : Level.END);
 +        // okocraft start - Call EntityPortalReadyEvent
 +        io.papermc.paper.event.entity.EntityPortalReadyEvent event = new io.papermc.paper.event.entity.EntityPortalReadyEvent(this.getBukkitEntity(), destination == null ? null : destination.getWorld(), org.bukkit.PortalType.ENDER);
 +        if (!event.callEvent()) {
-+            if (this.portalProcess != null) {
-+                this.portalProcess.expire();
-+            }
++            this.portalProcess = null;
 +            return false;
 +        } else {
 +            destination = event.getTargetWorld() == null ? null : ((CraftWorld) event.getTargetWorld()).getHandle();
@@ -86,9 +84,7 @@ index 89167c4e216212c90c66bf4bd4aeab4a8ea1c87c..5d634be94d01e21784684ed43c5961df
 +        // okocraft start - Call EntityPortalReadyEvent
 +        io.papermc.paper.event.entity.EntityPortalReadyEvent event = new io.papermc.paper.event.entity.EntityPortalReadyEvent(this.getBukkitEntity(), destination == null ? null : destination.getWorld(), org.bukkit.PortalType.NETHER);
 +        if (!event.callEvent()) {
-+            if (this.portalProcess != null) {
-+                this.portalProcess.expire();
-+            }
++            this.portalProcess = null;
 +            return false;
 +        } else {
 +            destination = event.getTargetWorld() == null ? null : ((CraftWorld) event.getTargetWorld()).getHandle();
@@ -103,15 +99,3 @@ index 89167c4e216212c90c66bf4bd4aeab4a8ea1c87c..5d634be94d01e21784684ed43c5961df
      }
  
      private static final java.util.concurrent.atomic.AtomicLong CREATE_PORTAL_DOUBLE_CHECK = new java.util.concurrent.atomic.AtomicLong();
-diff --git a/src/main/java/net/minecraft/world/entity/PortalProcessor.java b/src/main/java/net/minecraft/world/entity/PortalProcessor.java
-index c55d795209222a34c349d6f59eea36186324825d..618aa22cd9e6b0ed91dae5c53c325377f48108d6 100644
---- a/src/main/java/net/minecraft/world/entity/PortalProcessor.java
-+++ b/src/main/java/net/minecraft/world/entity/PortalProcessor.java
-@@ -10,6 +10,7 @@ public class PortalProcessor {
-     private Portal portal;
-     private BlockPos entryPosition;
-     private int portalTime;
-+    public void expire() { this.portalTime = 0; } // okocraft - Call EntityPortalReadyEvent
-     private boolean insidePortalThisTick;
- 
-     public PortalProcessor(Portal portal, BlockPos pos) {
