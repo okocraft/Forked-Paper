@@ -11,9 +11,9 @@ jobs:
       latest_commit_hash: ${{ steps.latest_commit_hash.outputs.hash }}
     steps:
       - name: Checkout Git Repository
-        uses: actions/checkout@v4.1.7
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - name: Run check-upstream.sh
-        uses: actions/github-script@v7.0.1
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         id: check_result
         with:
           result-encoding: string
@@ -31,16 +31,16 @@ jobs:
     if: ${{ startsWith(needs.check_upstream.outputs.pr_description, 'Folia Changes:') }}
     steps:
       - name: Checkout Git Repository
-        uses: actions/checkout@v4.1.7
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - name: Set up JDK
-        uses: actions/setup-java@v4.2.2
+        uses: actions/setup-java@6a0805fcefea3d4657a47ac4c165951e33482018 # v4.2.2
         with:
           distribution: 'temurin'
           java-version: '21'
       - name: Validate Gradle wrapper
-        uses: gradle/actions/wrapper-validation@v3.5.0
+        uses: gradle/actions/wrapper-validation@d9c87d481d55275bb5441eef3fe0e46805f9ef70 # v3.5.0
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3.5.0
+        uses: gradle/actions/setup-gradle@d9c87d481d55275bb5441eef3fe0e46805f9ef70 # v3.5.0
         with:
           cache-read-only: false
           gradle-home-cache-cleanup: true
@@ -67,7 +67,7 @@ jobs:
               echo "result=upstream,rebase-required" >> $GITHUB_OUTPUT
           fi
       - name: Create a Pull Request
-        uses: peter-evans/create-pull-request@v6.1.0
+        uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c # v6.1.0
         if: always()
         with:
           title: Updated Upstream (Folia)
