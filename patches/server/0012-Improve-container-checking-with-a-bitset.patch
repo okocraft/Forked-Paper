@@ -505,7 +505,7 @@ index 431fb6a658c6aac43b6f9dbd1f578b83f261a4e3..37afd8026e925c57aa5a3e14b33aa3d2
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
-index 09410e95ebb0fd0089c924f39914287465a453bd..cf9d771d32629a1e8b7c23d13eb1a556939913f3 100644
+index 66d20e4b7f096f0755044a3946e98251385ed18c..6f0d048c74c0f32f304748f3e02e0cd9677e1a93 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 @@ -43,6 +43,18 @@ import org.bukkit.inventory.Inventory;
@@ -566,7 +566,7 @@ index 09410e95ebb0fd0089c924f39914287465a453bd..cf9d771d32629a1e8b7c23d13eb1a556
          final List<ItemStack> hopperItems = tileEntity.getItems();
  
          boolean empty = true;
-@@ -538,6 +564,7 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+@@ -542,6 +568,7 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
      }
  
      private static boolean isFullContainer(Container inventory, Direction direction) {
@@ -574,7 +574,7 @@ index 09410e95ebb0fd0089c924f39914287465a453bd..cf9d771d32629a1e8b7c23d13eb1a556
          int[] aint = HopperBlockEntity.getSlots(inventory, direction);
          int[] aint1 = aint;
          int i = aint.length;
-@@ -926,7 +953,10 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+@@ -934,7 +961,10 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
  
      @Override
      protected void setItems(NonNullList<ItemStack> inventory) {
