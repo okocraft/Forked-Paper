@@ -7,7 +7,7 @@ We currently maintain a forked version from Folia.
 
 ```bash
 ./gradlew applyPatches
-./gradlew createReobfPaperclipJar
+./gradlew createMojmapPaperclipJar
 ```
 
 ## License
