@@ -1,0 +1,130 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Sun, 11 Aug 2024 07:41:26 +0900
+Subject: [PATCH] Disable Spark completely
+
+
+diff --git a/src/main/java/io/papermc/paper/SparksFly.java b/src/main/java/io/papermc/paper/SparksFly.java
+index 5e1eb6e1853ff19f26ca6f01dac77a05c804f539..aad2244a80f182e2f158f47b0d35ef5c8b2bd8d8 100644
+--- a/src/main/java/io/papermc/paper/SparksFly.java
++++ b/src/main/java/io/papermc/paper/SparksFly.java
+@@ -29,13 +29,16 @@ public final class SparksFly {
+ 
+     private static final int SPARK_YELLOW = 0xffc93a;
+ 
++    /* // okocraft start - disable spark completely
+     private final Logger logger;
+     private final PaperSparkModule spark;
+ 
+     private boolean enabled;
+     private boolean disabledInConfigurationWarningLogged;
++     */ // okocraft end - disable spark completely
+ 
+     public SparksFly(final Server server) {
++        /* // okocraft start - disable spark completely
+         this.logger = Logger.getLogger(ID);
+         this.logger.log(Level.INFO, "This server bundles the spark profiler. For more information please visit https://docs.papermc.io/paper/profiling");
+         this.spark = PaperSparkModule.create(Compatibility.VERSION_1_0, server, this.logger, new PaperScheduler() {
+@@ -81,6 +84,7 @@ public final class SparksFly {
+                 }
+             }
+         });
++        */ // okocraft end - disable spark completely
+     }
+ 
+     public void enableEarlyIfRequested() {
+@@ -96,6 +100,7 @@ public final class SparksFly {
+     }
+ 
+     public void enableAfterPlugins(final Server server) {
++        /* // okocraft start - disable spark completely
+         final boolean isPluginPreferred = isPluginPreferred();
+         final boolean isPluginEnabled = isPluginEnabled(server);
+         if (!isPluginPreferred || !isPluginEnabled) {
+@@ -104,9 +109,11 @@ public final class SparksFly {
+             }
+             this.enable();
+         }
++         */
+     }
+ 
+     private void enable() {
++        /* // okocraft start - disable spark completely
+         if (!this.enabled) {
+             if (false) { // Folia - disable in-built spark profiler
+                 this.enabled = true;
+@@ -118,25 +125,32 @@ public final class SparksFly {
+                 }
+             }
+         }
++         */
+     }
+ 
+     public void disable() {
++        /* // okocraft start - disable spark completely
+         if (this.enabled) {
+             this.spark.disable();
+             this.enabled = false;
+         }
++         */
+     }
+ 
+     public void registerCommandBeforePlugins(final Server server) {
++        /* // okocraft start - disable spark completely
+         if (!isPluginPreferred()) {
+             this.registerCommand(server);
+         }
++         */
+     }
+ 
+     public void registerCommandAfterPlugins(final Server server) {
++        /* // okocraft start - disable spark completely
+         if ((!isPluginPreferred() || !isPluginEnabled(server)) && server.getCommandMap().getCommand(COMMAND_NAME) == null) {
+             this.registerCommand(server);
+         }
++         */
+     }
+ 
+     private void registerCommand(final Server server) {
+@@ -144,19 +158,19 @@ public final class SparksFly {
+     }
+ 
+     public void tickStart() {
+-        this.spark.onServerTickStart();
++        //this.spark.onServerTickStart(); // okocraft - disable spark completely
+     }
+ 
+     public void tickEnd(final double duration) {
+-        this.spark.onServerTickEnd(duration);
++        //this.spark.onServerTickEnd(duration); // okocraft - disable spark completely
+     }
+ 
+     void executeCommand(final CommandSender sender, final String[] args) {
+-        this.spark.executeCommand(sender, args);
++        //this.spark.executeCommand(sender, args); // okocraft - disable spark completely
+     }
+ 
+     List<String> tabComplete(final CommandSender sender, final String[] args) {
+-        return this.spark.tabComplete(sender, args);
++        return List.of(); // okocraft - disable spark completely
+     }
+ 
+     public static boolean isPluginPreferred() {
+@@ -180,7 +194,7 @@ public final class SparksFly {
+         @Override
+         public boolean execute(final CommandSender sender, final String commandLabel, final String[] args) {
+             final SparksFly spark = ((CraftServer) sender.getServer()).spark;
+-            if (spark.enabled) {
++            if (false) { // okocraft - disable spark completely
+                 spark.executeCommand(sender, args);
+             } else {
+                 sender.sendMessage(Component.text("The spark profiler is currently disabled.", TextColor.color(SPARK_YELLOW)));
+@@ -191,7 +205,7 @@ public final class SparksFly {
+         @Override
+         public List<String> tabComplete(final CommandSender sender, final String alias, final String[] args) throws IllegalArgumentException {
+             final SparksFly spark = ((CraftServer) sender.getServer()).spark;
+-            if (spark.enabled) {
++            if (false) { // okocraft - disable spark completely
+                 return spark.tabComplete(sender, args);
+             }
+             return List.of();
