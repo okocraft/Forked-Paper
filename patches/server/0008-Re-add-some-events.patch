@@ -8,10 +8,10 @@ Subject: [PATCH] Re-add some events
 - PlayerChangedWorldEvent
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 2480166aa0f7acefc1302bc44bc31b6ad48c0711..fb633964aedf5f508948be2be85430599ff8d287 100644
+index d681ec617590a3718f926cd5a9749952d5ac52bd..8319d7a62f3fa5acaafaac0d44a4eedc0e4184c0 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -1573,6 +1573,16 @@ public class ServerPlayer extends net.minecraft.world.entity.player.Player imple
+@@ -1572,6 +1572,16 @@ public class ServerPlayer extends net.minecraft.world.entity.player.Player imple
                          );
                      }
                      // now the respawn logic is complete
@@ -28,7 +28,7 @@ index 2480166aa0f7acefc1302bc44bc31b6ad48c0711..fb633964aedf5f508948be2be8543059
  
                      // last, call the function callback
                      if (respawnComplete != null) {
-@@ -1758,6 +1768,7 @@ public class ServerPlayer extends net.minecraft.world.entity.player.Player imple
+@@ -1757,6 +1767,7 @@ public class ServerPlayer extends net.minecraft.world.entity.player.Player imple
              // Paper end - Reset shield blocking on dimension change
  
              this.triggerDimensionChangeTriggers(originWorld);
@@ -37,7 +37,7 @@ index 2480166aa0f7acefc1302bc44bc31b6ad48c0711..fb633964aedf5f508948be2be8543059
              // finished
  
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 683b5c164bf40a9d900cb96134350f2fdd06b620..cc9dfdc4d042ca1185f54c912ae462def4e7b8d4 100644
+index 0bc623397576fc7c95fdeebf86b660b7ae1f2c25..363db6187567c32540317224002f3e906ccab883 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -358,9 +358,10 @@ public abstract class PlayerList {
