@@ -5,6 +5,7 @@ on:
       commit_hash:
         description: 'The commit hash to be referenced'
         required: false
+permissions: write-all
 
 jobs:
   check_upstream:
