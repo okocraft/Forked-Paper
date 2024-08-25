@@ -65,7 +65,7 @@ jobs:
         id: build_jar
         if: steps.apply_patches.outcome == 'success'
         continue-on-error: true
-        run: ./gradlew clip --stacktrace
+        run: ./gradlew createMojmapPaperclipJar --stacktrace
       - name: Specify Labels
         id: labels
         if: always()
