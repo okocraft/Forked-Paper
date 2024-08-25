@@ -1,6 +1,10 @@
 name: Create Update Upstream PR
 on:
   workflow_dispatch:
+    inputs:
+      commit_hash:
+        description: 'The commit hash to be referenced'
+        required: false
 
 jobs:
   check_upstream:
@@ -17,8 +21,11 @@ jobs:
         id: check_result
         with:
           result-encoding: string
+          env:
+            commit_hash: ${{ inputs.commit_hash }}
           script: |
-            const result = await exec.getExecOutput('bash ./scripts/check-upstream.sh');
+            const { commit_hash } = process.env
+            const result = await exec.getExecOutput('bash ./scripts/check-upstream.sh ' + commit_hash);
             const output = result.stdout;
             core.setOutput('pr_description', output);
             core.setOutput('commit_message', 'Updated Upstream (Folia)\n' + output);

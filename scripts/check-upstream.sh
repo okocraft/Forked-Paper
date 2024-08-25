@@ -1,12 +1,18 @@
 CURRENT_HASH=`cat paper-ref`
 
-git clone https://github.com/PaperMC/Folia check-upstream-work -b master --single-branch
+git clone https://github.com/PaperMC/Folia check-upstream-work -b master
 cd check-upstream-work
 
-LATEST_COMMIT_HASH=`git show --format='%H' --no-patch`
+if [ $1 = "" ]; then
+  LATEST_COMMIT_HASH=`git show --format='%H' --no-patch`
+else
+  LATEST_COMMIT_HASH=$1
+fi
 
 if [ $CURRENT_HASH = $LATEST_COMMIT_HASH ]; then
   echo "Everything up-to-date"
+  cd ../
+  rm -rf check-upstream-work
   exit 0
 fi
 
