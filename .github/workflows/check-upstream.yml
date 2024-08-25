@@ -19,10 +19,10 @@ jobs:
       - name: Run check-upstream.sh
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         id: check_result
+        env:
+          commit_hash: ${{ inputs.commit_hash }}
         with:
           result-encoding: string
-          env:
-            commit_hash: ${{ inputs.commit_hash }}
           script: |
             const { commit_hash } = process.env
             const result = await exec.getExecOutput('bash ./scripts/check-upstream.sh ' + commit_hash);
