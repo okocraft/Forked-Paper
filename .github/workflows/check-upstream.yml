@@ -61,11 +61,16 @@ jobs:
         if: steps.apply_patches.outcome == 'success'
         continue-on-error: true
         run: ./gradlew rebuildPatches --stacktrace
+      - name: Build
+        id: build_jar
+        if: steps.apply_patches.outcome == 'success'
+        continue-on-error: true
+        run: ./gradlew clip --stacktrace
       - name: Specify Labels
         id: labels
         if: always()
         run: |
-          if [ "${{ steps.apply_patches.outcome }}" = "success" ]; then
+          if { ["${{ steps.apply_patches.outcome }}" = "success"] && ["${{ steps.build_jar.outcome }}" = "success"] }; then
               echo "result=upstream" >> $GITHUB_OUTPUT
           else
               echo "result=upstream,rebase-required" >> $GITHUB_OUTPUT
@@ -79,4 +84,11 @@ jobs:
           commit-message: ${{ needs.check_upstream.outputs.commit_message }}
           branch: upstream
           labels: ${{ steps.labels.outputs.result }}
-          draft: ${{ steps.apply_patches.outcome != 'success' }}
+          draft: ${{ steps.apply_patches.outcome != 'success' && steps.build_jar.outcome != 'success' }}
+      - name: Upload jar
+        uses: actions/upload-artifact@834a144ee995460fba8ed112a2fc961b36a5ec5a # v4.3.6
+        if: steps.build_jar.outcome == 'success'
+        continue-on-error: true
+        with:
+          name: Okocraft-Build-${{ github.run_number }}
+          path: ./build/libs/okocraft-paperclip-*.jar
