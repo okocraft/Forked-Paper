@@ -1,0 +1,31 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Sat, 31 Aug 2024 00:44:35 +0900
+Subject: [PATCH] Prevent hard crash
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/raid/Raids.java b/src/main/java/net/minecraft/world/entity/raid/Raids.java
+index b4702eb8c4595e6da53292041b8adc26e493779a..f91216e3043507544703ca42f67f7012966f5ed7 100644
+--- a/src/main/java/net/minecraft/world/entity/raid/Raids.java
++++ b/src/main/java/net/minecraft/world/entity/raid/Raids.java
+@@ -108,9 +108,17 @@ public class Raids extends SavedData {
+             if (!dimensionmanager.hasRaids() || !ca.spottedleaf.moonrise.common.util.TickThread.isTickThreadFor(this.level, player.chunkPosition().x, player.chunkPosition().z, 10)) { // Folia - region threading // okocraft - fix range
+                 return null;
+             } else {
+-                List<PoiRecord> list = this.level.getPoiManager().getInRange((holder) -> {
+-                    return holder.is(PoiTypeTags.VILLAGE);
+-                }, pos, 64, PoiManager.Occupancy.IS_OCCUPIED).toList();
++                // okocraft start - Prevent hard crash
++                List<PoiRecord> list;
++                try {
++                    list = this.level.getPoiManager().getInRange((holder) -> {
++                        return holder.is(PoiTypeTags.VILLAGE);
++                    }, pos, 64, PoiManager.Occupancy.IS_OCCUPIED).toList();
++                } catch (IllegalStateException e) {
++                    net.minecraft.server.MinecraftServer.LOGGER.error("Failed to get poi records", e);
++                    return null;
++                }
++                // okocraft end - Prevent hard crash
+                 int i = 0;
+                 Vec3 vec3d = Vec3.ZERO;
+ 
