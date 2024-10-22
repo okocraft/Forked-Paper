@@ -5,7 +5,7 @@ Subject: [PATCH] Disable Spark completely
 
 
 diff --git a/src/main/java/io/papermc/paper/SparksFly.java b/src/main/java/io/papermc/paper/SparksFly.java
-index 4b30b05dcd99176715d49133fb99b96383a0ecbc..e540b235f1a12077658df02955656b3aaa64f539 100644
+index 4b30b05dcd99176715d49133fb99b96383a0ecbc..463e470dfc5b4cd1513fb2669bfd8a8d62273edf 100644
 --- a/src/main/java/io/papermc/paper/SparksFly.java
 +++ b/src/main/java/io/papermc/paper/SparksFly.java
 @@ -30,13 +30,16 @@ public final class SparksFly {
@@ -53,7 +53,7 @@ index 4b30b05dcd99176715d49133fb99b96383a0ecbc..e540b235f1a12077658df02955656b3a
          if (!this.enabled) {
              if (false) { // Folia - disable in-built spark profiler
                  this.enabled = true;
-@@ -119,25 +126,32 @@ public final class SparksFly {
+@@ -119,45 +126,52 @@ public final class SparksFly {
                  }
              }
          }
@@ -86,7 +86,8 @@ index 4b30b05dcd99176715d49133fb99b96383a0ecbc..e540b235f1a12077658df02955656b3a
      }
  
      private void registerCommand(final Server server) {
-@@ -145,19 +159,19 @@ public final class SparksFly {
+-        server.getCommandMap().register(COMMAND_NAME, "paper", new CommandImpl(COMMAND_NAME, this.spark.getPermissions()));
++        //server.getCommandMap().register(COMMAND_NAME, "paper", new CommandImpl(COMMAND_NAME, this.spark.getPermissions())); // okocraft - disable spark completely
      }
  
      public void tickStart() {
