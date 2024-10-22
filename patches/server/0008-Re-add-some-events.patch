@@ -8,7 +8,7 @@ Subject: [PATCH] Re-add some events
 - PlayerChangedWorldEvent
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index d681ec617590a3718f926cd5a9749952d5ac52bd..8319d7a62f3fa5acaafaac0d44a4eedc0e4184c0 100644
+index e4a68f43c1a48fe8193623c646eb40bc5f664c76..4052f44c93dcbd1f43fbe2b20191d89a0d7428ec 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -1572,6 +1572,16 @@ public class ServerPlayer extends net.minecraft.world.entity.player.Player imple
@@ -37,7 +37,7 @@ index d681ec617590a3718f926cd5a9749952d5ac52bd..8319d7a62f3fa5acaafaac0d44a4eedc
              // finished
  
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 0bc623397576fc7c95fdeebf86b660b7ae1f2c25..363db6187567c32540317224002f3e906ccab883 100644
+index 93ceea16e436e9227bc983417b258c307156198e..645ec24737c6c0ee5b147c1097eebbb257ac87af 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -358,9 +358,10 @@ public abstract class PlayerList {
@@ -53,10 +53,10 @@ index 0bc623397576fc7c95fdeebf86b660b7ae1f2c25..363db6187567c32540317224002f3e90
  
          player.spawnIn(worldserver1);
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 89167c4e216212c90c66bf4bd4aeab4a8ea1c87c..36379d38c6eeee9df4591de895efcbded2057c73 100644
+index ccc9e153680d0816022488e16a705e3c40b98af3..ac30fb689e7410924208a089bc1eac06424bcbbc 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -4144,24 +4144,42 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
+@@ -4146,24 +4146,42 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
          ca.spottedleaf.moonrise.common.util.TickThread.ensureTickThread(this, "Cannot portal entity async");
  
          ServerLevel destination = this.getServer().getLevel(this.level().getTypeKey() == net.minecraft.world.level.dimension.LevelStem.END ? Level.OVERWORLD : Level.END);

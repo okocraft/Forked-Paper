@@ -5,10 +5,10 @@ Subject: [PATCH] Add custom and resource worlds
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index ac56b02498eb38883ae462be6ef3d15cb2a855aa..6a6783713415403bb5d8cb7c48e8e1fbc5cffc97 100644
+index 511992c31d70e806bba68737048ca760bef1def0..bdb0bfd2fea1204b915ec4651208cb5b302921de 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -755,6 +755,14 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -754,6 +754,14 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
                  this.getCustomBossEvents().load(worlddata.getCustomBossEvents(), this.registryAccess());
              }
          }
@@ -131,10 +131,10 @@ index 0000000000000000000000000000000000000000..082ff119c1e1ee7af4a9d07100e14c01
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 6bce7ef8067c4ca6a488673ecbfdf3625e596565..6912dc94a243eab834a07e2ced755131383096bd 100644
+index dee23b4b96b7f2c6af54a6affe385b183479f8cc..b2ee52cb15333b3954b0cdb133490bec63c80a09 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -1311,6 +1311,12 @@ public final class CraftServer implements Server {
+@@ -1313,6 +1313,12 @@ public final class CraftServer implements Server {
      @Override
      public World createWorld(WorldCreator creator) {
          if (true) throw new UnsupportedOperationException(); // Folia - not implemented properly yet
@@ -147,7 +147,7 @@ index 6bce7ef8067c4ca6a488673ecbfdf3625e596565..6912dc94a243eab834a07e2ced755131
          Preconditions.checkState(this.console.getAllLevels().iterator().hasNext(), "Cannot create additional worlds on STARTUP");
          //Preconditions.checkState(!this.console.isIteratingOverLevels, "Cannot create a world while worlds are being ticked"); // Paper - Cat - Temp disable. We'll see how this goes.
          Preconditions.checkArgument(creator != null, "WorldCreator cannot be null");
-@@ -1470,11 +1476,25 @@ public final class CraftServer implements Server {
+@@ -1472,11 +1478,25 @@ public final class CraftServer implements Server {
          }
  
          this.console.addLevel(internal); // Paper - Put world into worldlist before initing the world; move up
