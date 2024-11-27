@@ -43,7 +43,7 @@ index b63393c131f736cd51666c675ac18918e038eca6..99f539eab8259cf5691ee85ed02455fc
      public boolean hurtServer(ServerLevel world, DamageSource source, float amount) {
          if (this.isInvulnerableTo(world, source)) {
 diff --git a/src/main/java/net/minecraft/world/entity/boss/wither/WitherBoss.java b/src/main/java/net/minecraft/world/entity/boss/wither/WitherBoss.java
-index 244e38db508efa3eebebb6392c4ebb0805367baf..035217f187456deb2e9fe3c6f43ebe54d56d69e1 100644
+index 244e38db508efa3eebebb6392c4ebb0805367baf..8deec996278edc2eb4bf02384b0436768b7da635 100644
 --- a/src/main/java/net/minecraft/world/entity/boss/wither/WitherBoss.java
 +++ b/src/main/java/net/minecraft/world/entity/boss/wither/WitherBoss.java
 @@ -152,6 +152,13 @@ public class WitherBoss extends Monster implements RangedAttackMob {
@@ -55,7 +55,7 @@ index 244e38db508efa3eebebb6392c4ebb0805367baf..035217f187456deb2e9fe3c6f43ebe54
 +    public boolean shouldCheckForSuffocation(ServerLevel world) {
 +        return true;
 +    }
-+    // Pufferfish end
++    // Pufferfish end - optimize suffocation
 +
      @Override
      protected SoundEvent getAmbientSound() {
