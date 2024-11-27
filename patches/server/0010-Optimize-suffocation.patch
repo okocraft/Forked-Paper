@@ -17,7 +17,7 @@ but is so much cheaper than the suffocation check that it's worth
 keeping it.
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index b63393c131f736cd51666c675ac18918e038eca6..69cdcb463a6a6793dd07372a3c68ecb80010e593 100644
+index b63393c131f736cd51666c675ac18918e038eca6..99f539eab8259cf5691ee85ed02455fc6abdfe80 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -482,7 +482,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
@@ -25,7 +25,7 @@ index b63393c131f736cd51666c675ac18918e038eca6..69cdcb463a6a6793dd07372a3c68ecb8
              if (world1 instanceof ServerLevel) {
                  worldserver1 = (ServerLevel) world1;
 -                if (this.isInWall()) {
-+                if (this.shouldCheckForSuffocation(worldserver1) && this.isInWall()) {
++                if (this.shouldCheckForSuffocation(worldserver1) && this.isInWall()) { // Pufferfish - optimize suffocation
                      this.hurtServer(worldserver1, this.damageSources().inWall(), 1.0F);
                  } else if (flag && !this.level().getWorldBorder().isWithinBounds(this.getBoundingBox())) {
                      double d1 = this.level().getWorldBorder().getDistanceToBorder(this) + this.level().getWorldBorder().getDamageSafeZone();
@@ -42,3 +42,21 @@ index b63393c131f736cd51666c675ac18918e038eca6..69cdcb463a6a6793dd07372a3c68ecb8
      @Override
      public boolean hurtServer(ServerLevel world, DamageSource source, float amount) {
          if (this.isInvulnerableTo(world, source)) {
+diff --git a/src/main/java/net/minecraft/world/entity/boss/wither/WitherBoss.java b/src/main/java/net/minecraft/world/entity/boss/wither/WitherBoss.java
+index 244e38db508efa3eebebb6392c4ebb0805367baf..035217f187456deb2e9fe3c6f43ebe54d56d69e1 100644
+--- a/src/main/java/net/minecraft/world/entity/boss/wither/WitherBoss.java
++++ b/src/main/java/net/minecraft/world/entity/boss/wither/WitherBoss.java
+@@ -152,6 +152,13 @@ public class WitherBoss extends Monster implements RangedAttackMob {
+         this.bossEvent.setName(this.getDisplayName());
+     }
+ 
++    // Pufferfish start - optimize suffocation
++    @Override
++    public boolean shouldCheckForSuffocation(ServerLevel world) {
++        return true;
++    }
++    // Pufferfish end
++
+     @Override
+     protected SoundEvent getAmbientSound() {
+         return SoundEvents.WITHER_AMBIENT;

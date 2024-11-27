@@ -24,7 +24,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 diff --git a/src/main/java/net/minecraft/world/item/crafting/ShapelessRecipe.java b/src/main/java/net/minecraft/world/item/crafting/ShapelessRecipe.java
-index 12f95bee2a69fd5df7c4a165537e01299e60c5f6..489a61eaba7a7755f783f272eb9d1cd1a2158f4b 100644
+index 12f95bee2a69fd5df7c4a165537e01299e60c5f6..d219dd6fe8db37a7b69501d500b87c870946cb52 100644
 --- a/src/main/java/net/minecraft/world/item/crafting/ShapelessRecipe.java
 +++ b/src/main/java/net/minecraft/world/item/crafting/ShapelessRecipe.java
 @@ -31,8 +31,16 @@ public class ShapelessRecipe implements CraftingRecipe {
@@ -34,13 +34,13 @@ index 12f95bee2a69fd5df7c4a165537e01299e60c5f6..489a61eaba7a7755f783f272eb9d1cd1
 +    private final boolean isBukkit; // Pufferfish - Simpler ShapelessRecipes comparison for Vanilla
  
      public ShapelessRecipe(String group, CraftingBookCategory category, ItemStack result, List<Ingredient> ingredients) {
-+        // Pufferfish start - Simpler ShapelessRecipes comparison for Vanilla
++    // Pufferfish start - Simpler ShapelessRecipes comparison for Vanilla
 +        this(group, category, result, ingredients, false);
 +    }
 +
 +    public ShapelessRecipe(String group, CraftingBookCategory category, ItemStack result, List<Ingredient> ingredients, boolean isBukkit) {
 +        this.isBukkit = isBukkit;
-+        // Pufferfish end - Simpler ShapelessRecipes comparison for Vanilla
++    // Pufferfish end - Simpler ShapelessRecipes comparison for Vanilla
          this.group = group;
          this.category = category;
          this.result = result;
