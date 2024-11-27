@@ -6,7 +6,7 @@ Subject: [PATCH] Ensure that the zombie spawn point is on the current tick
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/ai/village/VillageSiege.java b/src/main/java/net/minecraft/world/entity/ai/village/VillageSiege.java
-index a2bc957bd643b90595711270ab88382c957e24b6..14901b40a251499c7d3941d527ab1c572bafb821 100644
+index 326be10d31d0b546a325f4af97bb413910e79e31..957d27dea09d18ed155373f1592fa65a10f403d1 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/village/VillageSiege.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/village/VillageSiege.java
 @@ -114,7 +114,7 @@ public class VillageSiege implements CustomSpawner {

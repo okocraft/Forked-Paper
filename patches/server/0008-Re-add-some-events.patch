@@ -8,10 +8,10 @@ Subject: [PATCH] Re-add some events
 - PlayerChangedWorldEvent
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index e4a68f43c1a48fe8193623c646eb40bc5f664c76..4052f44c93dcbd1f43fbe2b20191d89a0d7428ec 100644
+index 68a88928a3aae9d2ea6cd18088ede0a54c31d0d2..90b2fa10add03dd88f98906c31bd769d97b4b56a 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -1572,6 +1572,16 @@ public class ServerPlayer extends net.minecraft.world.entity.player.Player imple
+@@ -1831,6 +1831,16 @@ public class ServerPlayer extends net.minecraft.world.entity.player.Player imple
                          );
                      }
                      // now the respawn logic is complete
@@ -28,7 +28,7 @@ index e4a68f43c1a48fe8193623c646eb40bc5f664c76..4052f44c93dcbd1f43fbe2b20191d89a
  
                      // last, call the function callback
                      if (respawnComplete != null) {
-@@ -1757,6 +1767,7 @@ public class ServerPlayer extends net.minecraft.world.entity.player.Player imple
+@@ -2018,6 +2028,7 @@ public class ServerPlayer extends net.minecraft.world.entity.player.Player imple
              // Paper end - Reset shield blocking on dimension change
  
              this.triggerDimensionChangeTriggers(originWorld);
@@ -37,7 +37,7 @@ index e4a68f43c1a48fe8193623c646eb40bc5f664c76..4052f44c93dcbd1f43fbe2b20191d89a
              // finished
  
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 93ceea16e436e9227bc983417b258c307156198e..645ec24737c6c0ee5b147c1097eebbb257ac87af 100644
+index 12ae1c610f59f13416753e237fd0d7073bcd372b..f42302eb9e64faa95728d57b2a94b3cbf5996e18 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -358,9 +358,10 @@ public abstract class PlayerList {
@@ -53,10 +53,10 @@ index 93ceea16e436e9227bc983417b258c307156198e..645ec24737c6c0ee5b147c1097eebbb2
  
          player.spawnIn(worldserver1);
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index ccc9e153680d0816022488e16a705e3c40b98af3..ac30fb689e7410924208a089bc1eac06424bcbbc 100644
+index 89e1758800400f135ead5f73cf07061ee43a2178..4223fe120329ef3d49c07112e8df34357c2b809c 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -4146,24 +4146,42 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
+@@ -4352,24 +4352,42 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
          ca.spottedleaf.moonrise.common.util.TickThread.ensureTickThread(this, "Cannot portal entity async");
  
          ServerLevel destination = this.getServer().getLevel(this.level().getTypeKey() == net.minecraft.world.level.dimension.LevelStem.END ? Level.OVERWORLD : Level.END);

@@ -5,7 +5,7 @@ Subject: [PATCH] Disable advancement/recipe warnings
 
 
 diff --git a/src/main/java/net/minecraft/server/PlayerAdvancements.java b/src/main/java/net/minecraft/server/PlayerAdvancements.java
-index 9fabf9322acd663c4452b562494e74aa42eb19da..c65ec58183089be9e0b6644156b20e6b5f14933f 100644
+index 8e2eb7b61421ceb063654826941f1a81f6f50bdf..edc4b0849aecf653718995efe5175a6d24f7b51b 100644
 --- a/src/main/java/net/minecraft/server/PlayerAdvancements.java
 +++ b/src/main/java/net/minecraft/server/PlayerAdvancements.java
 @@ -198,7 +198,7 @@ public class PlayerAdvancements {
@@ -18,14 +18,16 @@ index 9fabf9322acd663c4452b562494e74aa42eb19da..c65ec58183089be9e0b6644156b20e6b
              } else {
                  this.startProgress(advancementholder, advancementprogress);
 diff --git a/src/main/java/net/minecraft/stats/ServerRecipeBook.java b/src/main/java/net/minecraft/stats/ServerRecipeBook.java
-index 8a2584deccbf19de8a18fcfcb9c65318b60afe57..869577eb94f631059de9e6190537a666b5b77d22 100644
+index 5c7484ce2850a2eb698a2183b81134b89b0bbcc7..99a33af94029612769ceac9105c9e60834f30959 100644
 --- a/src/main/java/net/minecraft/stats/ServerRecipeBook.java
 +++ b/src/main/java/net/minecraft/stats/ServerRecipeBook.java
-@@ -125,6 +125,7 @@ public class ServerRecipeBook extends RecipeBook {
-                 Optional<RecipeHolder<?>> optional = recipeManager.byKey(minecraftkey);
+@@ -157,8 +157,8 @@ public class ServerRecipeBook extends RecipeBook {
  
-                 if (optional.isEmpty()) {
+             try {
+                 ResourceKey<Recipe<?>> resourcekey = ResourceKey.create(Registries.RECIPE, ResourceLocation.parse(s));
+-
+                 if (!validPredicate.test(resourcekey)) {
 +                    if (false) // okocraft - Disable recipe warnings
-                     ServerRecipeBook.LOGGER.error("Tried to load unrecognized recipe: {} removed now.", minecraftkey);
+                     ServerRecipeBook.LOGGER.error("Tried to load unrecognized recipe: {} removed now.", resourcekey);
                  } else {
-                     handler.accept((RecipeHolder) optional.get());
+                     handler.accept(resourcekey);
