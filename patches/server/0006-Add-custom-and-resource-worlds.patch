@@ -5,10 +5,10 @@ Subject: [PATCH] Add custom and resource worlds
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index b261d166eb09386275ba52372cca56fceaac002b..ba79daa01803fbab6ffcc88a3e2b768e9cd6677e 100644
+index be6dc4c066efd66279301f5796451105e323089a..15558624d1123cfa37a175bd4948ee0080f917d4 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -785,6 +785,14 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -786,6 +786,14 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
                  this.getCustomBossEvents().load(worlddata.getCustomBossEvents(), this.registryAccess());
              }
          }

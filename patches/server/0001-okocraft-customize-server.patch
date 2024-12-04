@@ -5,7 +5,7 @@ Subject: [PATCH] okocraft customize server
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 142714c7d47eb5de937ad385c81968148a7e4828..6c9a644c2a784053cb4a0bab5472d0539fc9270b 100644
+index 8d2b5fec6fe27dca3ce01ba1ce50506179fc3b4d..1ed5b7a2e8cfd2fd34ffcbd0eaf5618a508461aa 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -25,7 +25,7 @@ abstract class MockitoAgentProvider : CommandLineArgumentProvider {
@@ -14,10 +14,10 @@ index 142714c7d47eb5de937ad385c81968148a7e4828..6c9a644c2a784053cb4a0bab5472d053
  dependencies {
 -    implementation(project(":folia-api")) // Folia
 +    implementation(project(":okocraft-api")) // Folia // okocraft
+     implementation("ca.spottedleaf:concurrentutil:0.0.2") // Paper - Add ConcurrentUtil dependency
      // Paper start
      implementation("org.jline:jline-terminal-ffm:3.27.1") // use ffm on java 22+
-     implementation("org.jline:jline-terminal-jni:3.27.1") // fall back to jni on java 21
-@@ -99,14 +99,14 @@ tasks.jar {
+@@ -100,14 +100,14 @@ tasks.jar {
          val gitBranch = git("rev-parse", "--abbrev-ref", "HEAD").getText().trim() // Paper
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",
@@ -99,7 +99,7 @@ index 0000000000000000000000000000000000000000..e6de952985b5e4f2ff2a64df948fed96
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 02de9ae7b8a3b7ef465351b02ff574cc6cacab99..e82e922d758c3a19a59bb5f240e1cfa95c9b3fff 100644
+index f546cbe867d524f402491901df7d08e56668f406..83c25c4cfba907475fe8d148c2fbe12fd321182f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 @@ -511,7 +511,7 @@ public final class CraftMagicNumbers implements UnsafeValues {

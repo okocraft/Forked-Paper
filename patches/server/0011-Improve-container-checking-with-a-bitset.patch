@@ -319,7 +319,7 @@ index 1f29b2419914ca9257db6553f01b7e7ec49bfc18..ce12888f1602ff534bd1aa82eebcd8e6
  
          ItemStack itemstack;
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/ChestBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/ChestBlockEntity.java
-index 8847617f6a23e6d2fe9bf7444a2072dc53f741b8..63f524fb3b9d7a1b7497efd95aaeb35d44afb79b 100644
+index 3165e13b0cf5089cfed9d0bdbc7ce96495de5133..11d7a4188b36806a3c71ead91296d818eaba42ca 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/ChestBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/ChestBlockEntity.java
 @@ -30,6 +30,18 @@ import org.bukkit.entity.HumanEntity;
@@ -578,7 +578,7 @@ index 44aae845da6cd34fc00e0c71795d6f610679bd4b..90a95eb0be35add2372807bd7fa352b7
  
      public static void entityInside(Level world, BlockPos pos, BlockState state, Entity entity, HopperBlockEntity blockEntity) {
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java
-index 6291ebf3426bddb0e6d13159ce20936b6e9ba6bd..a4e8936245d1effbbc6f026f46988b10de8a8ade 100644
+index 26f0c6ddea76c8a6e17faea2e5603e7c02a7f1b1..b819f83da67926d90217ae27ef8536f1ff0b3929 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/ShulkerBoxBlockEntity.java
 @@ -39,6 +39,18 @@ import org.bukkit.entity.HumanEntity;
@@ -621,9 +621,9 @@ index 6291ebf3426bddb0e6d13159ce20936b6e9ba6bd..a4e8936245d1effbbc6f026f46988b10
 +        this.itemStacks = this.optimizedItems.nonNullList;
 +        // Pufferfish end - Improve container checking with a bitset
          this.animationStatus = ShulkerBoxBlockEntity.AnimationStatus.CLOSED;
-         this.color = ShulkerBoxBlock.getColorFromBlock(state.getBlock());
-     }
-@@ -253,7 +271,10 @@ public class ShulkerBoxBlockEntity extends RandomizableContainerBlockEntity impl
+         Block block = state.getBlock();
+         DyeColor enumcolor;
+@@ -264,7 +282,10 @@ public class ShulkerBoxBlockEntity extends RandomizableContainerBlockEntity impl
      }
  
      public void loadFromTag(CompoundTag nbt, HolderLookup.Provider registries) {
@@ -635,7 +635,7 @@ index 6291ebf3426bddb0e6d13159ce20936b6e9ba6bd..a4e8936245d1effbbc6f026f46988b10
          if (!this.tryLoadLootTable(nbt) && nbt.contains("Items", 9)) {
              ContainerHelper.loadAllItems(nbt, this.itemStacks, registries);
          }
-@@ -267,7 +288,10 @@ public class ShulkerBoxBlockEntity extends RandomizableContainerBlockEntity impl
+@@ -278,7 +299,10 @@ public class ShulkerBoxBlockEntity extends RandomizableContainerBlockEntity impl
  
      @Override
      protected void setItems(NonNullList<ItemStack> inventory) {
