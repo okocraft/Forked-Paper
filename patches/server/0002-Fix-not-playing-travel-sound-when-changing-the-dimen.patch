@@ -6,10 +6,10 @@ Subject: [PATCH] Fix not playing travel sound when changing the dimension by
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 2ccc358daae43dcebf03db64526f17fbd9df23f8..ccc9e153680d0816022488e16a705e3c40b98af3 100644
+index 20fe53cc8e9edfc7b7d50f23379e0044e520c84d..85e1dfe46858d6856f9e7c7e7cf380f4f69defd7 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -4151,7 +4151,7 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
+@@ -4389,7 +4389,7 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
              return false;
          }
  
@@ -18,7 +18,7 @@ index 2ccc358daae43dcebf03db64526f17fbd9df23f8..ccc9e153680d0816022488e16a705e3c
      }
  
      public boolean netherPortalLogicAsync(BlockPos portalPos) {
-@@ -4163,7 +4163,7 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
+@@ -4401,7 +4401,7 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
              return false;
          }
  

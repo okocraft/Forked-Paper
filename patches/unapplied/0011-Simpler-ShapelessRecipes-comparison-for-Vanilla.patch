@@ -24,27 +24,27 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 diff --git a/src/main/java/net/minecraft/world/item/crafting/ShapelessRecipe.java b/src/main/java/net/minecraft/world/item/crafting/ShapelessRecipe.java
-index 213ee4aa988dd4c2a5a7be99b1d13f67338e5209..1d9bf0c1db46f7ac6327f1f3814f031c6811f0f0 100644
+index 12f95bee2a69fd5df7c4a165537e01299e60c5f6..d219dd6fe8db37a7b69501d500b87c870946cb52 100644
 --- a/src/main/java/net/minecraft/world/item/crafting/ShapelessRecipe.java
 +++ b/src/main/java/net/minecraft/world/item/crafting/ShapelessRecipe.java
-@@ -25,8 +25,16 @@ public class ShapelessRecipe extends io.papermc.paper.inventory.recipe.RecipeBoo
-     final CraftingBookCategory category;
-     final ItemStack result;
-     final NonNullList<Ingredient> ingredients;
+@@ -31,8 +31,16 @@ public class ShapelessRecipe implements CraftingRecipe {
+     final List<Ingredient> ingredients;
+     @Nullable
+     private PlacementInfo placementInfo;
 +    private final boolean isBukkit; // Pufferfish - Simpler ShapelessRecipes comparison for Vanilla
  
-     public ShapelessRecipe(String group, CraftingBookCategory category, ItemStack result, NonNullList<Ingredient> ingredients) {
+     public ShapelessRecipe(String group, CraftingBookCategory category, ItemStack result, List<Ingredient> ingredients) {
 +    // Pufferfish start - Simpler ShapelessRecipes comparison for Vanilla
 +        this(group, category, result, ingredients, false);
 +    }
 +
-+    public ShapelessRecipe(String group, CraftingBookCategory category, ItemStack result, NonNullList<Ingredient> ingredients, boolean isBukkit) {
++    public ShapelessRecipe(String group, CraftingBookCategory category, ItemStack result, List<Ingredient> ingredients, boolean isBukkit) {
 +        this.isBukkit = isBukkit;
 +    // Pufferfish end - Simpler ShapelessRecipes comparison for Vanilla
          this.group = group;
          this.category = category;
          this.result = result;
-@@ -76,6 +84,27 @@ public class ShapelessRecipe extends io.papermc.paper.inventory.recipe.RecipeBoo
+@@ -80,6 +88,27 @@ public class ShapelessRecipe implements CraftingRecipe {
      }
  
      public boolean matches(CraftingInput input, Level world) {
@@ -69,18 +69,18 @@ index 213ee4aa988dd4c2a5a7be99b1d13f67338e5209..1d9bf0c1db46f7ac6327f1f3814f031c
 +            return ingredients.isEmpty();
 +        }
 +        // Pufferfish end - Simpler ShapelessRecipes comparison for Vanilla
-         // Paper start - unwrap ternary & better exact choice recipes
+         // Paper start - Improve exact choice recipe ingredients & unwrap ternary
          if (input.ingredientCount() != this.ingredients.size()) {
              return false;
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftShapelessRecipe.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftShapelessRecipe.java
-index 96d772eb02f79f8c478f5e6f065e387aa7665b18..7b79c38443e387207edf5076c01d591c23dc8a6c 100644
+index 7c989318dc7ad89bb0d9143fcaac1e4bba6f5907..143a4d4efcc989ed4a4c73cc304e1978ad8f0699 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftShapelessRecipe.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftShapelessRecipe.java
-@@ -45,6 +45,6 @@ public class CraftShapelessRecipe extends ShapelessRecipe implements CraftRecipe
-             data.set(i, this.toNMS(ingred.get(i), true));
+@@ -44,6 +44,6 @@ public class CraftShapelessRecipe extends ShapelessRecipe implements CraftRecipe
+             data.add(this.toNMS(i, true));
          }
  
--        MinecraftServer.getServer().getRecipeManager().addRecipe(new RecipeHolder<>(CraftNamespacedKey.toMinecraft(this.getKey()), new net.minecraft.world.item.crafting.ShapelessRecipe(this.getGroup(), CraftRecipe.getCategory(this.getCategory()), CraftItemStack.asNMSCopy(this.getResult()), data)));
-+        MinecraftServer.getServer().getRecipeManager().addRecipe(new RecipeHolder<>(CraftNamespacedKey.toMinecraft(this.getKey()), new net.minecraft.world.item.crafting.ShapelessRecipe(this.getGroup(), CraftRecipe.getCategory(this.getCategory()), CraftItemStack.asNMSCopy(this.getResult()), data, true))); // Pufferfish - Simpler ShapelessRecipes comparison for Vanilla
+-        MinecraftServer.getServer().getRecipeManager().addRecipe(new RecipeHolder<>(CraftRecipe.toMinecraft(this.getKey()), new net.minecraft.world.item.crafting.ShapelessRecipe(this.getGroup(), CraftRecipe.getCategory(this.getCategory()), CraftItemStack.asNMSCopy(this.getResult()), data)));
++        MinecraftServer.getServer().getRecipeManager().addRecipe(new RecipeHolder<>(CraftRecipe.toMinecraft(this.getKey()), new net.minecraft.world.item.crafting.ShapelessRecipe(this.getGroup(), CraftRecipe.getCategory(this.getCategory()), CraftItemStack.asNMSCopy(this.getResult()), data, true))); // Pufferfish
      }
  }

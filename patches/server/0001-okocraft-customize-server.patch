@@ -5,19 +5,19 @@ Subject: [PATCH] okocraft customize server
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index c2f2ba1df68e9823c56287f1bea23fb6d6a781a2..74ce6a6e46d627af819bff98006228722e770ec4 100644
+index 8d2b5fec6fe27dca3ce01ba1ce50506179fc3b4d..1ed5b7a2e8cfd2fd34ffcbd0eaf5618a508461aa 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -13,7 +13,7 @@ configurations.named(log4jPlugins.compileClasspathConfigurationName) {
- val alsoShade: Configuration by configurations.creating
+@@ -25,7 +25,7 @@ abstract class MockitoAgentProvider : CommandLineArgumentProvider {
+ // Paper end - configure mockito agent that is needed in newer java versions
  
  dependencies {
 -    implementation(project(":folia-api")) // Folia
 +    implementation(project(":okocraft-api")) // Folia // okocraft
+     implementation("ca.spottedleaf:concurrentutil:0.0.2") // Paper - Add ConcurrentUtil dependency
      // Paper start
-     implementation("org.jline:jline-terminal-jansi:3.21.0")
-     implementation("net.minecrell:terminalconsoleappender:1.3.0")
-@@ -85,14 +85,14 @@ tasks.jar {
+     implementation("org.jline:jline-terminal-ffm:3.27.1") // use ffm on java 22+
+@@ -100,14 +100,14 @@ tasks.jar {
          val gitBranch = git("rev-parse", "--abbrev-ref", "HEAD").getText().trim() // Paper
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",
@@ -99,11 +99,11 @@ index 0000000000000000000000000000000000000000..e6de952985b5e4f2ff2a64df948fed96
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 7948267b6b91100a2fd2dcb24817037c75f6953c..671ad5f5978d2b083c906111f3d1efddcae8655a 100644
+index f546cbe867d524f402491901df7d08e56668f406..83c25c4cfba907475fe8d148c2fbe12fd321182f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-@@ -495,7 +495,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
- 
+@@ -511,7 +511,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+     // Paper start
      @Override
      public com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {
 -        return new com.destroystokyo.paper.PaperVersionFetcher();
