@@ -2,7 +2,7 @@ import io.papermc.paperweight.util.constants.PAPERCLIP_CONFIG
 
 plugins {
     java
-    id("io.papermc.paperweight.patcher") version "1.7.6"
+    id("io.papermc.paperweight.patcher") version "1.7.7"
 }
 
 repositories {
