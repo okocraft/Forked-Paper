@@ -8,7 +8,7 @@ Subject: [PATCH] Re-add some events
 - PlayerChangedWorldEvent
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index b6f3078fa688ca61cfd45d856b95c160cfe7b2da..2a17caec1ec82fb13463f2b6b24f5e1e0801d0d7 100644
+index 23f852ede94bce4d000c8fcaa8fba5d4800b533c..f1a019d08ac96b157de5519fdac61065313d35e9 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -1819,6 +1819,16 @@ public class ServerPlayer extends net.minecraft.world.entity.player.Player imple
@@ -28,7 +28,7 @@ index b6f3078fa688ca61cfd45d856b95c160cfe7b2da..2a17caec1ec82fb13463f2b6b24f5e1e
  
                      // last, call the function callback
                      if (respawnComplete != null) {
-@@ -2006,6 +2016,7 @@ public class ServerPlayer extends net.minecraft.world.entity.player.Player imple
+@@ -2007,6 +2017,7 @@ public class ServerPlayer extends net.minecraft.world.entity.player.Player imple
              // Paper end - Reset shield blocking on dimension change
  
              this.triggerDimensionChangeTriggers(originWorld);
@@ -53,10 +53,10 @@ index a809622f43a45fd77bbb07a24f21c841a90dc07a..b8c72c72af3218a37a96755e4fefe666
  
          player.spawnIn(worldserver1);
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 85e1dfe46858d6856f9e7c7e7cf380f4f69defd7..280a107723d72e2dbc8d719a16e5c8620d00c249 100644
+index 87dce18e5748ba960097cefd4dd5a7d70ca0cc86..f3e60c1171d46467142113497dafe45916043d78 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -4384,24 +4384,42 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
+@@ -4386,24 +4386,42 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
          ca.spottedleaf.moonrise.common.util.TickThread.ensureTickThread(this, "Cannot portal entity async");
  
          ServerLevel destination = this.getServer().getLevel(this.level().getTypeKey() == net.minecraft.world.level.dimension.LevelStem.END ? Level.OVERWORLD : Level.END);
