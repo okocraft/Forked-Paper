@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Sat, 4 Jan 2025 19:41:17 +0900
+Subject: [PATCH] Fix crash when loading thrown enderpearl
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/projectile/Projectile.java b/src/main/java/net/minecraft/world/entity/projectile/Projectile.java
+index a6bcf7b57b804af74f75c0b24ff48ee2714c3b73..58a04293dff82226b64e8ffbd43fafc288fa09bd 100644
+--- a/src/main/java/net/minecraft/world/entity/projectile/Projectile.java
++++ b/src/main/java/net/minecraft/world/entity/projectile/Projectile.java
+@@ -96,7 +96,7 @@ public abstract class Projectile extends Entity implements TraceableEntity {
+ 
+     @Nullable
+     public Entity getOwnerRaw() { // Folia - region threading
+-        ca.spottedleaf.moonrise.common.util.TickThread.ensureTickThread(this, "Cannot update owner state asynchronously"); // Folia - region threading
++        if (!ca.spottedleaf.moonrise.common.util.TickThread.isTickThreadFor(this)) return null; // okocraft - Fix crash when loading thrown enderpearl
+         if (this.cachedOwner != null && !this.cachedOwner.isPurged()) { // Folia - region threading
+             this.refreshProjectileSource(false); // Paper - Refresh ProjectileSource for projectiles
+             return this.cachedOwner.getHandleRaw(); // Folia - region threading
