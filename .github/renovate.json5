@@ -1,23 +1,23 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended",
-    "helpers:pinGitHubActionDigests"
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  extends: [
+    'config:recommended',
+    'helpers:pinGitHubActionDigests',
   ],
-  "packageRules": [
+  packageRules: [
     {
-      "groupName": "all non-major dependencies",
-      "groupSlug": "all-minor-patch",
-      "matchManagers": [
-        "github-actions"
+      groupName: 'all non-major dependencies',
+      groupSlug: 'all-minor-patch',
+      matchManagers: [
+        'github-actions',
       ],
-      "matchPackagePatterns": [
-        "*"
+      matchUpdateTypes: [
+        'minor',
+        'patch',
       ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ]
-    }
-  ]
+      matchPackageNames: [
+        '*',
+      ],
+    },
+  ],
 }
