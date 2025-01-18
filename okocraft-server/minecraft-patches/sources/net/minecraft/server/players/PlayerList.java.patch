@@ -1,0 +1,14 @@
+--- a/net/minecraft/server/players/PlayerList.java
++++ b/net/minecraft/server/players/PlayerList.java
+@@ -320,9 +_,10 @@
+         // Spigot start - spawn location event
+         org.bukkit.entity.Player spawnPlayer = player.getBukkitEntity();
+         org.spigotmc.event.player.PlayerSpawnLocationEvent ev = new org.spigotmc.event.player.PlayerSpawnLocationEvent(spawnPlayer, spawnPlayer.getLocation());
++        ev.callEvent(); // okocraft - Call PlayerSpawnLocationEvent that cannot modify spawn location
+         //this.cserver.getPluginManager().callEvent(ev); // Folia - region threading - TODO WTF TO DO WITH THIS EVENT?
+ 
+-        org.bukkit.Location loc = ev.getSpawnLocation();
++        org.bukkit.Location loc = spawnPlayer.getLocation(); // okocraft -  Call PlayerSpawnLocationEvent; Prevents the spawn location from being changed
+         serverLevel = ((org.bukkit.craftbukkit.CraftWorld) loc.getWorld()).getHandle();
+ 
+         player.spawnIn(serverLevel);

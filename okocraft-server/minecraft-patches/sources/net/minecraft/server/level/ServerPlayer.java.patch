@@ -1,0 +1,28 @@
+--- a/net/minecraft/server/level/ServerPlayer.java
++++ b/net/minecraft/server/level/ServerPlayer.java
+@@ -1608,7 +_,16 @@
+                         );
+                     }
+                     // now the respawn logic is complete
+-
++                    // okocraft start - Call PlayerRespawnEvent
++                    new org.bukkit.event.player.PlayerRespawnEvent(
++                            this.getBukkitEntity(),
++                            this.getBukkitEntity().getLocation(),
++                            false,
++                            usedRespawnAnchor[0],
++                            reason,
++                            com.google.common.collect.ImmutableSet.builder()
++                    );
++                    // okocraft end - Call PlayerRespawnEvent
+                     // last, call the function callback
+                     if (respawnComplete != null) {
+                         respawnComplete.accept(ServerPlayer.this);
+@@ -1796,6 +_,7 @@
+             // Paper end - Reset shield blocking on dimension change
+ 
+             this.triggerDimensionChangeTriggers(originWorld);
++            new org.bukkit.event.player.PlayerChangedWorldEvent(this.getBukkitEntity(), originWorld.getWorld()).callEvent(); // okocraft - Call PlayerChangedWorldEvent
+ 
+             // finished
+ 

@@ -1,0 +1,10 @@
+--- a/src/main/java/org/bukkit/event/player/PlayerRespawnEvent.java
++++ b/src/main/java/org/bukkit/event/player/PlayerRespawnEvent.java
+@@ -69,6 +_,7 @@
+         Preconditions.checkArgument(respawnLocation != null, "Respawn location can not be null");
+         Preconditions.checkArgument(respawnLocation.getWorld() != null, "Respawn world can not be null");
+ 
++        org.bukkit.Bukkit.getLogger().log(java.util.logging.Level.WARNING, "PlayerRespawnEvent#setRespawnLocation has no effect in this server!", new Throwable()); // okocraft - Notify that PlayerRespawnEvent#setSpawnLocation has no effect
+         this.respawnLocation = respawnLocation.clone();
+     }
+ 

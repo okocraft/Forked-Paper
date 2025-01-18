@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Siroshun09 <siro.shun8@gmail.com>
+Date: Sat, 21 Dec 2024 06:04:23 +0900
+Subject: [PATCH] Add custom and resource worlds
+
+
+diff --git a/net/minecraft/server/MinecraftServer.java b/net/minecraft/server/MinecraftServer.java
+index faf72dd6dff74296c73cb058aaabd1f9f475a072..752d2a400ae220707fa793454163444b7192e871 100644
+--- a/net/minecraft/server/MinecraftServer.java
++++ b/net/minecraft/server/MinecraftServer.java
+@@ -760,6 +760,14 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+                 this.getCustomBossEvents().load(primaryLevelData.getCustomBossEvents(), this.registryAccess());
+             }
+         }
++        // okocraft start - Add custom worlds
++        try {
++            net.okocraft.paper.CustomWorldFile.read(java.nio.file.Path.of("custom-worlds.txt")).forEach(this.server::createCustomWorld);
++            net.okocraft.paper.ResourceWorldNumberFile.read(java.nio.file.Path.of("resource-world-number.txt")).forEach(this.server::createCustomWorld);
++        } catch (IOException e) {
++            LOGGER.warn("Cannot load custom worlds: {}", e.getMessage());
++        }
++        // okocraft end - Add custom worlds
+         this.forceDifficulty();
+         for (ServerLevel serverLevel : this.getAllLevels()) {
+             this.prepareLevels(serverLevel.getChunkSource().chunkMap.progressListener, serverLevel);

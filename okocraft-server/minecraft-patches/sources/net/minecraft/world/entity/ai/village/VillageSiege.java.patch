@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/entity/ai/village/VillageSiege.java
++++ b/net/minecraft/world/entity/ai/village/VillageSiege.java
+@@ -99,7 +_,7 @@
+     private void trySpawn(ServerLevel level) {
+         io.papermc.paper.threadedregions.RegionizedWorldData worldData = level.getCurrentWorldData(); // Folia - region threading
+         Vec3 vec3 = this.findRandomSpawnPos(level, new BlockPos(worldData.villageSiegeState.spawnX, worldData.villageSiegeState.spawnY, worldData.villageSiegeState.spawnZ)); // Folia - region threading
+-        if (vec3 != null) {
++        if (vec3 != null && ca.spottedleaf.moonrise.common.util.TickThread.isTickThreadFor(level, vec3)) { // okocraft - region threading
+             Zombie zombie;
+             try {
+                 zombie = new Zombie(level);

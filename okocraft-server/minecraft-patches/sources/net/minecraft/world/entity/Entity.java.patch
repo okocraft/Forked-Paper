@@ -1,0 +1,45 @@
+--- a/net/minecraft/world/entity/Entity.java
++++ b/net/minecraft/world/entity/Entity.java
+@@ -4193,24 +_,42 @@
+         ca.spottedleaf.moonrise.common.util.TickThread.ensureTickThread(this, "Cannot portal entity async");
+ 
+         ServerLevel destination = this.getServer().getLevel(this.level().getTypeKey() == net.minecraft.world.level.dimension.LevelStem.END ? Level.OVERWORLD : Level.END);
++        // okocraft start - Call EntityPortalReadyEvent
++        io.papermc.paper.event.entity.EntityPortalReadyEvent event = new io.papermc.paper.event.entity.EntityPortalReadyEvent(this.getBukkitEntity(), destination == null ? null : destination.getWorld(), org.bukkit.PortalType.ENDER);
++        if (!event.callEvent()) {
++            this.portalProcess = null;
++            return false;
++        } else {
++            destination = event.getTargetWorld() == null ? null : ((org.bukkit.craftbukkit.CraftWorld) event.getTargetWorld()).getHandle();
++        // okocraft end - Call EntityPortalReadyEvent
+         if (destination == null) {
+             // wat
+             return false;
+         }
+ 
+         return this.portalToAsync(destination, portalPos, true, PortalType.END, null);
++        } // okocraft - Call EntityPortalReadyEvent
+     }
+ 
+     public boolean netherPortalLogicAsync(BlockPos portalPos) {
+         ca.spottedleaf.moonrise.common.util.TickThread.ensureTickThread(this, "Cannot portal entity async");
+ 
+         ServerLevel destination = this.getServer().getLevel(this.level().getTypeKey() == net.minecraft.world.level.dimension.LevelStem.NETHER ? Level.OVERWORLD : Level.NETHER);
++        // okocraft start - Call EntityPortalReadyEvent
++        io.papermc.paper.event.entity.EntityPortalReadyEvent event = new io.papermc.paper.event.entity.EntityPortalReadyEvent(this.getBukkitEntity(), destination == null ? null : destination.getWorld(), org.bukkit.PortalType.NETHER);
++        if (!event.callEvent()) {
++            this.portalProcess = null;
++            return false;
++        } else {
++            destination = event.getTargetWorld() == null ? null : ((org.bukkit.craftbukkit.CraftWorld) event.getTargetWorld()).getHandle();
++        // okocraft end - Call EntityPortalReadyEvent
+         if (destination == null) {
+             // wat
+             return false;
+         }
+ 
+         return this.portalToAsync(destination, portalPos, true, PortalType.NETHER, null);
++        } // okocraft - Call EntityPortalReadyEvent
+     }
+ 
+     private static final java.util.concurrent.atomic.AtomicLong CREATE_PORTAL_DOUBLE_CHECK = new java.util.concurrent.atomic.AtomicLong();
