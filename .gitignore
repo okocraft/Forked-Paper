@@ -1,0 +1,17 @@
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
+
+/run
+
+/okocraft-server/build.gradle.kts
+/okocraft-server/src/minecraft
+/paper-server
+/folia-server
+/okocraft-api/build.gradle.kts
+/paper-api
+/folia-api
+
+.idea/
