@@ -1,0 +1,32 @@
+--- a/folia-api/build.gradle.kts
++++ b/folia-api/build.gradle.kts
+@@ -104,17 +_,21 @@
+         java {
+             srcDir(generatedApiPath)
+             srcDir(file("../paper-api/src/main/java"))
++            srcDir(file("../folia-api/src/main/java"))
+         }
+         resources {
+             srcDir(file("../paper-api/src/main/resources"))
++            srcDir(file("../folia-api/src/main/resources"))
+         }
+     }
+     test {
+         java {
+             srcDir(file("../paper-api/src/test/java"))
++            srcDir(file("../folia-api/src/test/java"))
+         }
+         resources {
+             srcDir(file("../paper-api/src/test/resources"))
++            srcDir(file("../folia-api/src/test/resources"))
+         }
+     }
+ }
+@@ -180,6 +_,7 @@
+ val services = objects.newInstance<Services>()
+ 
+ tasks.withType<Javadoc> {
++    enabled = false // okocraft - Build Changes - Javadoc generation fails due to javadoc.io sometimes down. Disable this since this is not needed for us.
+     val options = options as StandardJavadocDocletOptions
+     options.overview = "../paper-api/src/main/javadoc/overview.html"
+     options.use()
