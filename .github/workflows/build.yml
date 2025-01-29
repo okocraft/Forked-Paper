@@ -27,4 +27,4 @@ jobs:
         continue-on-error: true
         with:
           name: Okocraft-Build-${{ github.run_number }}
-          path: ./build/libs/okocraft-paperclip-*.jar
+          path: ./okocraft-server/build/libs/okocraft-paperclip-*.jar
