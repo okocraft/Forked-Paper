@@ -17,10 +17,10 @@ but is so much cheaper than the suffocation check that it's worth
 keeping it.
 
 diff --git a/net/minecraft/world/entity/LivingEntity.java b/net/minecraft/world/entity/LivingEntity.java
-index 5ba06cf6b26baa5acae9d64111ee3f61533e7867..ea819cbb8eaa7921c5042a6dc688c35ade2df386 100644
+index d50aef6307fb854c8d4f66bb622cdafc43dce0ae..ab4aa7de081799ce5972dbf2eb2cf2d7f34e6223 100644
 --- a/net/minecraft/world/entity/LivingEntity.java
 +++ b/net/minecraft/world/entity/LivingEntity.java
-@@ -467,7 +467,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -472,7 +472,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
          if (this.isAlive()) {
              boolean flag = this instanceof Player;
              if (this.level() instanceof ServerLevel serverLevel1) {
