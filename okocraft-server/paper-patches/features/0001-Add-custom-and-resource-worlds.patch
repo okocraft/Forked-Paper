@@ -5,10 +5,10 @@ Subject: [PATCH] Add custom and resource worlds
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 20bcfeef39746d547ef17ccf2b66d44ce1e6e354..a909b10d7af0c966999c5e91eabe2b054c5054c5 100644
+index acff6136c321fd1b097c9888bce6195571663d75..024e07339d1586c649ee6354954f59d74d0db1e9 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -1322,6 +1322,12 @@ public final class CraftServer implements Server {
+@@ -1323,6 +1323,12 @@ public final class CraftServer implements Server {
      @Override
      public World createWorld(WorldCreator creator) {
          if (true) throw new UnsupportedOperationException(); // Folia - not implemented properly yet
@@ -21,7 +21,7 @@ index 20bcfeef39746d547ef17ccf2b66d44ce1e6e354..a909b10d7af0c966999c5e91eabe2b05
          Preconditions.checkState(this.console.getAllLevels().iterator().hasNext(), "Cannot create additional worlds on STARTUP");
          //Preconditions.checkState(!this.console.isIteratingOverLevels, "Cannot create a world while worlds are being ticked"); // Paper - Cat - Temp disable. We'll see how this goes.
          Preconditions.checkArgument(creator != null, "WorldCreator cannot be null");
-@@ -1500,11 +1506,25 @@ public final class CraftServer implements Server {
+@@ -1501,11 +1507,25 @@ public final class CraftServer implements Server {
          }
  
          this.console.addLevel(serverLevel); // Paper - Put world into worldlist before initing the world; move up
