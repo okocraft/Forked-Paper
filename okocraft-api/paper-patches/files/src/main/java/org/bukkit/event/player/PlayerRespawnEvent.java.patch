@@ -1,6 +1,6 @@
 --- a/src/main/java/org/bukkit/event/player/PlayerRespawnEvent.java
 +++ b/src/main/java/org/bukkit/event/player/PlayerRespawnEvent.java
-@@ -71,6 +_,7 @@
+@@ -69,6 +_,7 @@
          Preconditions.checkArgument(respawnLocation != null, "Respawn location can not be null");
          Preconditions.checkArgument(respawnLocation.getWorld() != null, "Respawn world can not be null");
  

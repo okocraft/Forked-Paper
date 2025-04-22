@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/level/ServerPlayer.java
 +++ b/net/minecraft/server/level/ServerPlayer.java
-@@ -1626,7 +_,16 @@
+@@ -1627,7 +_,17 @@
                          );
                      }
                      // now the respawn logic is complete
@@ -11,6 +11,7 @@
 +                            this.getBukkitEntity().getLocation(),
 +                            false,
 +                            usedRespawnAnchor[0],
++                            false,
 +                            reason,
 +                            com.google.common.collect.ImmutableSet.builder()
 +                    );
@@ -18,7 +19,7 @@
                      // last, call the function callback
                      if (respawnComplete != null) {
                          respawnComplete.accept(ServerPlayer.this);
-@@ -1814,6 +_,7 @@
+@@ -1815,6 +_,7 @@
              // Paper end - Reset shield blocking on dimension change
  
              this.triggerDimensionChangeTriggers(originWorld);
