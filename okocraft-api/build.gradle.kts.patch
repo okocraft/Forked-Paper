@@ -1,28 +1,14 @@
 --- a/folia-api/build.gradle.kts
 +++ b/folia-api/build.gradle.kts
-@@ -104,17 +_,21 @@
+@@ -101,6 +_,7 @@
          java {
-             srcDir(generatedApiPath)
+             srcDir(generatedDir)
              srcDir(file("../paper-api/src/main/java"))
-+            srcDir(file("../folia-api/src/main/java"))
++            srcDir(file("../folia-api/src/main/java")) // okocraft - Build Changes - add folia-api to source sets
          }
          resources {
              srcDir(file("../paper-api/src/main/resources"))
-+            srcDir(file("../folia-api/src/main/resources"))
-         }
-     }
-     test {
-         java {
-             srcDir(file("../paper-api/src/test/java"))
-+            srcDir(file("../folia-api/src/test/java"))
-         }
-         resources {
-             srcDir(file("../paper-api/src/test/resources"))
-+            srcDir(file("../folia-api/src/test/resources"))
-         }
-     }
- }
-@@ -180,6 +_,7 @@
+@@ -177,6 +_,7 @@
  val services = objects.newInstance<Services>()
  
  tasks.withType<Javadoc> {
