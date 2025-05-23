@@ -1,8 +1,8 @@
 package gg.airplane.structs;
 
+import com.google.common.base.Preconditions;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
-import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.AbstractList;
@@ -70,7 +70,7 @@ public class ItemListWithBitset extends AbstractList<ItemStack> {
     }
 
     public ItemListWithBitset(int size) {
-        Validate.isTrue(size < MAX_SIZE, "size is too large");
+        Preconditions.checkArgument(size < MAX_SIZE, "size is too large");
 
         this.items = createArray(size);
     }
