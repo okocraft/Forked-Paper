@@ -17,15 +17,15 @@ but is so much cheaper than the suffocation check that it's worth
 keeping it.
 
 diff --git a/net/minecraft/world/entity/LivingEntity.java b/net/minecraft/world/entity/LivingEntity.java
-index d50aef6307fb854c8d4f66bb622cdafc43dce0ae..ab4aa7de081799ce5972dbf2eb2cf2d7f34e6223 100644
+index 6102493315f1db2695478ecd7a346cc3f371ebe0..c2ac7e83cbb87d9cb351c3c6796f02ee10abf5bd 100644
 --- a/net/minecraft/world/entity/LivingEntity.java
 +++ b/net/minecraft/world/entity/LivingEntity.java
-@@ -472,7 +472,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
-         if (this.isAlive()) {
+@@ -443,7 +443,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
+ 
+         if (this.isAlive() && this.level() instanceof ServerLevel serverLevel1) {
              boolean flag = this instanceof Player;
-             if (this.level() instanceof ServerLevel serverLevel1) {
--                if (this.isInWall()) {
-+                if (gg.airplane.structs.OptimizeSuffocation.shouldCheckForSuffocation(this, serverLevel1) && this.isInWall()) { // Pufferfish - optimize suffocation
-                     this.hurtServer(serverLevel1, this.damageSources().inWall(), 1.0F);
-                 } else if (flag && !this.level().getWorldBorder().isWithinBounds(this.getBoundingBox())) {
-                     double d = this.level().getWorldBorder().getDistanceToBorder(this) + this.level().getWorldBorder().getDamageSafeZone();
+-            if (this.isInWall()) {
++            if (gg.airplane.structs.OptimizeSuffocation.shouldCheckForSuffocation(this, serverLevel1) && this.isInWall()) { // Pufferfish - optimize suffocation
+                 this.hurtServer(serverLevel1, this.damageSources().inWall(), 1.0F);
+             } else if (flag && !serverLevel1.getWorldBorder().isWithinBounds(this.getBoundingBox())) {
+                 double d = serverLevel1.getWorldBorder().getDistanceToBorder(this) + serverLevel1.getWorldBorder().getDamageSafeZone();

@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/entity/projectile/Projectile.java
 +++ b/net/minecraft/world/entity/projectile/Projectile.java
-@@ -88,7 +_,7 @@
+@@ -93,7 +_,7 @@
  
      @Nullable
      public Entity getOwnerRaw() { // Folia - region threading
