@@ -18,8 +18,8 @@
                      // last, call the function callback
                      if (respawnComplete != null) {
                          respawnComplete.accept(ServerPlayer.this);
-@@ -1754,6 +_,7 @@
-             // Paper end - Reset shield blocking on dimension change
+@@ -1753,6 +_,7 @@
+             this.lastSentFood = -1;
  
              this.triggerDimensionChangeTriggers(originWorld);
 +            new org.bukkit.event.player.PlayerChangedWorldEvent(this.getBukkitEntity(), originWorld.getWorld()).callEvent(); // okocraft - Call PlayerChangedWorldEvent
