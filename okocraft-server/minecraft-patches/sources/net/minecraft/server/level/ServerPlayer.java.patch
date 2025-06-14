@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/level/ServerPlayer.java
 +++ b/net/minecraft/server/level/ServerPlayer.java
-@@ -1627,7 +_,17 @@
+@@ -1572,7 +_,16 @@
                          );
                      }
                      // now the respawn logic is complete
@@ -12,15 +12,14 @@
 +                            false,
 +                            usedRespawnAnchor[0],
 +                            false,
-+                            reason,
-+                            com.google.common.collect.ImmutableSet.builder()
++                            reason
 +                    );
 +                    // okocraft end - Call PlayerRespawnEvent
                      // last, call the function callback
                      if (respawnComplete != null) {
                          respawnComplete.accept(ServerPlayer.this);
-@@ -1815,6 +_,7 @@
-             // Paper end - Reset shield blocking on dimension change
+@@ -1753,6 +_,7 @@
+             this.lastSentFood = -1;
  
              this.triggerDimensionChangeTriggers(originWorld);
 +            new org.bukkit.event.player.PlayerChangedWorldEvent(this.getBukkitEntity(), originWorld.getWorld()).callEvent(); // okocraft - Call PlayerChangedWorldEvent

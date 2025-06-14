@@ -1,15 +1,6 @@
 --- a/folia-server/build.gradle.kts
 +++ b/folia-server/build.gradle.kts
-@@ -20,7 +_,7 @@
-     minecraftVersion = providers.gradleProperty("mcVersion")
-     // macheOldPath = file("F:\\Projects\\PaperTooling\\mache\\versions\\1.21.4\\src\\main\\java")
-     // gitFilePatches = true
--    
-+
-     val fork = forks.register("folia") {
-         upstream.patchDir("paperServer") {
-             upstreamPath = "paper-server"
-@@ -30,7 +_,28 @@
+@@ -37,7 +_,28 @@
          }
      }
  
@@ -38,10 +29,10 @@
 +    activeFork = okocraftFork
  
      spigot {
-         buildDataRef = "3edaf46ec1eed4115ce1b18d2846cded42577e42"
-@@ -116,10 +_,14 @@
+         buildDataRef = "702e1a0a5072b2c4082371d5228cb30525687efc"
+@@ -123,10 +_,14 @@
      main {
-         java { srcDir("../paper-server/src/main/java") }
+         java { srcDir("../paper-server/src/main/java"); srcDir("../paper-server/src/generated/java") }
          resources { srcDir("../paper-server/src/main/resources") }
 +        java { srcDir("../folia-server/src/main/java") }
 +        resources { srcDir("../folia-server/src/main/resources") }
@@ -53,8 +44,8 @@
 +        resources { srcDir("../folia-server/src/main/resources") }
      }
  }
- 
-@@ -143,7 +_,7 @@
+ val log4jPlugins = sourceSets.create("log4jPlugins") {
+@@ -153,7 +_,7 @@
  }
  
  dependencies {
@@ -63,7 +54,7 @@
      implementation("ca.spottedleaf:concurrentutil:0.0.3")
      implementation("org.jline:jline-terminal-ffm:3.27.1") // use ffm on java 22+
      implementation("org.jline:jline-terminal-jni:3.27.1") // fall back to jni on java 21
-@@ -213,14 +_,14 @@
+@@ -229,14 +_,14 @@
          val gitBranch = git.exec(providers, "rev-parse", "--abbrev-ref", "HEAD").get().trim()
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",

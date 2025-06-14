@@ -5,10 +5,10 @@ Subject: [PATCH] Add custom and resource worlds
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index acff6136c321fd1b097c9888bce6195571663d75..024e07339d1586c649ee6354954f59d74d0db1e9 100644
+index 1091d2747c04166447540b37d86f51fe2591adc8..8dc316e46f10d48a607ed27f8eaf659e8daf3794 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -1323,6 +1323,12 @@ public final class CraftServer implements Server {
+@@ -1292,6 +1292,12 @@ public final class CraftServer implements Server {
      @Override
      public World createWorld(WorldCreator creator) {
          if (true) throw new UnsupportedOperationException(); // Folia - not implemented properly yet
@@ -21,18 +21,18 @@ index acff6136c321fd1b097c9888bce6195571663d75..024e07339d1586c649ee6354954f59d7
          Preconditions.checkState(this.console.getAllLevels().iterator().hasNext(), "Cannot create additional worlds on STARTUP");
          //Preconditions.checkState(!this.console.isIteratingOverLevels, "Cannot create a world while worlds are being ticked"); // Paper - Cat - Temp disable. We'll see how this goes.
          Preconditions.checkArgument(creator != null, "WorldCreator cannot be null");
-@@ -1501,11 +1507,25 @@ public final class CraftServer implements Server {
+@@ -1470,11 +1476,25 @@ public final class CraftServer implements Server {
          }
  
          this.console.addLevel(serverLevel); // Paper - Put world into worldlist before initing the world; move up
-+        // okocraft start - Add custom worlds; Copied from MinecraftServer L625
-+        int loadRegionRadius = ((32) >> 4);
++        // okocraft start - Add custom worlds; Copied from MinecraftServer L742
++        int loadRegionRadius = 1024 >> 4;
 +        serverLevel.randomSpawnSelection = new net.minecraft.world.level.ChunkPos(serverLevel.getChunkSource().randomState().sampler().findSpawnPosition());
 +        for (int currX = -loadRegionRadius; currX <= loadRegionRadius; ++currX) {
 +            for (int currZ = -loadRegionRadius; currZ <= loadRegionRadius; ++currZ) {
 +                net.minecraft.world.level.ChunkPos pos = new net.minecraft.world.level.ChunkPos(currX, currZ);
-+                serverLevel.chunkSource.addTicketAtLevel(
-+                        net.minecraft.server.level.TicketType.UNKNOWN, pos, ca.spottedleaf.moonrise.patches.chunk_system.scheduling.ChunkHolderManager.MAX_TICKET_LEVEL, pos
++                serverLevel.moonrise$getChunkTaskScheduler().chunkHolderManager.addTicketAtLevel(
++                        net.minecraft.server.level.TicketType.UNKNOWN, pos, ca.spottedleaf.moonrise.patches.chunk_system.scheduling.ChunkHolderManager.MAX_TICKET_LEVEL, null
 +                );
 +            }
 +        }
