@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/players/PlayerList.java
 +++ b/net/minecraft/server/players/PlayerList.java
-@@ -320,9 +_,10 @@
+@@ -321,9 +_,10 @@
          // Spigot start - spawn location event
          org.bukkit.entity.Player spawnPlayer = player.getBukkitEntity();
          org.spigotmc.event.player.PlayerSpawnLocationEvent ev = new org.spigotmc.event.player.PlayerSpawnLocationEvent(spawnPlayer, spawnPlayer.getLocation());

@@ -23,7 +23,7 @@ public class OkocraftVersionFetcher implements VersionFetcher {
     }
 
     @Override
-    public @NotNull Component getVersionMessage(final @NotNull String serverVersion) {
+    public @NotNull Component getVersionMessage() {
         TextComponent.Builder builder =
                 text().append(text("This server software is maintained by OKOCRAFT."))
                         .append(newline())
