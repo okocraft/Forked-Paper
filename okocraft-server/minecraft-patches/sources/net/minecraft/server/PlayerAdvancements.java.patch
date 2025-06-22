@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/PlayerAdvancements.java
 +++ b/net/minecraft/server/PlayerAdvancements.java
-@@ -147,7 +_,7 @@
+@@ -146,7 +_,7 @@
          data.forEach((path, progress) -> {
              AdvancementHolder advancementHolder = advancementManager.get(path);
              if (advancementHolder == null) {

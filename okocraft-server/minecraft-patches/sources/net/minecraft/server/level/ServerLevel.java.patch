@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/level/ServerLevel.java
 +++ b/net/minecraft/server/level/ServerLevel.java
-@@ -978,6 +_,7 @@
+@@ -982,6 +_,7 @@
      // Paper end - optimise random ticking
  
      public void tickChunk(LevelChunk chunk, int randomTickSpeed) {
