@@ -1,6 +1,6 @@
 --- a/net/minecraft/stats/ServerRecipeBook.java
 +++ b/net/minecraft/stats/ServerRecipeBook.java
-@@ -133,6 +_,7 @@
+@@ -102,6 +_,7 @@
      private void loadRecipes(List<ResourceKey<Recipe<?>>> recipes, Consumer<ResourceKey<Recipe<?>>> output, Predicate<ResourceKey<Recipe<?>>> isRecognized) {
          for (ResourceKey<Recipe<?>> resourceKey : recipes) {
              if (!isRecognized.test(resourceKey)) {

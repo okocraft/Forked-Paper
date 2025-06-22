@@ -1,6 +1,6 @@
 --- a/folia-server/build.gradle.kts
 +++ b/folia-server/build.gradle.kts
-@@ -37,7 +_,28 @@
+@@ -33,7 +_,28 @@
          }
      }
  
@@ -29,8 +29,8 @@
 +    activeFork = okocraftFork
  
      spigot {
-         buildDataRef = "702e1a0a5072b2c4082371d5228cb30525687efc"
-@@ -123,10 +_,14 @@
+         enabled = true
+@@ -120,10 +_,14 @@
      main {
          java { srcDir("../paper-server/src/main/java"); srcDir("../paper-server/src/generated/java") }
          resources { srcDir("../paper-server/src/main/resources") }
@@ -45,32 +45,32 @@
      }
  }
  val log4jPlugins = sourceSets.create("log4jPlugins") {
-@@ -153,7 +_,7 @@
+@@ -150,7 +_,7 @@
  }
  
  dependencies {
 -    implementation(project(":folia-api"))
-+    implementation(project(":okocraft-api")) // okocraft
++    implementation(project(":okocraft-api"))
      implementation("ca.spottedleaf:concurrentutil:0.0.3")
      implementation("org.jline:jline-terminal-ffm:3.27.1") // use ffm on java 22+
      implementation("org.jline:jline-terminal-jni:3.27.1") // fall back to jni on java 21
-@@ -229,14 +_,14 @@
+@@ -226,14 +_,14 @@
          val gitBranch = git.exec(providers, "rev-parse", "--abbrev-ref", "HEAD").get().trim()
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",
 -            "Implementation-Title" to "Folia",
-+            "Implementation-Title" to "OKOCRAFT", // okocraft
++            "Implementation-Title" to "OKOCRAFT",
              "Implementation-Version" to implementationVersion,
              "Implementation-Vendor" to date,
 -            "Specification-Title" to "Folia",
-+            "Specification-Title" to "OKOCRAFT", // okocraft
++            "Specification-Title" to "OKOCRAFT",
              "Specification-Version" to project.version,
 -            "Specification-Vendor" to "Paper Team",
 -            "Brand-Id" to "papermc:folia",
 -            "Brand-Name" to "Folia",
-+            "Specification-Vendor" to "OKOCRAFT Team", // okocraft
-+            "Brand-Id" to "okocraft:folia", // okocraft
-+            "Brand-Name" to "OKOCRAFT", // okocraft
++            "Specification-Vendor" to "OKOCRAFT Team",
++            "Brand-Id" to "okocraft:folia",
++            "Brand-Name" to "OKOCRAFT",
              "Build-Number" to (build ?: ""),
              "Build-Time" to buildTime.toString(),
              "Git-Branch" to gitBranch,
