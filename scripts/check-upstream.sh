@@ -1,6 +1,6 @@
 CURRENT_HASH=`cat paper-ref`
 
-git clone https://github.com/PaperMC/Folia check-upstream-work -b master
+git clone https://github.com/PaperMC/Folia check-upstream-work
 cd check-upstream-work
 
 if [ $1 = "" ]; then
