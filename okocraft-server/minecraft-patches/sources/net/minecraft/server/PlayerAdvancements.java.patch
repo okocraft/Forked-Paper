@@ -1,5 +1,20 @@
 --- a/net/minecraft/server/PlayerAdvancements.java
 +++ b/net/minecraft/server/PlayerAdvancements.java
+@@ -51,10 +_,10 @@
+     private final PlayerList playerList;
+     private final Path playerSavePath;
+     private AdvancementTree tree;
+-    private final Map<AdvancementHolder, AdvancementProgress> progress = new LinkedHashMap<>();
+-    private final Set<AdvancementHolder> visible = new HashSet<>();
+-    private final Set<AdvancementHolder> progressChanged = new HashSet<>();
+-    private final Set<AdvancementNode> rootsToUpdate = new HashSet<>();
++    private final Map<AdvancementHolder, AdvancementProgress> progress = java.util.Collections.synchronizedMap(new LinkedHashMap<>()); // okocraft - region threading
++    private final Set<AdvancementHolder> visible = java.util.Collections.synchronizedSet(new HashSet<>()); // okocraft - region threading
++    private final Set<AdvancementHolder> progressChanged = java.util.Collections.synchronizedSet(new HashSet<>()); // okocraft - region threading
++    private final Set<AdvancementNode> rootsToUpdate = java.util.Collections.synchronizedSet(new HashSet<>()); // okocraft - region threading
+     private ServerPlayer player;
+     @Nullable
+     private AdvancementHolder lastSelectedTab;
 @@ -146,7 +_,7 @@
          data.forEach((path, progress) -> {
              AdvancementHolder advancementHolder = advancementManager.get(path);
@@ -9,38 +24,3 @@
                  LOGGER.warn("Ignored advancement '{}' in progress file {} - it doesn't exist anymore?", path, this.playerSavePath);
              } else {
                  this.startProgress(advancementHolder, progress);
-@@ -228,7 +_,9 @@
-     private void markForVisibilityUpdate(AdvancementHolder advancement) {
-         AdvancementNode advancementNode = this.tree.get(advancement);
-         if (advancementNode != null) {
-+            synchronized (this.rootsToUpdate) { // okocraft - region threading
-             this.rootsToUpdate.add(advancementNode.root());
-+            } // okocraft - region threading
-         }
-     }
- 
-@@ -265,15 +_,22 @@
- 
-     public void flushDirty(ServerPlayer player, boolean showAdvancements) {
-         if (this.isFirstPacket || !this.rootsToUpdate.isEmpty() || !this.progressChanged.isEmpty()) {
-+            // okocraft start - region threading
-+            Set<AdvancementNode> rootsToUpdate;
-+            synchronized (this.rootsToUpdate) {
-+                rootsToUpdate = Set.copyOf(this.rootsToUpdate);
-+                this.rootsToUpdate.clear();
-+            }
-+            // okocraft end - region threading
-             Map<ResourceLocation, AdvancementProgress> map = new HashMap<>();
-             Set<AdvancementHolder> set = new java.util.TreeSet<>(java.util.Comparator.comparing(adv -> adv.id().toString())); // Paper - Changed from HashSet to TreeSet ordered alphabetically.
-             Set<ResourceLocation> set1 = new HashSet<>();
- 
--            for (AdvancementNode advancementNode : this.rootsToUpdate) {
-+            for (AdvancementNode advancementNode : rootsToUpdate) { // okocraft - region threading
-                 this.updateTreeVisibility(advancementNode, set, set1);
-             }
- 
--            this.rootsToUpdate.clear();
-+            // okocraft - region threading
- 
-             for (AdvancementHolder advancementHolder : this.progressChanged) {
-                 if (this.visible.contains(advancementHolder)) {
