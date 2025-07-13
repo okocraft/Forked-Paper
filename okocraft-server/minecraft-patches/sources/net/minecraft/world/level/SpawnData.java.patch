@@ -1,0 +1,14 @@
+--- a/net/minecraft/world/level/SpawnData.java
++++ b/net/minecraft/world/level/SpawnData.java
+@@ -36,6 +_,11 @@
+         } else {
+             entityToSpawn.remove("id");
+         }
++        // okocraft start - Hotfix for https://github.com/PaperMC/Paper/issues/12837
++        if (entityToSpawn.getDouble(net.minecraft.world.entity.Entity.TAG_FALL_DISTANCE).filter(value -> value == 0.0D).isPresent()) {
++            entityToSpawn.remove(net.minecraft.world.entity.Entity.TAG_FALL_DISTANCE);
++        }
++        // okocraft end
+ 
+         this.entityToSpawn = entityToSpawn;
+         this.customSpawnRules = customSpawnRules;
