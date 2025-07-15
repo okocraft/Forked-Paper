@@ -8,7 +8,7 @@
                  final net.minecraft.world.level.chunk.LevelChunkSection[] sections = chunkSource.getChunk(currChunkX, currChunkZ, net.minecraft.world.level.chunk.status.ChunkStatus.FULL, true).getSections();
  
                  for (int currChunkY = minChunkY; currChunkY <= maxChunkY; ++currChunkY) {
-@@ -4390,24 +_,42 @@
+@@ -4389,24 +_,42 @@
          ca.spottedleaf.moonrise.common.util.TickThread.ensureTickThread(this, "Cannot portal entity async");
  
          ServerLevel destination = this.getServer().getLevel(this.level().getTypeKey() == net.minecraft.world.level.dimension.LevelStem.END ? Level.OVERWORLD : Level.END);

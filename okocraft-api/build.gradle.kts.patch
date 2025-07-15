@@ -11,7 +11,7 @@
 @@ -177,6 +_,7 @@
  val services = objects.newInstance<Services>()
  
- tasks.withType<Javadoc> {
+ tasks.withType<Javadoc>().configureEach {
 +    enabled = false // okocraft - Build Changes - Javadoc generation fails due to javadoc.io sometimes down. Disable this since this is not needed for us.
      val options = options as StandardJavadocDocletOptions
      options.overview = "../paper-api/src/main/javadoc/overview.html"
