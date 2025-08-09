@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/level/ServerPlayer.java
 +++ b/net/minecraft/server/level/ServerPlayer.java
-@@ -1610,7 +_,16 @@
+@@ -1614,7 +_,16 @@
                          );
                      }
                      // now the respawn logic is complete
@@ -18,7 +18,7 @@
                      // last, call the function callback
                      if (respawnComplete != null) {
                          respawnComplete.accept(ServerPlayer.this);
-@@ -1791,6 +_,7 @@
+@@ -1795,6 +_,7 @@
              this.lastSentFood = -1;
  
              this.triggerDimensionChangeTriggers(originWorld);
