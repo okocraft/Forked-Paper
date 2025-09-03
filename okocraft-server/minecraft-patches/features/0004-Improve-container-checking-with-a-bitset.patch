@@ -342,7 +342,7 @@ index ae52dc75335799e55e403e3d3f11e9f1d67e4305..0117a29daab943bdad3acf3b1d42f258
  
      @Override
 diff --git a/net/minecraft/world/level/block/entity/HopperBlockEntity.java b/net/minecraft/world/level/block/entity/HopperBlockEntity.java
-index 5de769e7bd56bb3355c3c711d46ce5e103ea4409..0b014fd49ca18e3863eb65ad377082c4cb72f93b 100644
+index 25ad8bb4099fefaf51f38a8bba70ea3594d0d914..64c9cd2342c5537b28fb40e5aba7202dc11dd4b3 100644
 --- a/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 +++ b/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 @@ -33,7 +33,19 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
@@ -402,7 +402,7 @@ index 5de769e7bd56bb3355c3c711d46ce5e103ea4409..0b014fd49ca18e3863eb65ad377082c4
          int[] slots = getSlots(container, direction);
  
          for (int i : slots) {
-@@ -872,7 +897,10 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+@@ -874,7 +899,10 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
  
      @Override
      protected void setItems(NonNullList<ItemStack> items) {
