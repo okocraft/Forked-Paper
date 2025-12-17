@@ -1,49 +1,43 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Siroshun09 <siro.shun8@gmail.com>
-Date: Sat, 21 Dec 2024 06:04:23 +0900
+Date: Wed, 17 Dec 2025 10:15:25 +0900
 Subject: [PATCH] Add custom and resource worlds
 
 
-diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index d2db175fd7bfc5ff38e3945c8744858265212b1d..16338bde14be3c4e0224572eff76cc4c2b141b0c 100644
---- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-+++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -1263,6 +1263,12 @@ public final class CraftServer implements Server {
-     @Override
-     public World createWorld(WorldCreator creator) {
-         if (true) throw new UnsupportedOperationException(); // Folia - not implemented properly yet
-+        // okocraft start - Add custom worlds
-+        return createCustomWorld(creator);
-+    }
-+
-+    public World createCustomWorld(WorldCreator creator) {
-+        // okocraft end - Add custom worlds
-         Preconditions.checkState(this.console.getAllLevels().iterator().hasNext(), "Cannot create additional worlds on STARTUP");
-         //Preconditions.checkState(!this.console.isIteratingOverLevels, "Cannot create a world while worlds are being ticked"); // Paper - Cat - Temp disable. We'll see how this goes.
-         Preconditions.checkArgument(creator != null, "WorldCreator cannot be null");
-@@ -1441,11 +1447,25 @@ public final class CraftServer implements Server {
+diff --git a/src/main/java/io/papermc/paper/world/PaperWorldLoader.java b/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
+index 51a01f86fee58052cfa10febc2b3ddf8f6dd2ad7..5c7be39cf78a4e9ba8df40dcb4b57367a078aad4 100644
+--- a/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
++++ b/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
+@@ -105,11 +105,30 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
+             }
          }
- 
-         this.console.addLevel(serverLevel); // Paper - Put world into worldlist before initing the world; move up
-+        // okocraft start - Add custom worlds; Copied from MinecraftServer L740
-+        int loadRegionRadius = 1024 >> 4;
-+        serverLevel.randomSpawnSelection = new net.minecraft.world.level.ChunkPos(serverLevel.getChunkSource().randomState().sampler().findSpawnPosition());
-+        for (int currX = -loadRegionRadius; currX <= loadRegionRadius; ++currX) {
-+            for (int currZ = -loadRegionRadius; currZ <= loadRegionRadius; ++currZ) {
-+                net.minecraft.world.level.ChunkPos pos = new net.minecraft.world.level.ChunkPos(currX, currZ);
-+                serverLevel.moonrise$getChunkTaskScheduler().chunkHolderManager.addTicketAtLevel(
-+                        net.minecraft.server.level.TicketType.UNKNOWN, pos, ca.spottedleaf.moonrise.patches.chunk_system.scheduling.ChunkHolderManager.MAX_TICKET_LEVEL, null
-+                );
-+            }
+     }
++    // okocraft start - Add custom worlds
++    private java.util.List<WorldLoadingInfo> loadWorldInfoList() {
++        java.util.List<WorldLoadingInfo> worlds = new java.util.ArrayList<>();
++        for (final LevelStem stem : this.server.registryAccess().lookupOrThrow(Registries.LEVEL_STEM)) {
++            worlds.add(this.getWorldInfo(this.levelId, stem));
 +        }
++
++        try {
++            worlds.addAll(net.okocraft.paper.CustomWorlds.readCustomWorldFile(java.nio.file.Path.of("custom-worlds.txt")));
++            worlds.addAll(net.okocraft.paper.CustomWorlds.readResourceNumberFile(java.nio.file.Path.of("resource-world-number.txt")));
++        } catch (IOException e) {
++            LOGGER.warn("Cannot load custom worlds: {}", e.getMessage());
++        }
++
++        return worlds;
++    }
++    // okocraft end - Add custom worlds
+ 
+     // Loosely modeled on code in net.minecraft.server.Main
+     public void loadInitialWorlds() {
+-        for (final LevelStem stem : this.server.registryAccess().lookupOrThrow(Registries.LEVEL_STEM)) {
+-            final WorldLoadingInfo info = this.getWorldInfo(this.levelId, stem);
++        // okocraft start - Add custom worlds
++        for (final WorldLoadingInfo info : this.loadWorldInfoList()) {
++            LevelStem stem = this.server.registryAccess().lookupOrThrow(Registries.LEVEL_STEM).getValue(info.stemKey());
 +        // okocraft end - Add custom worlds
-+        if (false) // okocraft - Add custom worlds; Not needed for loading custom worlds
-         this.console.initWorld(serverLevel, primaryLevelData, primaryLevelData, primaryLevelData.worldGenOptions());
- 
-         serverLevel.setSpawnSettings(true);
-         // Paper - Put world into worldlist before initing the world; move up
- 
-+        if (false) // okocraft - Add custom worlds; Not needed for loading custom worlds
-         this.getServer().prepareLevels(serverLevel.getChunkSource().chunkMap.progressListener, serverLevel);
-         io.papermc.paper.FeatureHooks.tickEntityManager(serverLevel); // SPIGOT-6526: Load pending entities so they are available to the API // Paper - chunk system
- 
+             this.migrateWorldFolder(info);
+             if (!info.enabled()) {
+                 continue;

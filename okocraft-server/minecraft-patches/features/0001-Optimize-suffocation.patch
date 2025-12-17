@@ -17,15 +17,15 @@ but is so much cheaper than the suffocation check that it's worth
 keeping it.
 
 diff --git a/net/minecraft/world/entity/LivingEntity.java b/net/minecraft/world/entity/LivingEntity.java
-index 144d15bda80d3e5fbae0a824088fe05567a259c6..154f140a54abc3e729f95c4fa020226b8540c8d5 100644
+index d5bd641094730571eb65110c84b1df287288be3d..581cad1ea62fcbb8720ecb29579b0039f03c20bd 100644
 --- a/net/minecraft/world/entity/LivingEntity.java
 +++ b/net/minecraft/world/entity/LivingEntity.java
-@@ -457,7 +457,7 @@ public abstract class LivingEntity extends Entity implements Attackable, Waypoin
- 
+@@ -460,7 +460,7 @@ public abstract class LivingEntity extends Entity implements Attackable, Waypoin
+         profilerFiller.push("livingEntityBaseTick");
          if (this.isAlive() && this.level() instanceof ServerLevel serverLevel1) {
              boolean flag = this instanceof Player;
 -            if (this.isInWall()) {
 +            if (gg.airplane.structs.OptimizeSuffocation.shouldCheckForSuffocation(this, serverLevel1) && this.isInWall()) { // Pufferfish - optimize suffocation
                  this.hurtServer(serverLevel1, this.damageSources().inWall(), 1.0F);
              } else if (flag && !serverLevel1.getWorldBorder().isWithinBounds(this.getBoundingBox())) {
-                 double d = serverLevel1.getWorldBorder().getDistanceToBorder(this) + serverLevel1.getWorldBorder().getDamageSafeZone();
+                 double d = serverLevel1.getWorldBorder().getDistanceToBorder(this) + serverLevel1.getWorldBorder().getSafeZone();

@@ -6,13 +6,13 @@ Subject: [PATCH] Simpler ShapelessRecipes comparison for Vanilla
 Paper added a fancy sorting comparison due to Bukkit recipes breaking the vanilla one, however this is far more advanced than what you need for all the vanilla recipes.
 
 diff --git a/net/minecraft/world/item/crafting/ShapelessRecipe.java b/net/minecraft/world/item/crafting/ShapelessRecipe.java
-index d601b54b1de2f2ae44fe2b20c8116c71a6340e45..619840aa7ae7147e82b62d5e950770f5b9629e6b 100644
+index 28d085fce206634ee88c492e06fdbf63a618ee12..e55aef9d50baabbe2a32d6fb1fee725d0a86e023 100644
 --- a/net/minecraft/world/item/crafting/ShapelessRecipe.java
 +++ b/net/minecraft/world/item/crafting/ShapelessRecipe.java
-@@ -23,8 +23,16 @@ public class ShapelessRecipe implements CraftingRecipe {
+@@ -22,8 +22,16 @@ public class ShapelessRecipe implements CraftingRecipe {
+     final ItemStack result;
      final List<Ingredient> ingredients;
-     @Nullable
-     private PlacementInfo placementInfo;
+     private @Nullable PlacementInfo placementInfo;
 +    private final boolean isBukkit; // Pufferfish - Simpler ShapelessRecipes comparison for Vanilla
  
      public ShapelessRecipe(String group, CraftingBookCategory category, ItemStack result, List<Ingredient> ingredients) {
@@ -26,7 +26,7 @@ index d601b54b1de2f2ae44fe2b20c8116c71a6340e45..619840aa7ae7147e82b62d5e950770f5
          this.group = group;
          this.category = category;
          this.result = result;
-@@ -72,6 +80,27 @@ public class ShapelessRecipe implements CraftingRecipe {
+@@ -71,6 +79,27 @@ public class ShapelessRecipe implements CraftingRecipe {
  
      @Override
      public boolean matches(CraftingInput input, Level level) {
