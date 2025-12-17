@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/entity/Entity.java
 +++ b/net/minecraft/world/entity/Entity.java
-@@ -2879,6 +_,7 @@
+@@ -2942,6 +_,7 @@
  
          for (int currChunkZ = minChunkZ; currChunkZ <= maxChunkZ; ++currChunkZ) {
              for (int currChunkX = minChunkX; currChunkX <= maxChunkX; ++currChunkX) {
@@ -8,10 +8,10 @@
                  final net.minecraft.world.level.chunk.LevelChunkSection[] sections = chunkSource.getChunk(currChunkX, currChunkZ, net.minecraft.world.level.chunk.status.ChunkStatus.FULL, true).getSections();
  
                  for (int currChunkY = minChunkY; currChunkY <= maxChunkY; ++currChunkY) {
-@@ -4389,24 +_,42 @@
+@@ -4476,24 +_,42 @@
          ca.spottedleaf.moonrise.common.util.TickThread.ensureTickThread(this, "Cannot portal entity async");
  
-         ServerLevel destination = this.getServer().getLevel(this.level().getTypeKey() == net.minecraft.world.level.dimension.LevelStem.END ? Level.OVERWORLD : Level.END);
+         ServerLevel destination = this.level().getServer().getLevel(this.level().getTypeKey() == net.minecraft.world.level.dimension.LevelStem.END ? Level.OVERWORLD : Level.END);
 +        // okocraft start - Call EntityPortalReadyEvent
 +        io.papermc.paper.event.entity.EntityPortalReadyEvent event = new io.papermc.paper.event.entity.EntityPortalReadyEvent(this.getBukkitEntity(), destination == null ? null : destination.getWorld(), org.bukkit.PortalType.ENDER);
 +        if (!event.callEvent()) {
@@ -32,7 +32,7 @@
      public boolean netherPortalLogicAsync(BlockPos portalPos) {
          ca.spottedleaf.moonrise.common.util.TickThread.ensureTickThread(this, "Cannot portal entity async");
  
-         ServerLevel destination = this.getServer().getLevel(this.level().getTypeKey() == net.minecraft.world.level.dimension.LevelStem.NETHER ? Level.OVERWORLD : Level.NETHER);
+         ServerLevel destination = this.level().getServer().getLevel(this.level().getTypeKey() == net.minecraft.world.level.dimension.LevelStem.NETHER ? Level.OVERWORLD : Level.NETHER);
 +        // okocraft start - Call EntityPortalReadyEvent
 +        io.papermc.paper.event.entity.EntityPortalReadyEvent event = new io.papermc.paper.event.entity.EntityPortalReadyEvent(this.getBukkitEntity(), destination == null ? null : destination.getWorld(), org.bukkit.PortalType.NETHER);
 +        if (!event.callEvent()) {

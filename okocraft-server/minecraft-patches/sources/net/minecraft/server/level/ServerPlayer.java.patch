@@ -1,8 +1,8 @@
 --- a/net/minecraft/server/level/ServerPlayer.java
 +++ b/net/minecraft/server/level/ServerPlayer.java
-@@ -1614,7 +_,16 @@
-                         );
+@@ -1732,7 +_,16 @@
                      }
+                     ServerPlayer.this.connection.restartClientLoadTimerAfterRespawn();
                      // now the respawn logic is complete
 -
 +                    // okocraft start - Call PlayerRespawnEvent
@@ -18,7 +18,7 @@
                      // last, call the function callback
                      if (respawnComplete != null) {
                          respawnComplete.accept(ServerPlayer.this);
-@@ -1795,6 +_,7 @@
+@@ -1913,6 +_,7 @@
              this.lastSentFood = -1;
  
              this.triggerDimensionChangeTriggers(originWorld);

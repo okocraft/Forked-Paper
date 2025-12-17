@@ -13,14 +13,14 @@
 +    private final Set<AdvancementHolder> progressChanged = java.util.Collections.synchronizedSet(new HashSet<>()); // okocraft - region threading
 +    private final Set<AdvancementNode> rootsToUpdate = java.util.Collections.synchronizedSet(new HashSet<>()); // okocraft - region threading
      private ServerPlayer player;
-     @Nullable
-     private AdvancementHolder lastSelectedTab;
-@@ -146,7 +_,7 @@
+     private @Nullable AdvancementHolder lastSelectedTab;
+     private boolean isFirstPacket = true;
+@@ -145,7 +_,7 @@
          data.forEach((path, progress) -> {
              AdvancementHolder advancementHolder = advancementManager.get(path);
              if (advancementHolder == null) {
--                if (!path.getNamespace().equals(ResourceLocation.DEFAULT_NAMESPACE)) return; // CraftBukkit
-+                if (true || !path.getNamespace().equals(ResourceLocation.DEFAULT_NAMESPACE)) return; // CraftBukkit // okocraft - Disable advancement warning
+-                if (!path.getNamespace().equals(Identifier.DEFAULT_NAMESPACE)) return; // CraftBukkit
++                if (true || !path.getNamespace().equals(Identifier.DEFAULT_NAMESPACE)) return; // CraftBukkit // okocraft - Disable advancement warning
                  LOGGER.warn("Ignored advancement '{}' in progress file {} - it doesn't exist anymore?", path, this.playerSavePath);
              } else {
                  this.startProgress(advancementHolder, progress);

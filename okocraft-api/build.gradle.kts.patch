@@ -1,6 +1,6 @@
 --- a/folia-api/build.gradle.kts
 +++ b/folia-api/build.gradle.kts
-@@ -101,6 +_,7 @@
+@@ -102,6 +_,7 @@
          java {
              srcDir(generatedDir)
              srcDir(file("../paper-api/src/main/java"))
@@ -8,7 +8,7 @@
          }
          resources {
              srcDir(file("../paper-api/src/main/resources"))
-@@ -177,6 +_,7 @@
+@@ -194,6 +_,7 @@
  val services = objects.newInstance<Services>()
  
  tasks.withType<Javadoc>().configureEach {
