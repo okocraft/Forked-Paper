@@ -1,8 +1,9 @@
 package net.okocraft.paper;
 
 import io.papermc.paper.world.PaperWorldLoader;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.dimension.LevelStem;
 import org.bukkit.World;
 
 import java.io.IOException;
@@ -80,18 +81,11 @@ public final class CustomWorlds {
     }
 
     private static PaperWorldLoader.WorldLoadingInfo createWorldInfo(String worldName, World.Environment environment) {
-        ResourceKey<LevelStem> stemKey = switch (environment) {
-            case NORMAL -> LevelStem.OVERWORLD;
-            case NETHER -> LevelStem.NETHER;
-            case THE_END -> LevelStem.END;
-            default -> throw new IllegalArgumentException();
-        };
-
         return new PaperWorldLoader.WorldLoadingInfo(
                 environment.getId(),
                 worldName,
                 environment.toString().toLowerCase(Locale.ROOT),
-                stemKey,
+                ResourceKey.create(Registries.LEVEL_STEM, Identifier.fromNamespaceAndPath(Identifier.DEFAULT_NAMESPACE, worldName)),
                 true
         );
     }

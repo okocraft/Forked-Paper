@@ -5,10 +5,10 @@ Subject: [PATCH] Add custom and resource worlds
 
 
 diff --git a/src/main/java/io/papermc/paper/world/PaperWorldLoader.java b/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
-index 51a01f86fee58052cfa10febc2b3ddf8f6dd2ad7..5c7be39cf78a4e9ba8df40dcb4b57367a078aad4 100644
+index 51a01f86fee58052cfa10febc2b3ddf8f6dd2ad7..02911a81453a4b7e3262cf627c581cc85741081a 100644
 --- a/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
 +++ b/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
-@@ -105,11 +105,30 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
+@@ -105,20 +105,45 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
              }
          }
      }
@@ -36,8 +36,34 @@ index 51a01f86fee58052cfa10febc2b3ddf8f6dd2ad7..5c7be39cf78a4e9ba8df40dcb4b57367
 -            final WorldLoadingInfo info = this.getWorldInfo(this.levelId, stem);
 +        // okocraft start - Add custom worlds
 +        for (final WorldLoadingInfo info : this.loadWorldInfoList()) {
-+            LevelStem stem = this.server.registryAccess().lookupOrThrow(Registries.LEVEL_STEM).getValue(info.stemKey());
++            ResourceKey<LevelStem> actualStemKey = switch (info.dimension()) {
++                case 0 -> LevelStem.OVERWORLD;
++                case -1 -> LevelStem.NETHER;
++                case 1 -> LevelStem.END;
++                default -> throw new IllegalStateException("Unexpected value: " + info.dimension());
++            };
++            LevelStem actualStem = this.server.registryAccess().lookupOrThrow(Registries.LEVEL_STEM).getValueOrThrow(actualStemKey);
 +        // okocraft end - Add custom worlds
              this.migrateWorldFolder(info);
              if (!info.enabled()) {
                  continue;
+             }
+ 
+             LevelStorageSource.LevelStorageAccess levelStorageAccess = this.server.storageSource;
+-            if (info.dimension() != 0) {
++            if (!info.name().equals(this.levelId)) { // okocraft - Add custom worlds
+                 try {
+-                    levelStorageAccess = LevelStorageSource.createDefault(this.server.server.getWorldContainer().toPath()).validateAndCreateAccess(info.name(), info.stemKey());
++                    levelStorageAccess = LevelStorageSource.createDefault(this.server.server.getWorldContainer().toPath()).validateAndCreateAccess(info.name(), actualStemKey); // okocraft - Add custom worlds
+                 } catch (IOException | ContentValidationException ex) {
+                     throw new RuntimeException(ex);
+                 }
+@@ -162,7 +187,7 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
+                 );
+             }
+ 
+-            this.server.createLevel(stem, info, levelStorageAccess, primaryLevelData);
++            this.server.createLevel(actualStem, info, levelStorageAccess, primaryLevelData); // okocraft - Add custom worlds
+         }
+ 
+         ((DedicatedServer) this.server).forceDifficulty();
