@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/entity/Mob.java
++++ b/net/minecraft/world/entity/Mob.java
+@@ -299,7 +_,7 @@
+             }
+ 
+             if (event.getTarget() != null) {
+-                target = ((org.bukkit.craftbukkit.entity.CraftLivingEntity) event.getTarget()).getHandle();
++                target = (net.minecraft.world.entity.LivingEntity) ((org.bukkit.craftbukkit.entity.CraftLivingEntity) event.getTarget()).getHandleRaw(); // okocraft - region threading
+             } else {
+                 target = null;
+             }
