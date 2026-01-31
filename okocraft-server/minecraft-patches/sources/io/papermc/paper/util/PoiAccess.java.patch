@@ -1,0 +1,44 @@
+--- a/io/papermc/paper/util/PoiAccess.java
++++ b/io/papermc/paper/util/PoiAccess.java
+@@ -29,6 +_,7 @@
+  */
+ public final class PoiAccess {
+ 
++    private static final ThreadLocal<LongOpenHashSet> SEEN_CACHE = ThreadLocal.withInitial(LongOpenHashSet::new); // okocraft - cache large set
+     protected static double clamp(final double val, final double min, final double max) {
+         return (val < min ? min : (val > max ? max : val));
+     }
+@@ -225,7 +_,7 @@
+         final long centerKey = CoordinateUtils.getChunkSectionKey(centerX, centerY, centerZ);
+ 
+         final LongArrayFIFOQueue queue = new LongArrayFIFOQueue();
+-        final LongOpenHashSet seen = new LongOpenHashSet();
++        final LongOpenHashSet seen = SEEN_CACHE.get(); seen.clear(); // okocraft - cache large set
+         seen.add(centerKey);
+         queue.enqueue(centerKey);
+ 
+@@ -331,6 +_,7 @@
+                 }
+             }
+         }
++        seen.clear(); seen.trim(1024); // okocraft - cache large set
+ 
+         // uh oh! we might have multiple records that match the distance sorting!
+         // we need to re-order our results by the way vanilla would have iterated over them.
+@@ -468,7 +_,7 @@
+         final long centerKey = CoordinateUtils.getChunkSectionKey(centerX, centerY, centerZ);
+ 
+         final LongArrayFIFOQueue queue = new LongArrayFIFOQueue();
+-        final LongOpenHashSet seen = new LongOpenHashSet();
++        final LongOpenHashSet seen = SEEN_CACHE.get(); seen.clear(); // okocraft - cache large set
+         seen.add(centerKey);
+         queue.enqueue(centerKey);
+ 
+@@ -606,6 +_,7 @@
+                 }
+             }
+         }
++        seen.clear(); seen.trim(1024); // okocraft - cache large set
+ 
+         final List<PoiRecord> closestRecordsUnsorted = new ArrayList<>();
+ 
