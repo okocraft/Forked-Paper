@@ -8,7 +8,7 @@
 +        // okocraft start - region threading
 +        LongSupplier longSupplier = () -> {
 +            final io.papermc.paper.threadedregions.RegionizedWorldData cur = io.papermc.paper.threadedregions.TickRegionScheduler.getCurrentRegionizedWorldData();
-+            return cur.world == level ? cur.getTickData().dayTime() : level.getLevelData().getDayTime();
++            return cur != null && cur.world == level ? cur.getTickData().dayTime() : level.getLevelData().getDayTime();
 +        };
 +        // okocraft end - region threading
          addDimensionLayer(builder, level.dimensionType());
