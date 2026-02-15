@@ -1,6 +1,6 @@
 --- a/ca/spottedleaf/moonrise/patches/collisions/CollisionUtil.java
 +++ b/ca/spottedleaf/moonrise/patches/collisions/CollisionUtil.java
-@@ -2090,7 +_,7 @@
+@@ -2099,7 +_,7 @@
          aabb = aabb.inflate(-COLLISION_EPSILON, -COLLISION_EPSILON, -COLLISION_EPSILON);
          final List<Entity> entities;
          if (entity != null && ((ChunkSystemEntity)entity).moonrise$isHardColliding()) {
