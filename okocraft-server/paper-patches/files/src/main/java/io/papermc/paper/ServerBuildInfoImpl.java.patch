@@ -1,0 +1,10 @@
+--- a/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java
++++ b/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java
+@@ -61,6 +_,7 @@
+ 
+     @Override
+     public boolean isBrandCompatible(final @NotNull Key brandId) {
++        if (brandId.namespace().equals("papermc") && brandId.value().equals("folia")) return true; // okocraft - We forked from Folia
+         return brandId.equals(this.brandId);
+     }
+ 
