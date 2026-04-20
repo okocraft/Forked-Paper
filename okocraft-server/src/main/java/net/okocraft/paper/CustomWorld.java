@@ -1,9 +1,10 @@
 package net.okocraft.paper;
 
-import io.papermc.paper.world.PaperWorldLoader;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.LevelStem;
 import org.bukkit.World;
 
 import java.io.IOException;
@@ -15,17 +16,22 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-public final class CustomWorlds {
+public record CustomWorld(
+        String name,
+        World.Environment environment,
+        ResourceKey<LevelStem> stemKey,
+        ResourceKey<Level> dimensionKey
+) {
 
-    public static List<PaperWorldLoader.WorldLoadingInfo> readCustomWorldFile(Path filepath) throws IOException {
+    public static List<CustomWorld> readCustomWorldFile(Path filepath) throws IOException {
         try (Stream<String> lines = Files.lines(filepath, StandardCharsets.UTF_8)) {
-            return lines.map(CustomWorlds::readCustomWorldFileLine)
+            return lines.map(CustomWorld::readCustomWorldFileLine)
                     .filter(Objects::nonNull)
                     .toList();
         }
     }
 
-    private static PaperWorldLoader.WorldLoadingInfo readCustomWorldFileLine(String originalLine) {
+    private static CustomWorld readCustomWorldFileLine(String originalLine) {
         String line = originalLine.trim().replace(" ", "");
 
         if (line.startsWith("#")) {
@@ -59,7 +65,7 @@ public final class CustomWorlds {
         return createWorldInfo(worldName, environment);
     }
 
-    public static List<PaperWorldLoader.WorldLoadingInfo> readResourceNumberFile(Path filepath) throws IOException {
+    public static List<CustomWorld> readResourceNumberFile(Path filepath) throws IOException {
         if (Files.isRegularFile(filepath) && Files.isReadable(filepath)) {
             List<String> lines = Files.readAllLines(filepath, StandardCharsets.UTF_8);
 
@@ -71,7 +77,7 @@ public final class CustomWorlds {
         return List.of();
     }
 
-    private static List<PaperWorldLoader.WorldLoadingInfo> resourceWorlds(String suffix) {
+    private static List<CustomWorld> resourceWorlds(String suffix) {
         String worldName = "resource_" + suffix;
         return List.of(
                 createWorldInfo(worldName, World.Environment.NORMAL),
@@ -80,17 +86,15 @@ public final class CustomWorlds {
         );
     }
 
-    private static PaperWorldLoader.WorldLoadingInfo createWorldInfo(String worldName, World.Environment environment) {
-        return new PaperWorldLoader.WorldLoadingInfo(
-                environment.getId(),
-                worldName,
-                environment.toString().toLowerCase(Locale.ROOT),
-                ResourceKey.create(Registries.LEVEL_STEM, Identifier.fromNamespaceAndPath(Identifier.DEFAULT_NAMESPACE, worldName)),
-                true
-        );
+    private static CustomWorld createWorldInfo(String worldName, World.Environment environment) {
+        return new CustomWorld(worldName, environment, toLevelStemKey(environment), ResourceKey.create(Registries.DIMENSION, Identifier.fromNamespaceAndPath(Identifier.DEFAULT_NAMESPACE, worldName)));
     }
 
-    private CustomWorlds() {
-        throw new UnsupportedOperationException();
+    private static ResourceKey<LevelStem> toLevelStemKey(World.Environment environment) {
+        return switch (environment) {
+            case NETHER -> LevelStem.NETHER;
+            case THE_END -> LevelStem.END;
+            default -> LevelStem.OVERWORLD;
+        };
     }
 }
