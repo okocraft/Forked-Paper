@@ -5,10 +5,10 @@ Subject: [PATCH] Add custom and resource worlds
 
 
 diff --git a/src/main/java/io/papermc/paper/world/PaperWorldLoader.java b/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
-index cd3e7cc8cf083915de46e03d9b2aaea3003f48fb..da4eca51920c870fd4ce77d6a23c4b1305707f4b 100644
+index cd3e7cc8cf083915de46e03d9b2aaea3003f48fb..c3be90c5ca9778b2d5bbd69a2f50335c49599895 100644
 --- a/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
 +++ b/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
-@@ -126,6 +126,34 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
+@@ -126,6 +126,39 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
  
          return data;
      }
@@ -33,6 +33,11 @@ index cd3e7cc8cf083915de46e03d9b2aaea3003f48fb..da4eca51920c870fd4ce77d6a23c4b13
 +                throw new RuntimeException("Failed to migrate world storage for " + world.name(), e);
 +            }
 +
++            if (!java.nio.file.Files.isDirectory(this.server.storageSource.getDimensionPath(world.dimensionKey()))) {
++                MinecraftServer.LOGGER.error("dimension directory does not exist for {}", world.dimensionKey());
++                continue;
++            }
++
 +            LoadedWorldData data = loadWorldData(this.server, world.dimensionKey(), world.name());
 +            loaded.add(new WorldLoadingInfoAndData(info, data));
 +        }
@@ -43,7 +48,7 @@ index cd3e7cc8cf083915de46e03d9b2aaea3003f48fb..da4eca51920c870fd4ce77d6a23c4b13
  
      public void loadInitialWorlds() {
          final var levelStemRegistry = this.server.registryAccess().lookupOrThrow(Registries.LEVEL_STEM);
-@@ -138,6 +166,12 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
+@@ -138,6 +171,12 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
              }
              this.loadInitialWorld(stem, hasWorldData);
          }
@@ -56,7 +61,7 @@ index cd3e7cc8cf083915de46e03d9b2aaea3003f48fb..da4eca51920c870fd4ce77d6a23c4b13
  
          // ((DedicatedServer) this.server).forceDifficulty();
  
-@@ -151,7 +185,11 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
+@@ -151,7 +190,11 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
          if (loading == null) {
              return;
          }
