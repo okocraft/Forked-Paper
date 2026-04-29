@@ -5,7 +5,7 @@ Subject: [PATCH] Add custom and resource worlds
 
 
 diff --git a/src/main/java/io/papermc/paper/world/PaperWorldLoader.java b/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
-index cd3e7cc8cf083915de46e03d9b2aaea3003f48fb..844d13f037fc7752b3fe6322b85940eedfc9ec3e 100644
+index cd3e7cc8cf083915de46e03d9b2aaea3003f48fb..da4eca51920c870fd4ce77d6a23c4b1305707f4b 100644
 --- a/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
 +++ b/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
 @@ -126,6 +126,34 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
@@ -28,7 +28,7 @@ index cd3e7cc8cf083915de46e03d9b2aaea3003f48fb..844d13f037fc7752b3fe6322b85940ee
 +            WorldLoadingInfo info = new WorldLoadingInfo(world.environment(), world.stemKey(), world.dimensionKey(), true);
 +
 +            try {
-+                WorldFolderMigration.migrateStartupWorld(this.server.storageSource, this.server.registryAccess(), world.name(), info.stemKey(), info.dimensionKey());
++                WorldFolderMigration.migrateApiWorld(this.server.storageSource, this.server.registryAccess(), world.name(), info.stemKey(), info.dimensionKey());
 +            } catch (final IOException e) {
 +                throw new RuntimeException("Failed to migrate world storage for " + world.name(), e);
 +            }
