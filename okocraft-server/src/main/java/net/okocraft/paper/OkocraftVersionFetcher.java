@@ -19,7 +19,7 @@ public class OkocraftVersionFetcher implements VersionFetcher {
 
     @Override
     public long getCacheTime() {
-        return Long.MAX_VALUE; // prevent re-fetching
+        return 0;
     }
 
     @Override
