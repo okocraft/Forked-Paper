@@ -87,7 +87,7 @@ public record CustomWorld(
     }
 
     private static CustomWorld createWorldInfo(String worldName, World.Environment environment) {
-        return new CustomWorld(worldName, environment, toLevelStemKey(environment), ResourceKey.create(Registries.DIMENSION, Identifier.fromNamespaceAndPath(Identifier.DEFAULT_NAMESPACE, worldName)));
+        return new CustomWorld(worldName, environment, toLevelStemKey(environment), ResourceKey.create(Registries.DIMENSION, Identifier.fromNamespaceAndPath("okocraft", worldName)));
     }
 
     private static ResourceKey<LevelStem> toLevelStemKey(World.Environment environment) {
