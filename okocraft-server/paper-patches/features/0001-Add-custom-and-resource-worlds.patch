@@ -5,10 +5,10 @@ Subject: [PATCH] Add custom and resource worlds
 
 
 diff --git a/src/main/java/io/papermc/paper/world/PaperWorldLoader.java b/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
-index cd3e7cc8cf083915de46e03d9b2aaea3003f48fb..c3be90c5ca9778b2d5bbd69a2f50335c49599895 100644
+index cd3e7cc8cf083915de46e03d9b2aaea3003f48fb..8dc17759783a6ae8f358dd6b1d96d65a38f359f8 100644
 --- a/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
 +++ b/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
-@@ -126,6 +126,39 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
+@@ -126,6 +126,34 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
  
          return data;
      }
@@ -33,11 +33,6 @@ index cd3e7cc8cf083915de46e03d9b2aaea3003f48fb..c3be90c5ca9778b2d5bbd69a2f50335c
 +                throw new RuntimeException("Failed to migrate world storage for " + world.name(), e);
 +            }
 +
-+            if (!java.nio.file.Files.isDirectory(this.server.storageSource.getDimensionPath(world.dimensionKey()))) {
-+                MinecraftServer.LOGGER.error("dimension directory does not exist for {}", world.dimensionKey());
-+                continue;
-+            }
-+
 +            LoadedWorldData data = loadWorldData(this.server, world.dimensionKey(), world.name());
 +            loaded.add(new WorldLoadingInfoAndData(info, data));
 +        }
@@ -48,29 +43,63 @@ index cd3e7cc8cf083915de46e03d9b2aaea3003f48fb..c3be90c5ca9778b2d5bbd69a2f50335c
  
      public void loadInitialWorlds() {
          final var levelStemRegistry = this.server.registryAccess().lookupOrThrow(Registries.LEVEL_STEM);
-@@ -138,6 +171,12 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
+@@ -138,6 +166,11 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
              }
              this.loadInitialWorld(stem, hasWorldData);
          }
 +        // okocraft start - Add custom worlds
 +        for (final WorldLoadingInfoAndData world : this.loadCustomWorlds()) {
-+            LevelStem stem = levelStemRegistry.getValueOrThrow(world.info().stemKey());
-+            this.loadWorld(stem, hasWorldData, world);
++            this.loadCustomWorld(hasWorldData, world);
 +        }
 +        // okocraft end - Add custom worlds
  
          // ((DedicatedServer) this.server).forceDifficulty();
  
-@@ -151,7 +190,11 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
+@@ -151,14 +184,46 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
          if (loading == null) {
              return;
          }
--
 +    // okocraft start - Add custom worlds
-+        this.loadWorld(stem, hasWorldData, loading);
++        this.loadWorld(stem, this.loadWorldGenSettings(hasWorldData, loading), loading);
 +    }
-+    private void loadWorld(final LevelStem stem, final boolean hasWorldData, WorldLoadingInfoAndData loading) {
-+    // okocraft end - Add custom worlds
-         final WorldGenSettings worldGenSettings = !hasWorldData
+ 
+-        final WorldGenSettings worldGenSettings = !hasWorldData
++    // Custom worlds reuse the vanilla LevelStem keys (overworld/nether/end), but the shared
++    // server LevelStem belongs to the default world (which may be a void world). Resolve the
++    // LevelStem from each world's own world_gen_settings so that its stored generator and
++    // biome source are used instead of the default world's.
++    private void loadCustomWorld(final boolean hasWorldData, final WorldLoadingInfoAndData loading) {
++        final WorldGenSettings worldGenSettings = this.customWorldGenSettings(hasWorldData, loading);
++        final LevelStem stem = worldGenSettings.dimensions().get(loading.info().stemKey())
++            .orElseThrow(() -> new IllegalStateException("Missing dimension " + loading.info().stemKey().identifier() + " in world gen settings for " + loading.data().bukkitName()));
++        this.loadWorld(stem, worldGenSettings, loading);
++    }
++
++    private WorldGenSettings customWorldGenSettings(final boolean hasWorldData, final WorldLoadingInfoAndData loading) {
++        // If the custom world has not been generated yet, create a fresh normal world with a new
++        // random seed instead of failing or inheriting the (possibly void) default world's generator.
++        if (hasWorldData && !java.nio.file.Files.isDirectory(this.server.storageSource.getDimensionPath(loading.info().dimensionKey()))) {
++            MinecraftServer.LOGGER.info("Custom world '{}' has not been generated yet; creating a new world", loading.data().bukkitName());
++            return new WorldGenSettings(
++                net.minecraft.world.level.levelgen.WorldOptions.defaultWithRandomSeed(),
++                net.minecraft.world.level.levelgen.presets.WorldPresets.createNormalWorldDimensions(this.server.worldLoaderContext.datapackWorldgen())
++            );
++        }
++        return this.loadWorldGenSettings(hasWorldData, loading);
++    }
++
++    private WorldGenSettings loadWorldGenSettings(final boolean hasWorldData, final WorldLoadingInfoAndData loading) {
++        return !hasWorldData
              ? this.server.getWorldGenSettings()
              : loadWorldGenSettings(
+             this.server.storageSource,
+             this.server.worldLoaderContext.datapackWorldgen(),
+             loading.info().dimensionKey()
+         );
++    }
++
++    private void loadWorld(final LevelStem stem, final WorldGenSettings worldGenSettings, final WorldLoadingInfoAndData loading) {
++    // okocraft end - Add custom worlds
+         final var worldDataAndGenSettings = new LevelDataAndDimensions.WorldDataAndGenSettings(this.server.getWorldData(), worldGenSettings);
+ 
+         if (loading.info().dimensionKey() == Level.OVERWORLD) {
