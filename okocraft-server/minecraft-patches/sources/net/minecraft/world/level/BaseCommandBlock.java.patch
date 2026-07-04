@@ -8,4 +8,4 @@
 +        // if (true) return false; // Folia - region threading // okocraft - Enable CommandBlock
          if (level.getGameTime() == this.lastExecution) {
              return false;
-         } else if ("Searge".equalsIgnoreCase(this.command)) {
+         }

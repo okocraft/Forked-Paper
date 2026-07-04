@@ -1,11 +1,11 @@
 --- a/net/minecraft/world/entity/ai/behavior/AcquirePoi.java
 +++ b/net/minecraft/world/entity/ai/behavior/AcquirePoi.java
-@@ -129,7 +_,7 @@
-         if (pois.isEmpty()) {
+@@ -134,7 +_,7 @@
              return null;
-         } else {
--            Set<BlockPos> targets = new HashSet<>();
-+            Set<BlockPos> targets = new HashSet<>(pois.size()); // okocraft - allocate pre-sized HashSet with known capacity
-             int maxRange = 1;
+         }
  
-             for (Pair<Holder<PoiType>, BlockPos> p : pois) {
+-        Set<BlockPos> targets = new HashSet<>();
++        Set<BlockPos> targets = new HashSet<>(pois.size()); // okocraft - allocate pre-sized HashSet with known capacity
+         int maxRange = 1;
+ 
+         for (Pair<Holder<PoiType>, BlockPos> p : pois) {

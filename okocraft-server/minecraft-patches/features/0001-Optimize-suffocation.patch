@@ -17,10 +17,10 @@ but is so much cheaper than the suffocation check that it's worth
 keeping it.
 
 diff --git a/net/minecraft/world/entity/LivingEntity.java b/net/minecraft/world/entity/LivingEntity.java
-index f1db892a9d6a27889e983eae3e4c029b8c44315c..9ae294472f2a808643e9072f8f76249b69669f91 100644
+index 1cb8265c1313ad4893d45c344b03007fc4e2de4b..d0a043abb073b45dfd2e5ffe61ec9fe49ad351e3 100644
 --- a/net/minecraft/world/entity/LivingEntity.java
 +++ b/net/minecraft/world/entity/LivingEntity.java
-@@ -454,7 +454,7 @@ public abstract class LivingEntity extends Entity implements Attackable, Waypoin
+@@ -473,7 +473,7 @@ public abstract class LivingEntity extends Entity implements Attackable, Waypoin
          profiler.push("livingEntityBaseTick");
          if (this.isAlive() && this.level() instanceof ServerLevel level) {
              boolean isPlayer = this instanceof Player;

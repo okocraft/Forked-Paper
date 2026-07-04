@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/entity/Mob.java
 +++ b/net/minecraft/world/entity/Mob.java
-@@ -313,7 +_,7 @@
+@@ -317,7 +_,7 @@
              }
  
              if (event.getTarget() != null) {

@@ -5,10 +5,10 @@ Subject: [PATCH] Add custom and resource worlds
 
 
 diff --git a/src/main/java/io/papermc/paper/world/PaperWorldLoader.java b/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
-index cd3e7cc8cf083915de46e03d9b2aaea3003f48fb..8dc17759783a6ae8f358dd6b1d96d65a38f359f8 100644
+index 1bf392bacaddcccaa5b17872b1646f4eb9876baf..5d6349560a7b16ed1da7e0f47dd0ecd0edb43df5 100644
 --- a/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
 +++ b/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
-@@ -126,6 +126,34 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
+@@ -116,6 +116,34 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
  
          return data;
      }
@@ -43,7 +43,7 @@ index cd3e7cc8cf083915de46e03d9b2aaea3003f48fb..8dc17759783a6ae8f358dd6b1d96d65a
  
      public void loadInitialWorlds() {
          final var levelStemRegistry = this.server.registryAccess().lookupOrThrow(Registries.LEVEL_STEM);
-@@ -138,6 +166,11 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
+@@ -128,6 +156,11 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
              }
              this.loadInitialWorld(stem, hasWorldData);
          }
@@ -55,7 +55,7 @@ index cd3e7cc8cf083915de46e03d9b2aaea3003f48fb..8dc17759783a6ae8f358dd6b1d96d65a
  
          // ((DedicatedServer) this.server).forceDifficulty();
  
-@@ -151,14 +184,46 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
+@@ -141,14 +174,46 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
          if (loading == null) {
              return;
          }
