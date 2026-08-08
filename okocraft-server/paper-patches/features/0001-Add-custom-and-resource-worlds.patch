@@ -5,10 +5,10 @@ Subject: [PATCH] Add custom and resource worlds
 
 
 diff --git a/src/main/java/io/papermc/paper/world/PaperWorldLoader.java b/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
-index 1bf392bacaddcccaa5b17872b1646f4eb9876baf..5d6349560a7b16ed1da7e0f47dd0ecd0edb43df5 100644
+index 66ee5e01f18946d30ff322b3d8a4eb93677a7373..60863f440b9c812afb07aea24cb28884e970fedc 100644
 --- a/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
 +++ b/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
-@@ -116,6 +116,34 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
+@@ -118,6 +118,34 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
  
          return data;
      }
@@ -42,10 +42,10 @@ index 1bf392bacaddcccaa5b17872b1646f4eb9876baf..5d6349560a7b16ed1da7e0f47dd0ecd0
 +    // okocraft end - Add custom worlds
  
      public void loadInitialWorlds() {
-         final var levelStemRegistry = this.server.registryAccess().lookupOrThrow(Registries.LEVEL_STEM);
-@@ -128,6 +156,11 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
+         final Registry<LevelStem> levelStemRegistry = this.server.registryAccess().lookupOrThrow(Registries.LEVEL_STEM);
+@@ -130,6 +158,11 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
              }
-             this.loadInitialWorld(stem, hasWorldData);
+             this.loadInitialWorld(stem, this.hasDimensionData(stem));
          }
 +        // okocraft start - Add custom worlds
 +        for (final WorldLoadingInfoAndData world : this.loadCustomWorlds()) {
@@ -55,7 +55,7 @@ index 1bf392bacaddcccaa5b17872b1646f4eb9876baf..5d6349560a7b16ed1da7e0f47dd0ecd0
  
          // ((DedicatedServer) this.server).forceDifficulty();
  
-@@ -141,14 +174,46 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
+@@ -143,14 +176,46 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
          if (loading == null) {
              return;
          }
