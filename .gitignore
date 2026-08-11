@@ -6,13 +6,18 @@ build
 
 /run
 
+/.checkstyle
+/okocraft-api/build.gradle.kts
+/okocraft-checkstyle/build.gradle.kts
 /okocraft-server/build.gradle.kts
 /okocraft-server/src/minecraft
-/paper-server
-/folia-server
-/okocraft-api/build.gradle.kts
 /paper-api
+/paper-api-generator
+/paper-checkstyle
+/paper-server
 /folia-api
+/folia-checkstyle
+/folia-server
 
 .idea/
 .DS_Store

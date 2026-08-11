@@ -1,6 +1,34 @@
 --- a/folia-api/build.gradle.kts
 +++ b/folia-api/build.gradle.kts
-@@ -105,6 +_,7 @@
+@@ -23,9 +_,18 @@
+ }
+ 
+ tasks.named<io.papermc.paperweight.checkstyle.tasks.MergeCheckstyleConfigs>("mergeCheckstyleConfigs") {
++    baseConfigFile.set(layout.projectDirectory.file("../paper-api/.checkstyle/checkstyle.xml"))
+     overrideConfigFile.set(layout.projectDirectory.file("../paper-api/.checkstyle/checkstyle.xml"))
+ }
+ 
++// okocraft - Build Changes - checkstyle was newly enabled for these upstream files but they were
++// never cleaned up upstream, so exclude them until upstream fixes their Javadoc.
++tasks.withType<Checkstyle>().configureEach {
++    exclude("**/InternalAPIBridge.java")
++    exclude("**/ServerBuildInfo.java")
++    exclude("**/TestServerBuildInfo.java")
++}
++
+ val annotationsVersion = "26.0.2"
+ val adventureVersion = "5.2.0"
+ val bungeeCordChatVersion = "1.21-R0.2-deprecated+build.21"
+@@ -109,7 +_,7 @@
+     testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.0.3")
+ 
+     // checkstyle
+-    checkstyle(project(":folia-checkstyle"))
++    checkstyle(project(":okocraft-checkstyle")) // okocraft - Build Changes - fork checkstyle
+ }
+ 
+ val generatedDir: java.nio.file.Path = rootProject.layout.projectDirectory.dir("paper-api/src/generated/java").asFile.toPath()
+@@ -123,6 +_,7 @@
          java {
              srcDir(generatedDir)
              srcDir(file("../paper-api/src/main/java"))
@@ -8,7 +36,7 @@
          }
          resources {
              srcDir(file("../paper-api/src/main/resources"))
-@@ -197,6 +_,7 @@
+@@ -215,6 +_,7 @@
  val services = objects.newInstance<Services>()
  
  tasks.withType<Javadoc>().configureEach {
