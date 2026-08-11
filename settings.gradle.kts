@@ -10,4 +10,4 @@ plugins {
 }
 
 rootProject.name = "okocraft"
-include("okocraft-api", "okocraft-server")
+include("okocraft-api", "okocraft-checkstyle", "okocraft-server")
