@@ -91,7 +91,7 @@ jobs:
           labels: ${{ steps.labels.outputs.result }}
           draft: ${{ steps.apply_patches.outcome != 'success' && steps.build_jar.outcome != 'success' }}
       - name: Upload jar
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: steps.build_jar.outcome == 'success'
         continue-on-error: true
         with:
