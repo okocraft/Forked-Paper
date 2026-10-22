@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/PlayerAdvancements.java
 +++ b/net/minecraft/server/PlayerAdvancements.java
-@@ -51,10 +_,10 @@
+@@ -52,10 +_,10 @@
      private final PlayerList playerList;
      private final Path playerSavePath;
      private AdvancementTree tree;
@@ -15,7 +15,7 @@
      private ServerPlayer player;
      private @Nullable AdvancementHolder lastSelectedTab;
      private boolean isFirstPacket = true;
-@@ -145,7 +_,7 @@
+@@ -146,7 +_,7 @@
          data.forEach((id, progress) -> {
              AdvancementHolder advancement = manager.get(id);
              if (advancement == null) {

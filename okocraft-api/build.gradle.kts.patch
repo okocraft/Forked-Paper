@@ -16,10 +16,10 @@
 +    exclude("**/TestServerBuildInfo.java")
 +}
 +
- val annotationsVersion = "26.0.2"
+ val annotationsVersion = "26.1.0"
  val adventureVersion = "5.2.0"
  val bungeeCordChatVersion = "1.21-R0.2-deprecated+build.21"
-@@ -109,7 +_,7 @@
+@@ -107,7 +_,7 @@
      testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.0.3")
  
      // checkstyle
@@ -28,7 +28,7 @@
  }
  
  val generatedDir: java.nio.file.Path = rootProject.layout.projectDirectory.dir("paper-api/src/generated/java").asFile.toPath()
-@@ -123,6 +_,7 @@
+@@ -121,6 +_,7 @@
          java {
              srcDir(generatedDir)
              srcDir(file("../paper-api/src/main/java"))
@@ -36,7 +36,7 @@
          }
          resources {
              srcDir(file("../paper-api/src/main/resources"))
-@@ -215,6 +_,7 @@
+@@ -213,6 +_,7 @@
  val services = objects.newInstance<Services>()
  
  tasks.withType<Javadoc>().configureEach {

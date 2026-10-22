@@ -5,7 +5,7 @@ Subject: [PATCH] Add custom and resource worlds
 
 
 diff --git a/src/main/java/io/papermc/paper/world/PaperWorldLoader.java b/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
-index 66ee5e01f18946d30ff322b3d8a4eb93677a7373..60863f440b9c812afb07aea24cb28884e970fedc 100644
+index 219d2ec1a0cff79604a2a6d8857679acd8f21ccf..87b804777ffeecac0db544d54634bae74ef768b4 100644
 --- a/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
 +++ b/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
 @@ -118,6 +118,34 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
@@ -82,7 +82,7 @@ index 66ee5e01f18946d30ff322b3d8a4eb93677a7373..60863f440b9c812afb07aea24cb28884
 +            MinecraftServer.LOGGER.info("Custom world '{}' has not been generated yet; creating a new world", loading.data().bukkitName());
 +            return new WorldGenSettings(
 +                net.minecraft.world.level.levelgen.WorldOptions.defaultWithRandomSeed(),
-+                net.minecraft.world.level.levelgen.presets.WorldPresets.createNormalWorldDimensions(this.server.worldLoaderContext.datapackWorldgen())
++                net.minecraft.world.level.levelgen.presets.WorldPresets.createNormalWorldDimensions(this.server.worldLoaderContext.datapackWorldRegistries())
 +            );
 +        }
 +        return this.loadWorldGenSettings(hasWorldData, loading);
@@ -93,7 +93,7 @@ index 66ee5e01f18946d30ff322b3d8a4eb93677a7373..60863f440b9c812afb07aea24cb28884
              ? this.server.getWorldGenSettings()
              : loadWorldGenSettings(
              this.server.storageSource,
-             this.server.worldLoaderContext.datapackWorldgen(),
+             this.server.worldLoaderContext.datapackWorldRegistries(),
              loading.info().dimensionKey()
          );
 +    }
