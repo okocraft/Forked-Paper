@@ -55,7 +55,7 @@ index 219d2ec1a0cff79604a2a6d8857679acd8f21ccf..87b804777ffeecac0db544d54634bae7
  
          // ((DedicatedServer) this.server).forceDifficulty();
  
-@@ -143,14 +176,46 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
+@@ -143,14 +176,69 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
          if (loading == null) {
              return;
          }
@@ -70,9 +70,32 @@ index 219d2ec1a0cff79604a2a6d8857679acd8f21ccf..87b804777ffeecac0db544d54634bae7
 +    // biome source are used instead of the default world's.
 +    private void loadCustomWorld(final boolean hasWorldData, final WorldLoadingInfoAndData loading) {
 +        final WorldGenSettings worldGenSettings = this.customWorldGenSettings(hasWorldData, loading);
-+        final LevelStem stem = worldGenSettings.dimensions().get(loading.info().stemKey())
++        final LevelStem storedStem = worldGenSettings.dimensions().get(loading.info().stemKey())
 +            .orElseThrow(() -> new IllegalStateException("Missing dimension " + loading.info().stemKey().identifier() + " in world gen settings for " + loading.data().bukkitName()));
++        final LevelStem stem = this.withDefaultWorldClock(storedStem, loading.info().stemKey());
 +        this.loadWorld(stem, worldGenSettings, loading);
++    }
++
++    // The dimension type decides the default world clock. If the stored dimension type has a different
++    // default clock from the vanilla one, use the vanilla dimension type so that the world behaves
++    // like the overworld (the clock state itself is still stored per world).
++    private LevelStem withDefaultWorldClock(final LevelStem stem, final net.minecraft.resources.ResourceKey<LevelStem> stemKey) {
++        final net.minecraft.resources.ResourceKey<net.minecraft.world.level.dimension.DimensionType> defaultTypeKey;
++        if (stemKey == LevelStem.NETHER) {
++            defaultTypeKey = net.minecraft.world.level.dimension.BuiltinDimensionTypes.NETHER;
++        } else if (stemKey == LevelStem.END) {
++            defaultTypeKey = net.minecraft.world.level.dimension.BuiltinDimensionTypes.END;
++        } else {
++            defaultTypeKey = net.minecraft.world.level.dimension.BuiltinDimensionTypes.OVERWORLD;
++        }
++
++        final var defaultType = this.server.registryAccess().lookupOrThrow(Registries.DIMENSION_TYPE).getOrThrow(defaultTypeKey);
++        if (stem.type().value().defaultClock().equals(defaultType.value().defaultClock())) {
++            return stem;
++        }
++
++        MinecraftServer.LOGGER.info("Using the default dimension type {} for the custom world {}", defaultTypeKey.identifier(), stemKey.identifier());
++        return new LevelStem(defaultType, stem.generator());
 +    }
 +
 +    private WorldGenSettings customWorldGenSettings(final boolean hasWorldData, final WorldLoadingInfoAndData loading) {
