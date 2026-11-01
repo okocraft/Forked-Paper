@@ -1,0 +1,17 @@
+--- a/net/minecraft/server/MinecraftServer.java
++++ b/net/minecraft/server/MinecraftServer.java
+@@ -731,12 +_,14 @@
+                 savedDataStorage,
+                 loading.data()
+             );
++            if (dimensionKey == Level.OVERWORLD) { // okocraft - Add custom and resource worlds - custom worlds also use the overworld stem, only initialize the server state for the main overworld
+             this.worldData = worldDataAndGenSettings.data();
+             this.worldData.setGameType(((net.minecraft.server.dedicated.DedicatedServer) this).getProperties().gameMode.get()); // From DedicatedServer.init
+         this.scoreboard.load(this.savedDataStorage.computeIfAbsent(ScoreboardSaveData.TYPE).getData());
+         this.commandStorage = new CommandStorage(this.savedDataStorage);
+         this.stopwatches = this.savedDataStorage.computeIfAbsent(Stopwatches.TYPE);
+             this.server.scoreboardManager = new org.bukkit.craftbukkit.scoreboard.CraftScoreboardManager(this, serverLevel.getScoreboard());
++            } // okocraft - Add custom and resource worlds
+         } else {
+             final List<CustomSpawner> spawners;
+             if (io.papermc.paper.configuration.GlobalConfiguration.get().misc.useDimensionTypeForCustomSpawners && levelStem.type().is(net.minecraft.world.level.dimension.BuiltinDimensionTypes.OVERWORLD)) {
