@@ -5,7 +5,7 @@ Subject: [PATCH] Add custom and resource worlds
 
 
 diff --git a/src/main/java/io/papermc/paper/world/PaperWorldLoader.java b/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
-index 219d2ec1a0cff79604a2a6d8857679acd8f21ccf..87b804777ffeecac0db544d54634bae74ef768b4 100644
+index 72e73c26b5b6ff8e194142d45f7fda6cf1272eb1..1796bf007c57a33d97207e3db210415053bbc7bd 100644
 --- a/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
 +++ b/src/main/java/io/papermc/paper/world/PaperWorldLoader.java
 @@ -118,6 +118,34 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
@@ -55,7 +55,7 @@ index 219d2ec1a0cff79604a2a6d8857679acd8f21ccf..87b804777ffeecac0db544d54634bae7
  
          // ((DedicatedServer) this.server).forceDifficulty();
  
-@@ -143,14 +176,69 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
+@@ -143,16 +176,70 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
          if (loading == null) {
              return;
          }
@@ -63,7 +63,7 @@ index 219d2ec1a0cff79604a2a6d8857679acd8f21ccf..87b804777ffeecac0db544d54634bae7
 +        this.loadWorld(stem, this.loadWorldGenSettings(hasWorldData, loading), loading);
 +    }
  
--        final WorldGenSettings worldGenSettings = !hasWorldData
+-        final boolean isOverworldLevel = loading.info().dimensionKey() == Level.OVERWORLD;
 +    // Custom worlds reuse the vanilla LevelStem keys (overworld/nether/end), but the shared
 +    // server LevelStem belongs to the default world (which may be a void world). Resolve the
 +    // LevelStem from each world's own world_gen_settings so that its stored generator and
@@ -75,7 +75,8 @@ index 219d2ec1a0cff79604a2a6d8857679acd8f21ccf..87b804777ffeecac0db544d54634bae7
 +        final LevelStem stem = this.withDefaultWorldClock(storedStem, loading.info().stemKey());
 +        this.loadWorld(stem, worldGenSettings, loading);
 +    }
-+
+ 
+-        final WorldGenSettings worldGenSettings = isOverworldLevel || !hasWorldData
 +    // The dimension type decides the default world clock. If the stored dimension type has a different
 +    // default clock from the vanilla one, use the vanilla dimension type so that the world behaves
 +    // like the overworld (the clock state itself is still stored per world).
@@ -112,7 +113,7 @@ index 219d2ec1a0cff79604a2a6d8857679acd8f21ccf..87b804777ffeecac0db544d54634bae7
 +    }
 +
 +    private WorldGenSettings loadWorldGenSettings(final boolean hasWorldData, final WorldLoadingInfoAndData loading) {
-+        return !hasWorldData
++        return loading.info().dimensionKey() == Level.OVERWORLD || !hasWorldData
              ? this.server.getWorldGenSettings()
              : loadWorldGenSettings(
              this.server.storageSource,
@@ -122,7 +123,8 @@ index 219d2ec1a0cff79604a2a6d8857679acd8f21ccf..87b804777ffeecac0db544d54634bae7
 +    }
 +
 +    private void loadWorld(final LevelStem stem, final WorldGenSettings worldGenSettings, final WorldLoadingInfoAndData loading) {
++        final boolean isOverworldLevel = loading.info().dimensionKey() == Level.OVERWORLD;
 +    // okocraft end - Add custom worlds
          final var worldDataAndGenSettings = new LevelDataAndDimensions.WorldDataAndGenSettings(this.server.getWorldData(), worldGenSettings);
  
-         if (loading.info().dimensionKey() == Level.OVERWORLD) {
+         if (isOverworldLevel) {
