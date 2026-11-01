@@ -1,14 +1,6 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Claude <noreply@anthropic.com>
-Date: Sun, 1 Nov 2026 12:37:57 +0000
-Subject: [PATCH] Fix world clocks desync
-
-
-diff --git a/io/papermc/paper/threadedregions/RegionizedServer.java b/io/papermc/paper/threadedregions/RegionizedServer.java
-index 075bef51d0c174f59a9a5c8b2bbff740111b1a13..fc342cc5a357d89b0daf7e2cb2b2404d2197f60b 100644
 --- a/io/papermc/paper/threadedregions/RegionizedServer.java
 +++ b/io/papermc/paper/threadedregions/RegionizedServer.java
-@@ -241,7 +241,7 @@ public final class RegionizedServer {
+@@ -241,7 +_,7 @@
          ((FoliaGlobalRegionScheduler)Bukkit.getGlobalRegionScheduler()).tick();
  
          // clock tick
@@ -17,10 +9,11 @@ index 075bef51d0c174f59a9a5c8b2bbff740111b1a13..fc342cc5a357d89b0daf7e2cb2b2404d
  
          // commands
          ((DedicatedServer)MinecraftServer.getServer()).handleConsoleInputs();
-@@ -397,6 +397,17 @@ public final class RegionizedServer {
+@@ -396,6 +_,17 @@
+     private void tickWorldBorder(final ServerLevel world) {
          world.getWorldBorder().tick();
      }
- 
++
 +    // okocraft start - Fix world clocks desync
 +    // The game time is advanced by tickCount (see tickTime), and the client advances its clocks by the
 +    // game time delta. If the clocks are only ticked once, they fall behind the game time whenever the
@@ -31,7 +24,6 @@ index 075bef51d0c174f59a9a5c8b2bbff740111b1a13..fc342cc5a357d89b0daf7e2cb2b2404d
 +        }
 +    }
 +    // okocraft end - Fix world clocks desync
-+
+ 
      private void tickClocks() {
          // Paper start - per-world time
-         if (io.papermc.paper.configuration.GlobalConfiguration.get().time.affectsAllWorlds) {
