@@ -17,7 +17,7 @@ but is so much cheaper than the suffocation check that it's worth
 keeping it.
 
 diff --git a/net/minecraft/world/entity/LivingEntity.java b/net/minecraft/world/entity/LivingEntity.java
-index a66f01754046bd9e3946552cac794b2f624214f9..ea4eef5c2c20a2916cafa9892ecb7f6fa7793323 100644
+index 44e865f2e0660a7605923f76c1943f081c19a07e..8e9cbe97d7792f1a8e9c6936f91f4f167964ebf6 100644
 --- a/net/minecraft/world/entity/LivingEntity.java
 +++ b/net/minecraft/world/entity/LivingEntity.java
 @@ -476,7 +476,7 @@ public abstract class LivingEntity extends Entity implements Attackable, Waypoin
