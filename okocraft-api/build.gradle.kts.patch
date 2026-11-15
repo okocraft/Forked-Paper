@@ -36,7 +36,7 @@
          }
          resources {
              srcDir(file("../paper-api/src/main/resources"))
-@@ -213,6 +_,7 @@
+@@ -208,6 +_,7 @@
  val services = objects.newInstance<Services>()
  
  tasks.withType<Javadoc>().configureEach {
