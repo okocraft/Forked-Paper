@@ -1,6 +1,6 @@
 --- a/io/papermc/paper/threadedregions/RegionizedServer.java
 +++ b/io/papermc/paper/threadedregions/RegionizedServer.java
-@@ -241,7 +_,7 @@
+@@ -242,7 +_,7 @@
          ((FoliaGlobalRegionScheduler)Bukkit.getGlobalRegionScheduler()).tick();
  
          // clock tick
@@ -9,7 +9,7 @@
  
          // commands
          ((DedicatedServer)MinecraftServer.getServer()).handleConsoleInputs();
-@@ -396,6 +_,17 @@
+@@ -397,6 +_,17 @@
      private void tickWorldBorder(final ServerLevel world) {
          world.getWorldBorder().tick();
      }
