@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/MinecraftServer.java
 +++ b/net/minecraft/server/MinecraftServer.java
-@@ -731,12 +_,14 @@
+@@ -732,12 +_,14 @@
                  savedDataStorage,
                  loading.data()
              );
